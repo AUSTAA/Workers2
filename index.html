@@ -8,9 +8,12 @@
     <style>
         /* تنسيق الرابط للتسجيل */
         #registration-link {
-
-            margin: 10px 0; /* هامش من الأعلى */
+            color: inherit; /* استخدام نفس لون باقي النصوص */
+            margin: 10px 0 10px 10px; /* هامش من اليسار */
             text-decoration: none; /* إزالة التأثير الافتراضي للرابط */
+            position: absolute; /* تحديد الوضع */
+            top: 10px; /* المسافة من الأعلى */
+            left: 10px; /* المسافة من اليسار */
         }
     </style>
 </head>
@@ -19,8 +22,6 @@
         <h1>خدمات البناء</h1>
         <nav>
             <ul>
-                <!-- رابط التسجيل -->
-                <li><a id="registration-link" href="registration.html">تسجيل</a></li>
                 <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="about.html">من نحن</a></li>
@@ -32,6 +33,8 @@
                 <li><a href="painters.html">الدهانين</a></li>
             </ul>
         </nav>
+        <!-- رابط التسجيل -->
+        <a id="registration-link" href="registration.html">تسجيل</a>
     </header>
     <main>
         <section id="search">
