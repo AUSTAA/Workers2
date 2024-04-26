@@ -1,0 +1,44 @@
+.worker-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.worker-card img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.worker-card h3 {
+    color: #333;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.worker-card p {
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.worker-card .rating {
+    color: #ffc107; /* لون التقييمات */
+    font-weight: bold;
+}
+
+.worker-card button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.worker-card button:hover {
+    background-color: #0056b3;
+}
