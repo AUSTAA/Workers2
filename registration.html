@@ -11,14 +11,6 @@
         <h1>تسجيل</h1>
     </header>
     <main>
-        <form action="#" method="post">
-            <label for="user_type">اختر نوع التسجيل:</label>
-            <select name="user_type" id="user_type">
-                <option value="customer">باحث عن خدمة</option>
-                <option value="worker">مقدم خدمة</option>
-            </select>
-            <button type="submit">تسجيل</button>
-        </form>
         <!-- نموذج ملء البيانات -->
         <form action="#" method="post" id="registration_form">
             <!-- حقول إدخال البيانات -->
@@ -26,6 +18,10 @@
             <input type="text" id="name" name="name" required>
             <label for="email">البريد الإلكتروني:</label>
             <input type="email" id="email" name="email" required>
+            <label for="password">كلمة المرور:</label>
+            <input type="password" id="password" name="password" required>
+            <label for="phone">رقم الهاتف:</label>
+            <input type="tel" id="phone" name="phone" required>
             <!-- حقول إضافية حسب نوع التسجيل -->
             <div id="additional_fields" style="display: none;">
                 <!-- حقول إضافية لمقدمي الخدمة -->
@@ -44,11 +40,12 @@
 
     <!-- الكود الجديد لتهيئة Firebase SDK -->
     <script type="module">
-        // استيراد الوظائف اللازمة من SDKs التي تحتاجها
+        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
-        // تكوين Firebase الخاص بتطبيقك
+        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyA1L9YC72fzgG_UhbZJAyuueAePoM9CgAU",
             authDomain: "workers2-e6d6f.firebaseapp.com",
@@ -59,9 +56,31 @@
             measurementId: "G-EVVLM3Q526"
         };
 
-        // تهيئة Firebase
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+
+        // Listen for the registration form submission event
+        const registrationForm = document.getElementById('registration_form');
+        registrationForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const phoneNumber = document.getElementById('phone').value;
+
+            // Use Firebase SDK to create a new account
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Handle success - for example, redirecting the user to a page after registration
+                    window.location.href = 'success.html';
+                })
+                .catch((error) => {
+                    // Handle errors - display an error message to the user for example
+                    console.error(error.message);
+                });
+        });
     </script>
 </body>
 </html>
