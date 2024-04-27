@@ -28,7 +28,7 @@ registrationForm.addEventListener('submit', function(event) {
                     console.log("Verification email sent.");
                     // Redirect user to enter the verification code
                     // For example, redirect to a page where the user enters the code
-                    window.location.href = 'verification.html';
+                    window.location.href = 'https://workers2-e6d6f.firebaseapp.com/__/auth/action?mode=action&oobCode=code';
                 })
                 .catch((error) => {
                     // Handle errors
