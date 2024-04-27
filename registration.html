@@ -47,19 +47,28 @@
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyA1L9YC72fzgG_UhbZJAyuueAePoM9CgAU",
-            authDomain: "workers2-e6d6f.firebaseapp.com",
-            projectId: "workers2-e6d6f",
-            storageBucket: "workers2-e6d6f.appspot.com",
-            messagingSenderId: "196462535548",
-            appId: "1:196462535548:web:e5ccd41d6adf5f893fbaf9",
-            measurementId: "G-EVVLM3Q526"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
         };
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const auth = getAuth(app);
+
+        // Define action code settings
+        const actionCodeSettings = {
+            // URL you want to redirect back to. The domain (www.example.com) for this
+            // URL must be in the authorized domains list in the Firebase Console.
+            url: 'https://www.example.com/verification.html',
+            // This must be true.
+            handleCodeInApp: true
+        };
 
         // Listen for the registration form submission event
         const registrationForm = document.getElementById('registration_form');
@@ -73,8 +82,21 @@
             // Use Firebase SDK to create a new account
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    // Handle success - for example, redirecting the user to a page after registration
-                    window.location.href = 'success.html';
+                    // Send verification code via phone number
+                    auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
+                        .then((confirmationResult) => {
+                            // Verification code sent
+                            console.log("Verification code sent to phone.");
+                            // Save the confirmation result to use later for verification
+                            window.confirmationResult = confirmationResult;
+                            // Redirect user to enter the verification code
+                            // For example, redirect to a page where the user enters the code
+                            window.location.href = 'verification.html';
+                        })
+                        .catch((error) => {
+                            // Handle errors
+                            console.error("Error sending verification code to phone:", error);
+                        });
                 })
                 .catch((error) => {
                     // Handle errors - display an error message to the user for example
