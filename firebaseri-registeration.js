@@ -23,7 +23,7 @@ const auth = getAuth(app);
 const actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be in the authorized domains list in the Firebase Console.
-    url: 'https://omranalr.github.io/Workers2/verification.htm',
+url:   'https://workers2-e6d6f.firebaseapp.com/__/auth/action',
     // This must be true.
     handleCodeInApp: true
 };
