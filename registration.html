@@ -61,14 +61,14 @@
         const analytics = getAnalytics(app);
         const auth = getAuth(app);
 
-        // Define action code settings
+      // Define action code settings
         const actionCodeSettings = {
-            // URL you want to redirect back to. The domain (www.example.com) for this
-            // URL must be in the authorized domains list in the Firebase Console.
-            url: '//omranalr.github.io/Workers2/verification.html',
-            // This must be true.
-            handleCodeInApp: true
-        };
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be in the authorized domains list in the Firebase Console.
+    url: '//omranalr.github.io/Workers2/verification.html',
+    // This must be true.
+    handleCodeInApp: true
+};
 
         // Listen for the registration form submission event
         const registrationForm = document.getElementById('registration_form');
@@ -83,15 +83,18 @@
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // Send verification code via phone number
-                    auth.signInWithPhoneNumber(phoneNumber, recaptchaVerifier)
-                        .then((confirmationResult) => {
-                            // Verification code sent
-                            console.log("Verification code sent to phone.");
-                            // Save the confirmation result to use later for verification
-                            window.confirmationResult = confirmationResult;
-                            // Redirect user to enter the verification code
-                            // For example, redirect to a page where the user enters the code
-                            window.location.href = 'verification.html';
+           auth.sendSignInLinkToEmail(email, actionCodeSettings)
+    .then(() => {
+        // Email sent
+        console.log("Verification email sent.");
+        // Redirect user to enter the verification code
+        // For example, redirect to a page where the user enters the code
+        window.location.href = 'verification.html';
+    })
+    .catch((error) => {
+        // Handle errors
+        console.error("Error sending verification email:", error);
+    });
                         })
                         .catch((error) => {
                             // Handle errors
