@@ -43,12 +43,11 @@ registrationForm.addEventListener('submit', function(event) {
             // Send verification code via email
 auth.currentUser.sendEmailVerification(actionCodeSettings)
                 .then(() => {
-                    // Email sent
-                    console.log("Verification email sent.");
-                    // Redirect user to enter the verification code
-                    // For example, redirect to a page where the user enters the code
-                    window.location.href = 'verification.html';
-                })
+    // Email sent
+    console.log("Verification email sent.");
+    // Redirect user to the specified URL
+    window.location.href = 'https://workers2-e6d6f.firebaseapp.com/__/auth/action?mode=action&oobCode=code';
+})
                 .catch((error) => {
                     // Handle errors
                     console.error("Error sending verification email:", error);
