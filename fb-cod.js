@@ -41,7 +41,7 @@ registrationForm.addEventListener('submit', function(event) {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Send verification code via email
-            auth.‏sendEmailVerification(email, actionCodeSettings)
+auth.currentUser.sendEmailVerification(actionCodeSettings)
                 .then(() => {
                     // Email sent
                     console.log("Verification email sent.");
