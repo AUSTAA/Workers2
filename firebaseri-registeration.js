@@ -32,7 +32,7 @@ registrationForm.addEventListener('submit', function(event) {
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             // Handle success - for example, redirecting the user to a page after registration
-            window.location.href = 'success.html';
+            window.location.href = 'verification.html';
         })
         .catch((error) => {
             // Handle errors - display an error message to the user for example
