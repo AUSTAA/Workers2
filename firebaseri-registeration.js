@@ -5,14 +5,15 @@
 
 <script>
   // Your web app's Firebase configuration
+  optional
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
+    apiKey: "AIzaSyA1L9YC72fzgG_UhbZJAyuueAePoM9CgAU",
+    authDomain: "workers2-e6d6f.firebaseapp.com",
+    projectId: "workers2-e6d6f",
+    storageBucket: "workers2-e6d6f.appspot.com",
+    messagingSenderId: "196462535548",
+    appId: "1:196462535548:web:e5ccd41d6adf5f893fbaf9",
+    measurementId: "G-EVVLM3Q526"
   };
 
   // Initialize Firebase
