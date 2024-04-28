@@ -19,35 +19,35 @@
         <button type="submit">تسجيل</button>
     </form>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
-    <script>
-        // إعداد تكوين Firebase
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
             apiKey: "AIzaSyB-xY9BrFF7NO8iwKwMn4O3aX__30Iqjnk",
-  authDomain: "workers2-c1d8f.firebaseapp.com",
-  projectId: "workers2-c1d8f",
-  storageBucket: "workers2-c1d8f.appspot.com",
-  messagingSenderId: "750487110155",
-  appId: "1:750487110155:web:36d72d9a0528d476e63d0e",
-  measurementId: "G-06X9VJ7005"
+            authDomain: "workers2-c1d8f.firebaseapp.com",
+            projectId: "workers2-c1d8f",
+            storageBucket: "workers2-c1d8f.appspot.com",
+            messagingSenderId: "750487110155",
+            appId: "1:750487110155:web:36d72d9a0528d476e63d0e",
+            measurementId: "G-06X9VJ7005"
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
 
         // تسجيل المستخدم
         const signUp = (email, password, name, phoneNumber) => {
-            return firebase.auth().createUserWithEmailAndPassword(email, password)
+            return createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // إضافة معلومات الإضافة الإضافية مثل الاسم ورقم الهاتف
-                    return userCredential.user.updateProfile({
+                    return updateProfile(auth.currentUser, {
                         displayName: name
                     });
-                })
-                .then(() => {
-                    // إرسال رسالة التحقق إلى البريد الإلكتروني
-                    return firebase.auth().currentUser.sendEmailVerification();
                 })
                 .catch((error) => {
                     // معالجة الأخطاء إذا حدثت
@@ -67,7 +67,7 @@
             // تسجيل المستخدم باستخدام Firebase
             signUp(email, password, name, phone)
                 .then(() => {
-                    alert('تم تسجيل المستخدم بنجاح! يرجى تفعيل حسابك عبر البريد الإلكتروني.');
+                    alert('تم تسجيل المستخدم بنجاح!');
                 })
                 .catch((error) => {
                     alert(error.message);
