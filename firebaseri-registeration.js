@@ -5,7 +5,7 @@
 
 <script>
   // Your web app's Firebase configuration
-  optional
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   const firebaseConfig = {
     apiKey: "AIzaSyA1L9YC72fzgG_UhbZJAyuueAePoM9CgAU",
     authDomain: "workers2-e6d6f.firebaseapp.com",
@@ -13,7 +13,7 @@
     storageBucket: "workers2-e6d6f.appspot.com",
     messagingSenderId: "196462535548",
     appId: "1:196462535548:web:e5ccd41d6adf5f893fbaf9",
-    measurementId: "G-EVVLM3Q526"
+    measurementId
   };
 
   // Initialize Firebase
