@@ -33,23 +33,22 @@
             </div>
             <button type="submit">تأكيد التسجيل</button>
         </form>
+        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
     </main>
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
 
     <!-- Firebase SDK Script Tags -->
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
 
+    <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyB-xY9BrFF7NO8iwKwMn4O3aX__30Iqjnk",
             authDomain: "workers2-c1d8f.firebaseapp.com",
-            databaseURL: "https://workers2-c1d8f-default-rtdb.firebaseio.com",
             projectId: "workers2-c1d8f",
             storageBucket: "workers2-c1d8f.appspot.com",
             messagingSenderId: "750487110155",
@@ -58,9 +57,9 @@
         };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const auth = getAuth();
+        firebase.initializeApp(firebaseConfig);
+        const analytics = firebase.analytics();
+        const auth = firebase.auth();
 
         // Listen for the registration form submission event
         const registrationForm = document.getElementById('registration_form');
@@ -72,13 +71,13 @@
             const phoneNumber = document.getElementById('phone').value;
 
             // Use Firebase SDK to create a new account
-            createUserWithEmailAndPassword(auth, email, password)
+            firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Handle successful registration
                     console.log("User registered successfully:", userCredential);
-                    
+
                     // Send email verification
-                    userCredential.user.sendEmailVerification()
+                    firebase.auth().currentUser.sendEmailVerification()
                         .then(() => {
                             // Email sent
                             console.log("Verification email sent.");
@@ -93,6 +92,24 @@
                 .catch((error) => {
                     // Handle errors
                     console.error("Error registering user:", error);
+                });
+        });
+
+        // Google Sign-In
+        const googleSignInButton = document.getElementById('googleSignIn');
+        googleSignInButton.addEventListener('click', function() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
+                .then((result) => {
+                    // This gives you a Google Access Token. You can use it to access the Google API.
+                    const credential = result.credential;
+                    // The signed-in user info.
+                    const user = result.user;
+                    console.log("Google sign-in successful:", user);
+                    // Redirect or do other things after successful sign-in
+                }).catch((error) => {
+                    // Handle errors
+                    console.error("Error signing in with Google:", error);
                 });
         });
     </script>
