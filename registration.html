@@ -29,6 +29,7 @@
     <!-- Firebase SDK Script Tags -->
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
 
     <script>
         // Your web app's Firebase configuration
@@ -46,6 +47,7 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const firestore = firebase.firestore();
 
         // Handle registration form submission
         const registrationForm = document.getElementById('registrationForm');
@@ -58,16 +60,19 @@
             // Create account with email and password
             firebase.auth().createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    // Send email verification
-                    firebase.auth().currentUser.sendEmailVerification()
-                        .then(() => {
-                            console.log("Verification email sent.");
-                            // Redirect user to verification_sent.html
-                            window.location.href = 'verification_sent.html';
-                        })
-                        .catch((error) => {
-                            console.error("Error sending verification email:", error);
-                        });
+                    // Save user data to Firestore
+                    firestore.collection("users").doc(userCredential.user.uid).set({
+                        email: email,
+                        phoneNumber: phoneNumber
+                    })
+                    .then(() => {
+                        console.log("User data saved to Firestore.");
+                        // Redirect user to verification_sent.html
+                        window.location.href = 'verification_sent.html';
+                    })
+                    .catch((error) => {
+                        console.error("Error saving user data to Firestore:", error);
+                    });
                 })
                 .catch((error) => {
                     console.error("Error creating user:", error);
