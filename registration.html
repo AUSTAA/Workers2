@@ -46,20 +46,30 @@
 
     <script>
         // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyB-xY9BrFF7NO8iwKwMn4O3aX__30Iqjnk",
-            authDomain: "workers2-c1d8f.firebaseapp.com",
-            projectId: "workers2-c1d8f",
-            storageBucket: "workers2-c1d8f.appspot.com",
-            messagingSenderId: "750487110155",
-            appId: "1:750487110155:web:36d72d9a0528d476e63d0e",
-            measurementId: "G-06X9VJ7005"
-        };
+        // Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyB-xY9BrFF7NO8iwKwMn4O3aX__30Iqjnk",
+  authDomain: "workers2-c1d8f.firebaseapp.com",
+  projectId: "workers2-c1d8f",
+  storageBucket: "workers2-c1d8f.appspot.com",
+  messagingSenderId: "750487110155",
+  appId: "1:750487110155:web:36d72d9a0528d476e63d0e",
+  measurementId: "G-06X9VJ7005"
+};
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const analytics = firebase.analytics();
-        const auth = firebase.auth();
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const analytics = firebase.analytics();
+const auth = firebase.auth();
+
+// Set Google Sign-In client ID
+const googleClientId = "750487110155-mb34unvhr3rhq5ef84ai8k6t206s435m.apps.googleusercontent.com";
+const provider = new firebase.auth.GoogleAuthProvider();
+provider.setCustomParameters({
+  'client_id': googleClientId
+});
+
+// Other code remains the same...
 
         // Listen for the registration form submission event
         const registrationForm = document.getElementById('registration_form');
