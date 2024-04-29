@@ -11,28 +11,6 @@
         <h1>تسجيل</h1>
     </header>
     <main>
-        <!-- نموذج ملء البيانات -->
-        <form method="post" id="registration_form">
-            <!-- حقول إدخال البيانات -->
-            <label for="name">الاسم:</label>
-            <input type="text" id="name" name="name" required>
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="password">كلمة المرور:</label>
-            <input type="password" id="password" name="password" required>
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <!-- حقول إضافية حسب نوع التسجيل -->
-            <div id="additional_fields" style="display: none;">
-                <!-- حقول إضافية لمقدمي الخدمة -->
-                <label for="specialty">التخصص:</label>
-                <input type="text" id="specialty" name="specialty">
-                <!-- حقول إضافية للباحثين عن الخدمة -->
-                <label for="location">الموقع:</label>
-                <input type="text" id="location" name="location">
-            </div>
-            <button type="submit">تأكيد التسجيل</button>
-        </form>
         <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
     </main>
     <footer>
@@ -41,69 +19,22 @@
 
     <!-- Firebase SDK Script Tags -->
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
 
     <script>
         // Your web app's Firebase configuration
-        // Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyB-xY9BrFF7NO8iwKwMn4O3aX__30Iqjnk",
-  authDomain: "workers2-c1d8f.firebaseapp.com",
-  projectId: "workers2-c1d8f",
-  storageBucket: "workers2-c1d8f.appspot.com",
-  messagingSenderId: "750487110155",
-  appId: "1:750487110155:web:36d72d9a0528d476e63d0e",
-  measurementId: "G-06X9VJ7005"
-};
+        const firebaseConfig = {
+            authDomain: "workers2-c1d8f.firebaseapp.com",
+            projectId: "workers2-c1d8f",
+            storageBucket: "workers2-c1d8f.appspot.com",
+            messagingSenderId: "750487110155",
+            appId: "1:750487110155:web:36d72d9a0528d476e63d0e",
+            measurementId: "G-06X9VJ7005"
+        };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const analytics = firebase.analytics();
-const auth = firebase.auth();
-
-// Set Google Sign-In client ID
-const googleClientId = "750487110155-mb34unvhr3rhq5ef84ai8k6t206s435m.apps.googleusercontent.com";
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({
-  'client_id': googleClientId
-});
-
-// Other code remains the same...
-
-        // Listen for the registration form submission event
-        const registrationForm = document.getElementById('registration_form');
-        registrationForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const phoneNumber = document.getElementById('phone').value;
-
-            // Use Firebase SDK to create a new account
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    // Handle successful registration
-                    console.log("User registered successfully:", userCredential);
-
-                    // Send email verification
-                    firebase.auth().currentUser.sendEmailVerification()
-                        .then(() => {
-                            // Email sent
-                            console.log("Verification email sent.");
-                            // Redirect user to a page indicating that verification email has been sent
-                            window.location.href = 'verification_sent.html'; // Change 'verification_sent.html' to the desired URL
-                        })
-                        .catch((error) => {
-                            // Handle errors
-                            console.error("Error sending verification email:", error);
-                        });
-                })
-                .catch((error) => {
-                    // Handle errors
-                    console.error("Error registering user:", error);
-                });
-        });
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
 
         // Google Sign-In
         const googleSignInButton = document.getElementById('googleSignIn');
