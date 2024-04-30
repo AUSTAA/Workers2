@@ -68,7 +68,7 @@
             signUp(email, password, name, phone)
                 .then(() => {
                     alert('تم تسجيل المستخدم بنجاح!');
-              window.location.herf = 'verification_sent.html';
+              window.location.href = 'verification_sent.html';
                 })
                 .catch((error) => {
                     alert(error.message);
