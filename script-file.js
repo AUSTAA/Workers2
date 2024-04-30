@@ -1,13 +1,11 @@
 // Firebase SDK Configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyB-xY9BrFF7NO8iwKwMn4O3aX__30Iqjnk",
-    authDomain: "workers2-c1d8f.firebaseapp.com",
-    projectId: "workers2-c1d8f",
-    storageBucket: "workers2-c1d8f.appspot.com",
-    messagingSenderId: "750487110155",
-    appId: "1:750487110155:web:36d72d9a0528d476e63d0e",
-    measurementId: "G-06X9VJ7005",
-    clientId: "750487110155-mb34unvhr3rhq5ef84ai8k6t206s435m.apps.googleusercontent.com"
+  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+  authDomain: "omran-16f44.firebaseapp.com",
+  projectId: "omran-16f44",
+  storageBucket: "omran-16f44.appspot.com",
+  messagingSenderId: "598982209417",
+  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
 };
 
 // Initialize Firebase
