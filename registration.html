@@ -27,11 +27,11 @@
     </footer>
 
     <!-- Firebase SDK Script Tags -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
+        import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js';
 
-    <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyB-xY9BrFF7NO8iwKwMn4O3aX__30Iqjnk",
@@ -45,9 +45,9 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const firestore = firebase.firestore();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const firestore = getFirestore(app);
 
         // Handle registration form submission
         const registrationForm = document.getElementById('registrationForm');
@@ -58,10 +58,10 @@
             const phoneNumber = document.getElementById('phone').value;
 
             // Create account with email and password
-            firebase.auth().createUserWithEmailAndPassword(email, password)
+            createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // Save user data to Firestore
-                    firestore.collection("users").doc(userCredential.user.uid).set({
+                    setDoc(doc(firestore, "users", userCredential.user.uid), {
                         email: email,
                         phoneNumber: phoneNumber
                     })
@@ -82,8 +82,8 @@
         // Google Sign-In
         const googleSignInButton = document.getElementById('googleSignIn');
         googleSignInButton.addEventListener('click', function() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            firebase.auth().signInWithPopup(provider)
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
                 .then((result) => {
                     const credential = result.credential;
                     const user = result.user;
