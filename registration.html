@@ -1,37 +1,57 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body dir="rtl">
-    <header>
-        <h1>تسجيل</h1>
-    </header>
-    <main>
-        <form id="registrationForm">
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <label for="password">كلمة المرور:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">تأكيد التسجيل</button>
-        </form>
-        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
-    </main>
-    <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء</p>
-    </footer>
+<!-- Add Firebase SDK script tags -->
+<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
 
-    <!-- Firebase SDK Script Tags -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  t firebaseConfig = {
+    apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+    authDomain: "omran-16f44.firebaseapp.com",
+    databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+    projectId: "omran-16f44",
+    storageBucket: "omran-16f44.appspot.com",
+    messagingSenderId: "598982209417",
+    appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
+  };
 
-    <!-- Import custom JavaScript file -->
-    <script src="script-file.js"></script>
-</body>
-</html>
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const analytics = firebase.analytics();
+  const auth = firebase.auth();
+
+  // Listen for the registration form submission event
+  const registrationForm = document.getElementById('registration_form');
+  registrationForm.addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent default form submission
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const phoneNumber = document.getElementById('phone').value;
+
+      // Use Firebase SDK to create a new account
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+          .then((userCredential) => {
+              // Handle successful registration
+              console.log("User registered successfully:", userCredential);
+              
+              // Send email verification
+              firebase.auth().currentUser.sendEmailVerification()
+                  .then(() => {
+                      // Email sent
+                      console.log("Verification email sent.");
+                      // Redirect user to a page indicating that verification email has been sent
+                      window.location.href = 'verification_sent.html'; // Change 'verification_sent.html' to the desired URL
+                  })
+                  .catch((error) => {
+                      // Handle errors
+                      console.error("Error sending verification email:", error);
+                  });
+          })
+          .catch((error) => {
+              // Handle errors
+              console.error("Error registering user:", error);
+          });
+  });
+</script>
