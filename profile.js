@@ -18,7 +18,7 @@ document.getElementById('logout').addEventListener('click', function() {
         // بنجاح
         console.log('تم تسجيل الخروج بنجاح');
         // قم بتوجيه المستخدم إلى صفحة تسجيل الدخول
-        window.location.href = 'login.html';
+        window.location.href = 'profile.html';
     }).catch(function(error) {
         // في حالة وجود خطأ، قم بطباعته في وحدة التحكم
         console.error('حدث خطأ أثناء تسجيل الخروج:', error);
