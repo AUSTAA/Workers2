@@ -79,18 +79,20 @@
         });
 
         // Google Sign-In
-        const googleSignInButton = document.getElementById('googleSignIn');
-        googleSignInButton.addEventListener('click', function() {
-            const provider = new GoogleAuthProvider();
-            signInWithPopup(auth, provider)
-                .then((result) => {
-                    const credential = result.credential;
-                    const user = result.user;
-                    console.log("Google sign-in successful:", user);
-                }).catch((error) => {
-                    console.error("Error signing in with Google:", error);
-                });
+const googleSignInButton = document.getElementById('googleSignIn');
+googleSignInButton.addEventListener('click', function() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            const credential = result.credential;
+            const user = result.user;
+            console.log("Google sign-in successful:", user);
+            window.location.href = 'verification_sent.html'; // توجيه المستخدم إلى الصفحة "verification_sent.html" بعد نجاح تسجيل الدخول بواسطة حساب Google
+        }).catch((error) => {
+            console.error("Error signing in with Google:", error);
         });
+});
+
     </script>
 </body>
 </html>
