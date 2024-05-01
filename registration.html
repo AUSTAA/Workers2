@@ -59,13 +59,21 @@
             const phoneNumber = document.getElementById('phone').value;
 
             // Send verification code to phone number
-            signInWithPhoneNumber(auth, phoneNumber)
-                .then((confirmationResult) => {
-                    const code = prompt('الرجاء إدخال رمز التحقق المرسل إلى رقم الهاتف:');
-                    return confirmationResult.confirm(code);
-                })
-                .then(() => {
-                    console.log("Phone verification successful.");
+            const phoneNumber = getPhoneNumberFromUserInput();
+const appVerifier = window.recaptchaVerifier;
+
+const auth = getAuth();
+signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+    .then((confirmationResult) => {
+      // SMS sent. Prompt user to type the code from the message, then sign the
+      // user in with confirmationResult.confirm(code).
+      window.confirmationResult = confirmationResult;
+      // ...
+    }).catch((error) => {
+      // Error; SMS not sent
+      // ...
+    });
+                
                     // Proceed with email/password registration
                     createUserWithEmailAndPassword(auth, email, password)
                         .then((userCredential) => {
