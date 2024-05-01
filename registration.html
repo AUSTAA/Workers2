@@ -26,13 +26,12 @@
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
 
-    <!-- Firebase SDK Script Tags -->
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
-    <script type="module">
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
+<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+<script type="module">
+    // Your Firebase SDK configuration
+    const firebaseConfig = {
     apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
     authDomain: "omran-16f44.firebaseapp.com",
     databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
@@ -42,22 +41,22 @@
     appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
   };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const firestore = firebase.firestore();
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const firestore = firebase.firestore();
 
-        // Handle registration form submission
-        const registrationForm = document.getElementById('registrationForm');
-        registrationForm.addEventListener('submit', function(event) {
-            // Default form submission
-        });
-
-        // Google Sign-In
-        const googleSignInButton = document.getElementById('googleSignIn');
-        googleSignInButton.addEventListener('click', function() {
-            // Google Sign-In logic
-        });
-    </script>
-</body>
-</html>
+    // Google Sign-In
+    const googleSignInButton = document.getElementById('googleSignIn');
+    googleSignInButton.addEventListener('click', function() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        auth.signInWithPopup(provider)
+            .then((result) => {
+                // Handle successful sign-in
+                console.log("Google sign-in successful:", result.user);
+            }).catch((error) => {
+                // Handle errors
+                console.error("Error signing in with Google:", error);
+            });
+    });
+</script>
