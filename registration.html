@@ -12,10 +12,8 @@
     </header>
     <main>
         <form id="registrationForm">
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
+            <label for="name">الاسم:</label>
+            <input type="text" id="name" name="name" required>
             <label for="password">كلمة المرور:</label>
             <input type="password" id="password" name="password" required>
             <button type="submit">تأكيد التسجيل</button>
@@ -29,21 +27,20 @@
     <!-- Firebase SDK Script Tags -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
+        import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
         import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js';
         import { GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
 
         // Your web app's Firebase configuration
-       const firebaseConfig = {
-  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-  authDomain: "omran-16f44.firebaseapp.com",
-  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-  projectId: "omran-16f44",
-  storageBucket: "omran-16f44.appspot.com",
-  messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
-};
-
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -54,49 +51,27 @@
         const registrationForm = document.getElementById('registrationForm');
         registrationForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
-            const email = document.getElementById('email').value;
+            const name = document.getElementById('name').value;
             const password = document.getElementById('password').value;
-            const phoneNumber = document.getElementById('phone').value;
 
-            // Send verification code to phone number
-            const phoneNumber = getPhoneNumberFromUserInput();
-const appVerifier = window.recaptchaVerifier;
-
-const auth = getAuth();
-signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-    .then((confirmationResult) => {
-      // SMS sent. Prompt user to type the code from the message, then sign the
-      // user in with confirmationResult.confirm(code).
-      window.confirmationResult = confirmationResult;
-      // ...
-    }).catch((error) => {
-      // Error; SMS not sent
-      // ...
-    });
-                
-                    // Proceed with email/password registration
-                    createUserWithEmailAndPassword(auth, email, password)
-                        .then((userCredential) => {
-                            // Save user data to Firestore
-                            setDoc(doc(firestore, "users", userCredential.user.uid), {
-                                email: email,
-                                phoneNumber: phoneNumber
-                            })
-                            .then(() => {
-                                console.log("User data saved to Firestore.");
-                                // Redirect user to verification_sent.html
-                                window.location.href = 'verification_sent.html';
-                            })
-                            .catch((error) => {
-                                console.error("Error saving user data to Firestore:", error);
-                            });
-                        })
-                        .catch((error) => {
-                            console.error("Error creating user:", error);
-                        });
+            // Create user with email and password
+            createUserWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Save additional user data to Firestore
+                    setDoc(doc(firestore, "users", userCredential.user.uid), {
+                        name: name
+                    })
+                    .then(() => {
+                        console.log("User data saved to Firestore.");
+                        // Redirect user to verification_sent.html
+                        window.location.href = 'verification_sent.html';
+                    })
+                    .catch((error) => {
+                        console.error("Error saving user data to Firestore:", error);
+                    });
                 })
                 .catch((error) => {
-                    console.error("Error verifying phone number:", error);
+                    console.error("Error creating user:", error);
                 });
         });
 
@@ -110,7 +85,8 @@ signInWithPhoneNumber(auth, phoneNumber, appVerifier)
                     const user = result.user;
                     console.log("Google sign-in successful:", user);
                     window.location.href = 'verification_sent.html'; // Redirect user to verification_sent.html after successful Google sign-in
-                }).catch((error) => {
+                })
+                .catch((error) => {
                     console.error("Error signing in with Google:", error);
                 });
         });
