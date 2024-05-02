@@ -18,7 +18,11 @@
             <input type="tel" id="phone" name="phone" required>
             <label for="password">كلمة المرور:</label>
             <input type="password" id="password" name="password" required>
-            <button id="sendVerificationCode" type="button">إرسال رمز التحقق</button>
+            <label>طريقة التحقق:</label>
+            <select id="verificationMethod">
+                <option value="phone">الهاتف</option>
+                <option value="email">البريد الإلكتروني</option>
+            </select>
             <button type="submit">تأكيد التسجيل</button>
         </form>
         <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
@@ -30,8 +34,9 @@
     <!-- Firebase SDK Script Tags -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
         import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js';
+        import { GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -56,43 +61,75 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const phoneNumber = document.getElementById('phone').value;
+            const verificationMethod = document.getElementById('verificationMethod').value;
 
-            // Proceed with email/password registration
-            createUserWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    // Save user data to Firestore
-                    setDoc(doc(firestore, "users", userCredential.user.uid), {
-                        email: email,
-                        phoneNumber: phoneNumber
+            if (verificationMethod === 'phone') {
+                // Send verification code to phone number
+                signInWithPhoneNumber(auth, phoneNumber)
+                    .then((confirmationResult) => {
+                        const code = prompt('الرجاء إدخال رمز التحقق المرسل إلى رقم الهاتف:');
+                        return confirmationResult.confirm(code);
                     })
                     .then(() => {
-                        console.log("User data saved to Firestore.");
-                        // Redirect user to verification_sent.html
-                        window.location.href = 'verification_sent.html';
+                        console.log("Phone verification successful.");
+                        createUserWithEmailAndPassword(auth, email, password)
+                            .then((userCredential) => {
+                                // Save user data to Firestore
+                                setDoc(doc(firestore, "users", userCredential.user.uid), {
+                                    email: email,
+                                    phoneNumber: phoneNumber
+                                })
+                                .then(() => {
+                                    console.log("User data saved to Firestore.");
+                                    // Redirect user to verification_sent.html
+                                    window.location.href = 'verification_sent.html';
+                                })
+                                .catch((error) => {
+                                    console.error("Error saving user data to Firestore:", error);
+                                });
+                            })
+                            .catch((error) => {
+                                console.error("Error creating user:", error);
+                            });
                     })
                     .catch((error) => {
-                        console.error("Error saving user data to Firestore:", error);
+                        console.error("Error verifying phone number:", error);
                     });
-                })
-                .catch((error) => {
-                    console.error("Error creating user:", error);
-                });
+            } else if (verificationMethod === 'email') {
+                createUserWithEmailAndPassword(auth, email, password)
+                    .then((userCredential) => {
+                        // Save user data to Firestore
+                        setDoc(doc(firestore, "users", userCredential.user.uid), {
+                            email: email,
+                            phoneNumber: ""
+                        })
+                        .then(() => {
+                            console.log("User data saved to Firestore.");
+                            // Redirect user to verification_sent.html
+                            window.location.href = 'verification_sent.html';
+                        })
+                        .catch((error) => {
+                            console.error("Error saving user data to Firestore:", error);
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Error creating user:", error);
+                    });
+            }
         });
 
-        // Send verification code to phone number
-        const sendVerificationCodeButton = document.getElementById('sendVerificationCode');
-        sendVerificationCodeButton.addEventListener('click', function() {
-            const phoneNumber = document.getElementById('phone').value;
-            signInWithPhoneNumber(auth, phoneNumber)
-                .then((confirmationResult) => {
-                    const code = prompt('الرجاء إدخال رمز التحقق المرسل إلى رقم الهاتف:');
-                    return confirmationResult.confirm(code);
-                })
-                .then(() => {
-                    console.log("Phone verification successful.");
-                })
-                .catch((error) => {
-                    console.error("Error verifying phone number:", error);
+        // Google Sign-In
+        const googleSignInButton = document.getElementById('googleSignIn');
+        googleSignInButton.addEventListener('click', function() {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const credential = result.credential;
+                    const user = result.user;
+                    console.log("Google sign-in successful:", user);
+                    window.location.href = 'verification_sent.html'; // Redirect user to verification_sent.html after successful Google sign-in
+                }).catch((error) => {
+                    console.error("Error signing in with Google:", error);
                 });
         });
     </script>
