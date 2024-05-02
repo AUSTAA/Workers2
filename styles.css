@@ -8,7 +8,7 @@ header {
     background-color: #333;
     color: #fff;
     padding: 20px;
-    text-align: center; /* تمت إضافة هذا السطر لتوسيط العنوان */
+    text-align: center;
 }
 
 nav ul {
@@ -28,17 +28,21 @@ nav ul li a {
 
 main {
     padding: 20px;
-    text-align: center; /* تمت إضافة هذا السطر لتوسيط المحتوى */
+    text-align: center;
 }
 
 section {
     margin-bottom: 30px;
 }
 
-input[type="text"], input[type="tel"], input[type="password"] {
+input[type="text"],
+input[type="tel"],
+input[type="password"] {
     padding: 10px;
-    width: 300px;
-    margin-bottom: 10px; /* تمت إضافة هذا السطر لتباعد الحقول */
+    width: 80%;
+    max-width: 300px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
 }
 
 button {
