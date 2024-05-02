@@ -63,4 +63,4 @@ registrationForm.addEventListener('submit', function(event) {
             });
     } else if (verificationMethod === 'email') {
         createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential)
+            then((userCredential).
