@@ -1,7 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js';
-import { getAuth, createUserWithEmailAndPassword, signInWithPopup, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
 import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js';
-import { GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -82,19 +81,4 @@ registrationForm.addEventListener('submit', function(event) {
                 console.error("Error creating user:", error);
             });
     }
-});
-
-// Google Sign-In
-const googleSignInButton = document.getElementById('googleSignIn');
-googleSignInButton.addEventListener('click', function() {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-        .then((result) => {
-            const credential = result.credential;
-            const user = result.user;
-            console.log("Google sign-in successful:", user);
-            window.location.href = 'verification_sent.html'; // Redirect user to verification_sent.html after successful Google sign-in
-        }).catch((error) => {
-            console.error("Error signing in with Google:", error);
-        });
 });
