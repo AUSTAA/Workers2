@@ -37,7 +37,9 @@ section {
 
 input[type="text"],
 input[type="tel"],
-input[type="password"] {
+input[type="password"],
+input[type="email"],
+input[type="file"] {
     padding: 10px;
     width: 80%;
     max-width: 300px;
