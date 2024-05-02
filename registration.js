@@ -63,4 +63,38 @@ registrationForm.addEventListener('submit', function(event) {
             });
     } else if (verificationMethod === 'email') {
         createUserWithEmailAndPassword(auth, email, password)
-            then((userCredential).
+            .then((userCredential) => {
+                // Save user data to Firestore
+                setDoc(doc(firestore, "users", userCredential.user.uid), {
+                    username: username,
+                    email: email
+                })
+                .then(() => {
+                    console.log("User data saved to Firestore.");
+                    // Redirect user to verification_sent.html
+                    window.location.href = 'verification_sent.html';
+                })
+                .catch((error) => {
+                    console.error("Error saving user data to Firestore:", error);
+                });
+            })
+            .catch((error) => {
+                console.error("Error creating user:", error);
+            });
+    }
+});
+
+// Google Sign-In
+const googleSignInButton = document.getElementById('googleSignIn');
+googleSignInButton.addEventListener('click', function() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            const credential = result.credential;
+            const user = result.user;
+            console.log("Google sign-in successful:", user);
+            window.location.href = 'verification_sent.html'; // Redirect user to verification_sent.html after successful Google sign-in
+        }).catch((error) => {
+            console.error("Error signing in with Google:", error);
+        });
+});
