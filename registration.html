@@ -11,7 +11,7 @@
         <h1>تسجيل</h1>
     </header>
     <main>
-        <form id="registrationForm" onsubmit="handleRegistration(event)">
+        <form id="registrationForm">
             <label for="username">الاسم:</label>
             <input type="text" id="username" name="username" required>
             <label for="email">البريد الإلكتروني:</label>
@@ -61,24 +61,25 @@
             auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Save user data to Firestore
-                    firestore.collection("users").doc(userCredential.user.uid).set({
+                    return firestore.collection("users").doc(userCredential.user.uid).set({
                         username: username,
                         email: email,
                         phone: phone
-                    })
-                    .then(() => {
-                        console.log("User data saved to Firestore.");
-                        // Redirect user to their profile page with query parameter
-                        window.location.href = `profile.html?userId=${userCredential.user.uid}`;
-                    })
-                    .catch((error) => {
-                        console.error("Error saving user data to Firestore:", error);
                     });
+                })
+                .then(() => {
+                    console.log("User data saved to Firestore.");
+                    // Redirect user to their profile page with query parameter
+                    window.location.href = `profile.html?userId=${auth.currentUser.uid}`;
                 })
                 .catch((error) => {
                     console.error("Error creating user:", error);
                 });
         }
+
+        // Event listener for registration form submission
+        const registrationForm = document.getElementById('registrationForm');
+        registrationForm.addEventListener('submit', handleRegistration);
 
         // Google Sign-In
         const googleSignInButton = document.getElementById('googleSignIn');
