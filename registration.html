@@ -11,7 +11,7 @@
         <h1>تسجيل</h1>
     </header>
     <main>
-        <form id="registrationForm">
+        <form id="registrationForm" onsubmit="handleRegistration(event)">
             <label for="username">الاسم:</label>
             <input type="text" id="username" name="username" required>
             <label for="email">البريد الإلكتروني:</label>
@@ -29,11 +29,10 @@
     </footer>
 
     <!-- Firebase SDK Script Tags -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js';
-        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
-        import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js';
-
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore.js"></script>
+    <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
   apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
@@ -44,15 +43,14 @@
   messagingSenderId: "598982209417",
   appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
 };
-
+        
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const firestore = getFirestore(app);
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const firestore = firebase.firestore();
 
-        // Handle registration form submission
-        const registrationForm = document.getElementById('registrationForm');
-        registrationForm.addEventListener('submit', function(event) {
+        // Function to handle registration form submission
+        function handleRegistration(event) {
             event.preventDefault(); // Prevent default form submission
             const username = document.getElementById('username').value;
             const email = document.getElementById('email').value;
@@ -60,18 +58,18 @@
             const password = document.getElementById('password').value;
 
             // Register user with email and password
-            createUserWithEmailAndPassword(auth, email, password)
+            auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     // Save user data to Firestore
-                    setDoc(doc(firestore, "users", userCredential.user.uid), {
+                    firestore.collection("users").doc(userCredential.user.uid).set({
                         username: username,
                         email: email,
                         phone: phone
                     })
                     .then(() => {
                         console.log("User data saved to Firestore.");
-                        // Redirect user to their profile page
-                        window.location.href = 'profile.html';
+                        // Redirect user to their profile page with query parameter
+                        window.location.href = `profile.html?userId=${userCredential.user.uid}`;
                     })
                     .catch((error) => {
                         console.error("Error saving user data to Firestore:", error);
@@ -80,18 +78,19 @@
                 .catch((error) => {
                     console.error("Error creating user:", error);
                 });
-        });
+        }
 
         // Google Sign-In
         const googleSignInButton = document.getElementById('googleSignIn');
         googleSignInButton.addEventListener('click', function() {
-            const provider = new GoogleAuthProvider();
-            signInWithPopup(auth, provider)
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebase.auth().signInWithPopup(provider)
                 .then((result) => {
                     const credential = result.credential;
                     const user = result.user;
                     console.log("Google sign-in successful:", user);
-                    window.location.href = 'profile.html'; // Redirect user to their profile page after successful Google sign-in
+                    // Redirect user to their profile page with query parameter
+                    window.location.href = `profile.html?userId=${user.uid}`;
                 }).catch((error) => {
                     console.error("Error signing in with Google:", error);
                 });
