@@ -1,38 +1,111 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body dir="rtl">
-    <header>
-        <h1>تسجيل</h1>
-    </header>
-    <main>
-        <form id="registrationForm">
-            <label for="username">اسم المستخدم:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="password">كلمة المرور:</label>
-            <input type="password" id="password" name="password" required>
-            <label>طريقة التحقق:</label>
-            <select id="verificationMethod">
-                <option value="phone">الهاتف</option>
-                <option value="email">البريد الإلكتروني</option>
-            </select>
-            <button type="submit">تأكيد التسجيل</button>
-        </form>
-        <!-- زر تسجيل الدخول باستخدام Google -->
-        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
-    </main>
-    <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء</p>
-    </footer>
-    <script src="registration.js" type="module"></script>
-</body>
-</html>
+‏ <!DOCTYPE html>
+‏<html lang="ar">
+‏<head>
+‏    <meta charset="UTF-8">
+‏    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+‏    <title>تسجيل</title>
+‏    <link rel="stylesheet" href="styles.css">
+‏</head>
+‏<body dir="rtl">
+‏    <header>
+‏        <h1>تسجيل</h1>
+‏    </header>
+‏    <main>
+‏        <form id="registrationForm">
+‏            <label for="email">البريد الإلكتروني:</label>
+‏            <input type="email" id="email" name="email" required>
+‏            <label for="phone">رقم الهاتف:</label>
+‏            <input type="tel" id="phone" name="phone" required>
+‏            <label for="password">كلمة المرور:</label>
+‏            <input type="password" id="password" name="password" required>
+‏            <button type="submit">تأكيد التسجيل</button>
+‏        </form>
+‏        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
+‏    </main>
+‏    <footer>
+‏        <p>&copy; ٢٠٢٤ خدمات البناء</p>
+‏    </footer>
+
+‏    <!-- Firebase SDK Script Tags -->
+‏    <script type="module">
+‏        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js';
+‏        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, signInWithPhoneNumber } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
+‏        import { getFirestore, doc, setDoc } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js';
+‏        import { GoogleAuthProvider } from 'https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js';
+
+‏        // Your web app's Firebase configuration
+‏       const firebaseConfig = {
+‏  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+‏  authDomain: "omran-16f44.firebaseapp.com",
+‏  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+‏  projectId: "omran-16f44",
+‏  storageBucket: "omran-16f44.appspot.com",
+‏  messagingSenderId: "598982209417",
+‏  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
+};
+
+
+‏        // Initialize Firebase
+‏        const app = initializeApp(firebaseConfig);
+‏        const auth = getAuth(app);
+‏        const firestore = getFirestore(app);
+
+‏        // Handle registration form submission
+‏        const registrationForm = document.getElementById('registrationForm');
+‏        registrationForm.addEventListener('submit', function(event) {
+‏            event.preventDefault(); // Prevent default form submission
+‏            const email = document.getElementById('email').value;
+‏            const password = document.getElementById('password').value;
+‏            const phoneNumber = document.getElementById('phone').value;
+
+‏            // Send verification code to phone number
+‏            signInWithPhoneNumber(auth, phoneNumber)
+‏                .then((confirmationResult) => {
+‏                    const code = prompt('الرجاء إدخال رمز التحقق المرسل إلى رقم الهاتف:');
+‏                    return confirmationResult.confirm(code);
+                })
+‏                .then(() => {
+‏                    console.log("Phone verification successful.");
+‏                    // Proceed with email/password registration
+‏                    createUserWithEmailAndPassword(auth, email, password)
+‏                        .then((userCredential) => {
+‏                            // Save user data to Firestore
+‏                            setDoc(doc(firestore, "users", userCredential.user.uid), {
+‏                                email: email,
+‏                                phoneNumber: phoneNumber
+                            })
+‏                            .then(() => {
+‏                                console.log("User data saved to Firestore.");
+‏                                // Redirect user to verification_sent.html
+‏                                window.location.href = 'verification_sent.html';
+                            })
+‏                            .catch((error) => {
+‏                                console.error("Error saving user data to Firestore:", error);
+                            });
+                        })
+‏                        .catch((error) => {
+‏                            console.error("Error creating user:", error);
+                        });
+                })
+‏                .catch((error) => {
+‏                    console.error("Error verifying phone number:", error);
+                });
+        });
+
+‏        // Google Sign-In
+‏        const googleSignInButton = document.getElementById('googleSignIn');
+‏        googleSignInButton.addEventListener('click', function() {
+‏            const provider = new GoogleAuthProvider();
+‏            signInWithPopup(auth, provider)
+‏                .then((result) => {
+‏                    const credential = result.credential;
+‏                    const user = result.user;
+‏                    console.log("Google sign-in successful:", user);
+‏                    window.location.href = 'verification_sent.html'; // Redirect user to verification_sent.html after successful Google sign-in
+‏                }).catch((error) => {
+‏                    console.error("Error signing in with Google:", error);
+                });
+        });
+‏    </script>
+‏</body>
+‏</html>
