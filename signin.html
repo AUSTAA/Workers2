@@ -19,9 +19,9 @@
     </div>
 
     <!-- Firebase SDK Script Tags -->
-<script type="text/javascript" src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-<script type="text/javascript" src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
-
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+    <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
     apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
@@ -33,17 +33,19 @@
     appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
     measurementId: "G-PGZJ0T555G"
   };
+        };
 
         // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
+        const app = firebase.initializeApp(firebaseConfig);
+        const firebaseAuth = firebase.auth();
 
         // Phone authentication
         function signInWithPhoneNumber() {
             const phoneNumber = document.getElementById('phoneNumber').value;
             const phoneNumberWithCountryCode = '+966' + phoneNumber; // Example: Saudi Arabia country code
-            const appVerifier = new firebaseAuth.default.RecaptchaVerifier('phoneAuth');
+            const appVerifier = new firebase.auth.RecaptchaVerifier('phoneAuth');
 
-            firebaseAuth.auth().signInWithPhoneNumber(phoneNumberWithCountryCode, appVerifier)
+            firebaseAuth.signInWithPhoneNumber(phoneNumberWithCountryCode, appVerifier)
                 .then((confirmationResult) => {
                     const code = prompt('أدخل رمز التحقق الذي تلقيته عبر الرسالة:');
                     return confirmationResult.confirm(code);
@@ -59,8 +61,8 @@
 
         // Google authentication
         function signInWithGoogle() {
-            const provider = new firebaseAuth.default.GoogleAuthProvider();
-            firebaseAuth.auth().signInWithPopup(provider)
+            const provider = new firebase.auth.GoogleAuthProvider();
+            firebaseAuth.signInWithPopup(provider)
                 .then((result) => {
                     console.log('تم تسجيل الدخول بنجاح باستخدام Google:', result);
                     window.location.href = 'index.html'; // Redirect to index.html after successful login
