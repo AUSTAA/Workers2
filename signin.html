@@ -52,6 +52,7 @@
                 })
                 .then((result) => {
                     console.log('تم تسجيل الدخول بنجاح:', result);
+                    window.location.href = 'index.html'; // Redirect to index.html after successful login
                 })
                 .catch((error) => {
                     console.error('خطأ في تسجيل الدخول:', error);
@@ -64,6 +65,7 @@
             auth.signInWithPopup(provider)
                 .then((result) => {
                     console.log('تم تسجيل الدخول بنجاح باستخدام Google:', result);
+                    window.location.href = 'index.html'; // Redirect to index.html after successful login
                 })
                 .catch((error) => {
                     console.error('خطأ في تسجيل الدخول باستخدام Google:', error);
