@@ -43,7 +43,7 @@
     <script type="module">
         // Import the necessary modules from Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { getAuth, currentUser, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+        import { getAuth, updateProfile } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
         import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
@@ -63,7 +63,7 @@
         const storage = getStorage(app);
 
         // Set user's profile data
-        const currentUserData = currentUser(auth);
+    const currentUserData = getAuth().currentUser;
         document.getElementById('name').value = currentUserData.displayName || '';
         document.getElementById('email').value = currentUserData.email || '';
 
