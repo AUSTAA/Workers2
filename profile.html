@@ -13,7 +13,7 @@
     <main>
         <section>
             <h2>الصورة الشخصية</h2>
-            <img src="صورتك الشخصية" alt="صورتك الشخصية" id="profileImage">
+            <img src="" alt="صورتك الشخصية" id="profileImage">
             <input type="file" accept="image/*" id="imageUpload">
         </section>
         <section>
@@ -48,14 +48,15 @@
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-storage.js";
 
         // Your web app's Firebase configuration
-       const firebaseConfig = {
-    apiKey: "AIzaSyCPXusJXNKWwMH87FCHZJKrhVhr54W8m6Q",
-    authDomain: "omran94-34afd.firebaseapp.com",
-    projectId: "omran94-34afd",
-    storageBucket: "omran94-34afd.appspot.com",
-    messagingSenderId: "832221132671",
-    appId: "1:832221132671:web:96846d7e3540e6ca988c4a"
-  };
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -63,7 +64,7 @@
         const storage = getStorage(app);
 
         // Set user's profile data
-    const currentUserData = getAuth().currentUser;
+        const currentUserData = getAuth().currentUser;
         document.getElementById('name').value = currentUserData.displayName || '';
         document.getElementById('email').value = currentUserData.email || '';
 
@@ -111,6 +112,20 @@
                 // An error happened
                 console.error("Error signing out:", error);
             });
+        });
+
+        // Display profile image when user selects a file
+        const imageUpload = document.getElementById('imageUpload');
+        const profileImage = document.getElementById('profileImage');
+        imageUpload.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    profileImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
         });
     </script>
 </body>
