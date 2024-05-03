@@ -34,6 +34,7 @@
             <button id="saveChanges">حفظ التغييرات</button>
         </section>
         <a href="#" id="logout">تسجيل الخروج</a>
+        <button id="login" style="display: none;">تسجيل الدخول</button> <!-- زر تسجيل الدخول -->
     </main>
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
@@ -126,6 +127,22 @@
                 };
                 reader.readAsDataURL(file);
             }
+        });
+
+        // Listen for authentication state changes
+        auth.onAuthStateChanged((user) => {
+            const loginButton = document.getElementById('login');
+            if (!user) {
+                // User is not signed in, show login button
+                loginButton.style.display = 'block';
+            }
+        });
+
+        // Handle login button click event
+        document.getElementById('login').addEventListener('click', () => {
+            // Implement your login logic here
+            // For example, you can redirect the user to a login page or display a login modal
+            // You can use Firebase signInWithPopup or signInWithRedirect methods to handle login
         });
     </script>
 </body>
