@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>تسجيل الدخول</h1>
+    <div id="phoneAuth">
+        <h2>تسجيل الدخول برقم الهاتف</h2>
+        <input type="text" id="phoneNumber" placeholder="ادخل رقم هاتفك">
+        <button onclick="signInWithPhoneNumber()">تسجيل الدخول برقم الهاتف</button>
+    </div>
+    <div id="googleAuth">
+        <h2>تسجيل الدخول باستخدام حساب Google</h2>
+        <button onclick="signInWithGoogle()">تسجيل الدخول باستخدام Google</button>
+    </div>
+
+    <!-- Firebase SDK Script Tags -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const auth = firebase.auth();
+
+        // Phone authentication
+        function signInWithPhoneNumber() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const phoneNumberWithCountryCode = '+966' + phoneNumber; // Example: Saudi Arabia country code
+            const appVerifier = new firebase.auth.RecaptchaVerifier('phoneAuth');
+
+            auth.signInWithPhoneNumber(phoneNumberWithCountryCode, appVerifier)
+                .then((confirmationResult) => {
+                    const code = prompt('أدخل رمز التحقق الذي تلقيته عبر الرسالة:');
+                    return confirmationResult.confirm(code);
+                })
+                .then((result) => {
+                    console.log('تم تسجيل الدخول بنجاح:', result);
+                })
+                .catch((error) => {
+                    console.error('خطأ في تسجيل الدخول:', error);
+                });
+        }
+
+        // Google authentication
+        function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    console.log('تم تسجيل الدخول بنجاح باستخدام Google:', result);
+                })
+                .catch((error) => {
+                    console.error('خطأ في تسجيل الدخول باستخدام Google:', error);
+                });
+        }
+    </script>
+</body>
+</html>
