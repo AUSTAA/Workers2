@@ -4,14 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up Confirmation</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
 </head>
 <body>
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Import the functions you need from the SDKs you need
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+  <!-- FirebaseUI Auth Container -->
+  <div id="firebaseui-auth-container"></div>
 
+  <!-- Firebase SDK Configuration -->
+  <script>
     // Your web app's Firebase configuration
     const firebaseConfig = {
     apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
@@ -25,33 +29,23 @@
   };
 
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-    // Sign Up Function
-    const signUp = (email, password) => {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed up successfully
-          const user = userCredential.user;
-          console.log("User signed up:", user);
-          // Redirect to index.html after successful sign up
-          window.location.href = "index.html";
-        })
-        .catch((error) => {
-          // Handle errors
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error("Sign up error:", errorMessage);
-        });
+    // Initialize the FirebaseUI Widget using Firebase
+    var ui = new firebaseui.auth.AuthUI(auth);
+
+    // FirebaseUI configuration
+    const uiConfig = {
+      signInSuccessUrl: 'index.html',
+      signInOptions: [
+        firebase.auth.EmailAuthProvider.PROVIDER_ID
+      ],
+      // Other config options...
     };
-  </script>
 
-  <!-- Sign Up Form -->
-  <form id="signUpForm" onsubmit="event.preventDefault(); signUp(this.email.value, this.password.value);">
-    <input type="email" name="email" placeholder="Email" required><br>
-    <input type="password" name="password" placeholder="Password" required><br>
-    <button type="submit">Sign Up</button>
-  </form>
+    // Start the FirebaseUI Auth UI
+    ui.start('#firebaseui-auth-container', uiConfig);
+  </script>
 </body>
 </html>
