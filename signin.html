@@ -9,11 +9,15 @@
 </head>
 <body>
   <!-- Sign In Form -->
-  <form id="signInForm" onsubmit="event.preventDefault(); signIn(this.email.value, this.password.value);">
+
     <input type="email" name="email" placeholder="Email" required><br>
     <input type="password" name="password" placeholder="Password" required><br>
     <button type="submit">Sign In</button>
   </form>
-    <script src="path/to/your/signin.js"></script>
+<!-- FirebaseUI Container -->
+<div id="firebaseui-auth-container"></div>
+
+<!-- Import the JavaScript file -->
+<script src="path/to/your/signin.js"></script>
 </body>
 </html>
