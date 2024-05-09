@@ -1,4 +1,3 @@
-<script>
     const firebaseConfig = {
   apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
   authDomain: "omran-16f44.firebaseapp.com",
@@ -12,7 +11,7 @@
     const firebaseApp = firebase.initializeApp(firebaseConfig);
     const db = firebaseApp.firestore();
     const auth = firebaseApp.auth();
-
+    const storageRef = firebaseApp.storage().ref(); 
     // Handle registration form submission
     const registrationForm = document.getElementById('registrationForm');
     registrationForm.addEventListener('submit', function(event) {
