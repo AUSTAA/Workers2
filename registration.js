@@ -6,13 +6,10 @@ const firebaseConfig = {
   storageBucket: "omran-16f44.appspot.com",
   messagingSenderId: "598982209417",
   appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-  measurementId: "G-PGZJ0T555G"
-};
-
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+  measurementId: "G-
+    });
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
-const storageRef = firebase.storage().ref();
 
 // Handle registration form submission
 const registrationForm = document.getElementById('registrationForm');
