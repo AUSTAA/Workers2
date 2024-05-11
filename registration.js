@@ -8,8 +8,10 @@ const firebaseConfig = {
     appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
     measurementId: "G-PGZJ0T555G"
   };
+const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
+const storageRef = firebaseApp.storage().ref();
 
 // Handle registration form submission
 const registrationForm = document.getElementById('registrationForm');
