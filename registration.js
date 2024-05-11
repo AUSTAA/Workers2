@@ -9,9 +9,9 @@ const firebaseConfig = {
     measurementId: "G-PGZJ0T555G"
   };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
-const db = firebaseApp.firestore();
-const auth = firebaseApp.auth();
-const storageRef = firebaseApp.storage().ref();
+   const db = firebaseApp.firestore();
+   const auth = firebaseApp.auth();
+   const storageRef = firebaseApp.storage().ref();
 
 // Handle registration form submission
 const registrationForm = document.getElementById('registrationForm');
