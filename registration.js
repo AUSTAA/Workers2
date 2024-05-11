@@ -1,19 +1,18 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-  authDomain: "omran-16f44.firebaseapp.com",
-  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-  projectId: "omran-16f44",
-  storageBucket: "omran-16f44.appspot.com",
-  messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-  measurementId: "G-PGZJ0T555G"
+    apiKey: "Your-API-Key",
+    authDomain: "Your-Auth-Domain",
+    databaseURL: "Your-Database-URL",
+    projectId: "Your-Project-ID",
+    storageBucket: "Your-Storage-Bucket",
+    messagingSenderId: "Your-Messaging-Sender-ID",
+    appId: "Your-App-ID",
+    measurementId: "Your-Measurement-ID"
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
-const storage = firebase.storage();
+const storageRef = firebase.storage().ref();
 
 // Handle registration form submission
 const registrationForm = document.getElementById('registrationForm');
