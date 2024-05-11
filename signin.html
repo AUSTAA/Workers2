@@ -37,16 +37,8 @@
     const uiConfig = {
       signInSuccessUrl: 'profile.html', // Redirect URL after sign in
       signInOptions: [
-        // Phone and password sign-in
-        {
-          provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-          recaptchaParameters: {
-            type: 'image', // 'audio'
-            size: 'invisible', // 'invisible' or 'normal' (visible)
-            badge: 'bottomleft' //' bottomleft' or 'inline' applies to invisible.
-          },
-          defaultCountry: 'EG' // Default country code
-        },
+        // Phone sign-in only
+        firebase.auth.PhoneAuthProvider.PROVIDER_ID,
         // Google sign-in
         firebase.auth.GoogleAuthProvider.PROVIDER_ID
       ],
