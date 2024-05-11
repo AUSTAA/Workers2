@@ -1,38 +1,35 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
 </head>
 <body dir="rtl">
-    <header>
-        <h1>تسجيل</h1>
-    </header>
-    <main>
-        <form id="registrationForm">
-            <label for="username">الاسم:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <label for="password">كلمة المرور:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">تأكيد التسجيل</button>
-        </form>
-        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
-        <a href="signin.html">تسجيل الدخول</a>
-    </main>
-    <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء</p>
-    </footer>
-    <!-- Firebase SDK Script Tag -->
-    <script src="registration.js" defer></script>
+    <header>
+        <h1>تسجيل</h1>
+    </header>
+    <main>
+        <form id="registrationForm">
+            <label for="username">الاسم:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="phone">رقم الهاتف:</label>
+            <input type="tel" id="phone" name="phone" required>
+            <label for="password">كلمة المرور:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">تأكيد التسجيل</button>
+        </form>
+        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
+        <a href="signin.html">تسجيل الدخول</a>
+    </main>
+    <footer>
+        <p>&copy; ٢٠٢٤ خدمات البناء</p>
+    </footer>
+    <!-- Firebase SDK Script Tag -->
+    <script src="registration.js" defer></script>
 </body>
 </html>
