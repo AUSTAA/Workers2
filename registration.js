@@ -13,7 +13,7 @@ const firebaseConfig = {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
-const storageRef = firebaseApp.storage().ref();
+const storageRef = firebase.storage().ref(); 
 
 // Handle registration form submission
 const registrationForm = document.getElementById('registrationForm');
