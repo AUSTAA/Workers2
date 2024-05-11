@@ -1,4 +1,5 @@
-    const firebaseConfig = {
+<script>
+ const firebaseConfig = {
   apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
   authDomain: "omran-16f44.firebaseapp.com",
   databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
