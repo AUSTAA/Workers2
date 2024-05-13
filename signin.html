@@ -1,73 +1,67 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Firebase JavaScript -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <!-- FirebaseUI CSS -->
+    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
 </head>
 <body dir="rtl">
-    <header>
-        <h1>تسجيل الدخول</h1>
-    </header>
-    <main>
-        <form id="loginForm">
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <button id="signInButton">تسجيل الدخول</button>
-        </form>
-        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
-        <a href="signup.html">إنشاء حساب جديد</a>
-    </main>
-    <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء</p>
-    </footer>
-    <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID",
-            measurementId: "YOUR_MEASUREMENT_ID"
-        };
+    <header>
+        <h1>تسجيل الدخول</h1>
+    </header>
+    <main>
+        <!-- FirebaseUI Container -->
+        <div id="firebaseui-auth-container"></div>
+    </main>
+    <footer>
+        <p>&copy; ٢٠٢٤ خدمات البناء</p>
+    </footer>
+    <!-- Firebase JavaScript -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+        import { auth, PhoneAuthProvider, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+        import { AuthUI, signInSuccessUrl } from "https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js";
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+      apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+      authDomain: "omran-16f44.firebaseapp.com",
+      projectId: "omran-16f44",
+      appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+    };
 
-        // إضافة RecaptchaVerifier
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signInButton', {
-            'size': 'invisible'
-        });
+        // Initialize Firebase
+        const firebaseApp = initializeApp(firebaseConfig);
 
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // منع إرسال النموذج بشكل افتراضي
-            var phoneNumber = document.getElementById("phone").value;
+        // Initialize the FirebaseUI Widget using Firebase
+        const ui = new AuthUI(auth());
 
-            // إرسال رمز التحقق
-            var appVerifier = window.recaptchaVerifier;
-            firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-                .then((confirmationResult) => {
-                    // يتم توجيه المستخدم إلى صفحة إدخال رمز التحقق
-                    var verificationCode = prompt('الرجاء إدخال رمز التحقق المرسل إلى هاتفك:');
-                    return confirmationResult.confirm(verificationCode);
-                })
-                .then((result) => {
-                    // تم تسجيل الدخول بنجاح
-                    window.location.href = "profile.html"; // توجيه المستخدم إلى صفحة الصفحة الشخصية
-                })
-                .catch((error) => {
-                    // إذا حدث خطأ أثناء تسجيل الدخول، يمكنك تنفيذ الإجراءات المناسبة هنا واضف له سكريبت ليعمل
-                    console.error("Error signing in:", error);
-                });
-        });
-    </script>
+        // FirebaseUI configurations
+        const uiConfig = {
+            signInSuccessUrl: 'profile.html', // Redirect URL after sign in
+            signInOptions: [
+                // Phone sign-in
+                {
+                    provider: PhoneAuthProvider.PROVIDER_ID,
+                    recaptchaParameters: {
+                        type: 'image', // 'audio' or 'image' or 'none'
+                        size: 'invisible', // 'invisible' or 'compact' or 'normal'
+                        badge: 'bottomleft' //' bottomright' or 'inline' applies to invisible.
+                    },
+                    defaultCountry: 'US', // Set default country to the United States (+1).
+                },
+                // Google sign-in
+                GoogleAuthProvider.PROVIDER_ID
+            ],
+            // Terms of service URL
+            tosUrl: '<your-tos-url>',
+        };
+
+        // Start the FirebaseUI auth widget
+        ui.start('#firebaseui-auth-container', uiConfig);
+    </script>
 </body>
 </html>
