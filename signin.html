@@ -50,7 +50,7 @@
             var phoneNumber = document.getElementById("phone").value;
             var password = document.getElementById("password").value;
 
-            firebase.auth().signInWithPhoneNumber(phoneNumber, password)
+            firebase.auth().signInWithEmailAndPassword(phoneNumber, password)
                 .then((userCredential) => {
                     // تم تسجيل الدخول بنجاح
                     window.location.href = "profile.html"; // توجيه المستخدم إلى صفحة الصفحة الشخصية
