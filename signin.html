@@ -1,74 +1,73 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Firebase JavaScript -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase JavaScript -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
 </head>
 <body dir="rtl">
-    <header>
-        <h1>تسجيل الدخول</h1>
-    </header>
-    <main>
-        <form id="loginForm">
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <button type="submit">تسجيل الدخول</button>
-        </form>
-        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
-        <a href="signup.html">إنشاء حساب جديد</a>
-    </main>
-    <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء</p>
-    </footer>
-    <script>
-        // Firebase configuration
-       const firebaseConfig = {
-  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-  authDomain: "omran-16f44.firebaseapp.com",
-  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-  projectId: "omran-16f44",
-  storageBucket: "omran-16f44.appspot.com",
-  messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-  measurementId: "G-PGZJ0T555G"
-};
+    <header>
+        <h1>تسجيل الدخول</h1>
+    </header>
+    <main>
+        <form id="loginForm">
+            <label for="phone">رقم الهاتف:</label>
+            <input type="tel" id="phone" name="phone" required>
+            <button id="signInButton">تسجيل الدخول</button>
+        </form>
+        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
+        <a href="signup.html">إنشاء حساب جديد</a>
+    </main>
+    <footer>
+        <p>&copy; ٢٠٢٤ خدمات البناء</p>
+    </footer>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
+        };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
 
-        // إضافة RecaptchaVerifier
-        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('loginForm', {
-            'size': 'invisible'
-        });
+        // إضافة RecaptchaVerifier
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('signInButton', {
+            'size': 'invisible'
+        });
 
-        document.getElementById("loginForm").addEventListener("submit", function(event) {
-            event.preventDefault(); // منع إرسال النموذج بشكل افتراضي
-            var phoneNumber = document.getElementById("phone").value;
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // منع إرسال النموذج بشكل افتراضي
+            var phoneNumber = document.getElementById("phone").value;
 
-            // إرسال رمز التحقق
-            var appVerifier = window.recaptchaVerifier;
-            firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-                .then((confirmationResult) => {
-                    // يتم توجيه المستخدم إلى صفحة إدخال رمز التحقق
-                    var verificationCode = prompt('Please enter the verification code sent to your mobile phone:');
-                    return confirmationResult.confirm(verificationCode);
-                })
-                .then((result) => {
-                    // تم تسجيل الدخول بنجاح
-                    window.location.href = "profile.html"; // توجيه المستخدم إلى صفحة الصفحة الشخصية
-                })
-                .catch((error) => {
-                    // إذا حدث خطأ أثناء تسجيل الدخول، يمكنك تنفيذ الإجراءات المناسبة هنا واضف له سكريبت ليعمل
-                    console.error("Error signing in:", error);
-                });
-        });
-    </script>
+            // إرسال رمز التحقق
+            var appVerifier = window.recaptchaVerifier;
+            firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+                .then((confirmationResult) => {
+                    // يتم توجيه المستخدم إلى صفحة إدخال رمز التحقق
+                    var verificationCode = prompt('الرجاء إدخال رمز التحقق المرسل إلى هاتفك:');
+                    return confirmationResult.confirm(verificationCode);
+                })
+                .then((result) => {
+                    // تم تسجيل الدخول بنجاح
+                    window.location.href = "profile.html"; // توجيه المستخدم إلى صفحة الصفحة الشخصية
+                })
+                .catch((error) => {
+                    // إذا حدث خطأ أثناء تسجيل الدخول، يمكنك تنفيذ الإجراءات المناسبة هنا واضف له سكريبت ليعمل
+                    console.error("Error signing in:", error);
+                });
+        });
+    </script>
 </body>
 </html>
