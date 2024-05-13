@@ -19,8 +19,6 @@
         <form id="loginForm">
             <label for="phone">رقم الهاتف:</label>
             <input type="tel" id="phone" name="phone" required>
-            <label for="password">كلمة المرور:</label>
-            <input type="password" id="password" name="password" required>
             <button type="submit">تسجيل الدخول</button>
         </form>
         <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
@@ -31,7 +29,7 @@
     </footer>
     <script>
         // Firebase configuration
-        const firebaseConfig = {
+       const firebaseConfig = {
   apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
   authDomain: "omran-16f44.firebaseapp.com",
   databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
@@ -41,21 +39,28 @@
   appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
   measurementId: "G-PGZJ0T555G"
 };
-        
+
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
-        
+
+        // إضافة RecaptchaVerifier
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('loginForm', {
+            'size': 'invisible'
+        });
+
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault(); // منع إرسال النموذج بشكل افتراضي
             var phoneNumber = document.getElementById("phone").value;
-            var password = document.getElementById("password").value;
 
-            // إنشاء إعتماد برقم الهاتف وكلمة المرور
-            var credential = firebase.auth.PhoneAuthProvider.credential(phoneNumber, password);
-
-            // تسجيل الدخول باستخدام الإعتماد
-            firebase.auth().signInWithCredential(credential)
-                .then((userCredential) => {
+            // إرسال رمز التحقق
+            var appVerifier = window.recaptchaVerifier;
+            firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+                .then((confirmationResult) => {
+                    // يتم توجيه المستخدم إلى صفحة إدخال رمز التحقق
+                    var verificationCode = prompt('Please enter the verification code sent to your mobile phone:');
+                    return confirmationResult.confirm(verificationCode);
+                })
+                .then((result) => {
                     // تم تسجيل الدخول بنجاح
                     window.location.href = "profile.html"; // توجيه المستخدم إلى صفحة الصفحة الشخصية
                 })
