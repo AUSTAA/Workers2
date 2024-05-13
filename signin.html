@@ -47,15 +47,16 @@
         
         document.getElementById("loginForm").addEventListener("submit", function(event) {
             event.preventDefault(); // منع إرسال النموذج بشكل افتراضي
-            var email = document.getElementById("phone").value;
+            var phoneNumber = document.getElementById("phone").value;
             var password = document.getElementById("password").value;
-            firebase.auth().signInWithEmailAndPassword(email, password)
+
+            firebase.auth().signInWithEmailAndPassword(phoneNumber, password)
                 .then((userCredential) => {
                     // تم تسجيل الدخول بنجاح
                     window.location.href = "profile.html"; // توجيه المستخدم إلى صفحة الصفحة الشخصية
                 })
                 .catch((error) => {
-                    // إذا حدث خطأ أثناء تسجيل الدخول، يمكنك تنفيذ الإجراءات المناسبة هنا
+                    // إذا حدث خطأ أثناء تسجيل الدخول، يمكنك تنفيذ الإجراءات المناسبة هنا واضف له سكريبت ليعمل
                     console.error("Error signing in:", error);
                 });
         });
