@@ -12,35 +12,34 @@
   <div id="firebaseui-auth-container"></div>
 
   <!-- Firebase JavaScript -->
-  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js"></script>
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { auth, PhoneAuthProvider, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+    import { AuthUI, signInSuccessUrl } from "https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js";
 
-  <!-- FirebaseUI JavaScript -->
-  <script src="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js"></script>
-
-  <script>
     // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
       authDomain: "omran-16f44.firebaseapp.com",
       projectId: "omran-16f44",
-      appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+      appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"   
     };
 
     // Initialize Firebase
-    const firebaseApp = firebase.initializeApp(firebaseConfig);
+    const firebaseApp = initializeApp(firebaseConfig);
 
     // Initialize the FirebaseUI Widget using Firebase
-    const ui = new firebaseui.auth.AuthUI(firebase.auth());
+    const ui = new AuthUI(auth());
 
     // FirebaseUI configurations
     const uiConfig = {
       signInSuccessUrl: 'profile.html', // Redirect URL after sign in
       signInOptions: [
         // Phone sign-in only
-        firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+        PhoneAuthProvider.PROVIDER_ID,
         // Google sign-in
-        firebase.auth.GoogleAuthProvider.PROVIDER_ID
+        GoogleAuthProvider.PROVIDER_ID
       ],
       // Terms of service URL
       tosUrl: '<your-tos-url>',
