@@ -20,16 +20,39 @@ auth.onAuthStateChanged((user) => {
     if (user) {
         const userId = user.uid;
         const userDocRef = db.collection('users').doc(userId);
-        
+
         userDocRef.get().then((doc) => {
             if (doc.exists) {
                 const userData = doc.data();
-                document.getElementById('username').value = userData.username || '';
-                document.getElementById('phone').value = userData.phone || '';
-                document.getElementById('nationality').value = userData.nationality || '';
-                document.getElementById('city').value = userData.city || '';
-                document.getElementById('experienceYears').value = userData.experienceYears || '';
-                document.getElementById('age').value = userData.age || '';
+                document.getElementById('usernameDisplay').innerText = `الاسم: ${userData.username || ''}`;
+                document.getElementById('phoneDisplay').innerText = `رقم الهاتف: ${userData.phone || ''}`;
+                document.getElementById('nationalityDisplay').innerText = `الجنسية: ${userData.nationality || ''}`;
+                document.getElementById('cityDisplay').innerText = `المدينة: ${userData.city || ''}`;
+                document.getElementById('experienceYearsDisplay').innerText = `عدد سنين الخبرة: ${userData.experienceYears || ''}`;
+                document.getElementById('ageDisplay').innerText = `العمر: ${userData.age || ''}`;
+
+                const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
+                profilePictureRef.getDownloadURL().then((url) => {
+                    document.getElementById('profilePictureDisplay').src = url;
+                }).catch((error) => {
+                    console.error("Error getting profile picture:", error);
+                });
+
+                const serviceImagesRef = storage.ref().child(`users/${userId}/serviceImages/`);
+                serviceImagesRef.listAll().then((result) => {
+                    result.items.forEach((imageRef) => {
+                        imageRef.getDownloadURL().then((url) => {
+                            const img = document.createElement('img');
+                            img.src = url;
+                            img.width = 100;
+                            document.getElementById('serviceImagesDisplay').appendChild(img);
+                        }).catch((error) => {
+                            console.error("Error getting service image:", error);
+                        });
+                    });
+                }).catch((error) => {
+                    console.error("Error listing service images:", error);
+                });
             } else {
                 console.log("No such document!");
             }
@@ -42,65 +65,12 @@ auth.onAuthStateChanged((user) => {
     }
 });
 
-// تحديث بيانات المستخدم عند حفظ التعديلات
-document.getElementById('profileForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const newPhone = document.getElementById('newPhone').value;
-    const nationality = document.getElementById('nationality').value;
-    const city = document.getElementById('city').value;
-    const experienceYears = document.getElementById('experienceYears').value;
-    const age = document.getElementById('age').value;
-
-    const user = auth.currentUser;
-    if (user) {
-        const userId = user.uid;
-        const userDocRef = db.collection('users').doc(userId);
-
-        const updatedData = {
-            username,
-            nationality,
-            city,
-            experienceYears,
-            age
-        };
-
-        if (newPhone) {
-            updatedData.newPhone = newPhone;
-        }
-
-        try {
-            await userDocRef.set(updatedData, { merge: true });
-
-            // تحديث الصور
-            const profilePictureFile = document.getElementById('profilePicture').files[0];
-            const serviceImagesFiles = document.getElementById('serviceImages').files;
-
-            if (profilePictureFile) {
-                const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
-                await profilePictureRef.put(profilePictureFile);
-            }
-
-            if (serviceImagesFiles.length > 0) {
-                for (let i = 0; i < serviceImagesFiles.length; i++) {
-                    const serviceImageRef = storage.ref().child(`users/${userId}/serviceImages/${serviceImagesFiles[i].name}`);
-                    await serviceImageRef.put(serviceImagesFiles[i]);
-                }
-            }
-
-            alert('تم تحديث البيانات بنجاح');
-        } catch (error) {
-            console.error("Error updating document:", error);
-            alert('حدث خطأ أثناء تحديث البيانات');
-        }
-    } else {
-        console.log("User is not signed in");
-        window.location.href = 'registration.html'; // إعادة توجيه المستخدم إذا لم يكن مسجلاً الدخول
-    }
-});
-
 // زر للعودة إلى الصفحة الرئيسية
 document.getElementById('homeButton').addEventListener('click', () => {
     window.location.href = 'index.html';
+});
+
+// زر لتعديل الصفحة الشخصية
+document.getElementById('editProfileButton').addEventListener('click', () => {
+    window.location.href = 'edit-profile.html';
 });
