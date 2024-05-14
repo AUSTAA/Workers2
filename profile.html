@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الملف الشخصي</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="profile.css">
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
@@ -17,7 +17,10 @@
         <button id="editProfileButton">تعديل الملف الشخصي</button>
     </header>
     <main>
-        <div id="profileData">
+        <h2>بيانات المستخدم</h2>
+        <div class="profile-section">
+            <img id="profilePicture" src="" alt="الصورة الشخصية">
+            <h3>المعلومات الشخصية</h3>
             <p id="username"></p>
             <p id="phone"></p>
             <p id="newPhone"></p>
@@ -26,11 +29,10 @@
             <p id="experienceYears"></p>
             <p id="age"></p>
             <p id="profession"></p>
-            <img id="profilePicture" src="" alt="الصورة الشخصية">
-            <div id="serviceImagesContainer">
-                <p>صور للخدمات التي قدمتها:</p>
-                <div id="serviceImages"></div>
-            </div>
+        </div>
+        <div id="serviceImagesContainer">
+            <p>صور للخدمات التي قدمتها:</p>
+            <div id="serviceImages"></div>
         </div>
     </main>
     <footer>
