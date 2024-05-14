@@ -3,46 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل</title>
+    <title>التسجيل</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.18/libphonenumber-js.min.js"></script>
 </head>
 <body dir="rtl">
     <header>
-        <h1>تسجيل</h1>
+        <h1>التسجيل</h1>
     </header>
     <main>
+        <!-- نموذج التسجيل -->
         <form id="registrationForm">
             <label for="username">الاسم:</label>
             <input type="text" id="username" name="username" required>
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <label for="password">كلمة المرور:</label>
+            <label for="password">الرمز:</label>
             <input type="password" id="password" name="password" required>
-            <button type="submit">تأكيد التسجيل</button>
+            <button type="submit">التسجيل</button>
         </form>
-        
+
+        <!-- زر تسجيل الدخول باستخدام Google -->
         <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
-        <a href="signin.html">تسجيل الدخول</a>
-
-        <!-- نموذج لإرسال رمز التحقق -->
-        <div id="phoneAuth">
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <div id="recaptcha-container"></div>
-            <button id="sendCode">إرسال رمز التحقق</button>
-        </div>
-
-        <!-- نموذج للتحقق من رمز التحقق -->
-        <form id="loginForm">
-            <label for="code">رمز التحقق:</label>
-            <input type="text" id="code" name="code" required>
-            <button type="submit">تسجيل الدخول</button>
-        </form>
+        
+        <a href="login.html">تسجيل الدخول</a>
     </main>
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
