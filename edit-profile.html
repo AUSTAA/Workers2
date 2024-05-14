@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تعديل الصفحة الشخصية</title>
+    <title>تعديل الملف الشخصي</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
@@ -13,30 +13,59 @@
 </head>
 <body dir="rtl">
     <header>
-        <h1>تعديل الصفحة الشخصية</h1>
-        <button id="homeButton">الصفحة الرئيسية</button>
+        <h1>تعديل الملف الشخصي</h1>
     </header>
     <main>
-        <!-- نموذج تعديل البيانات الشخصية -->
         <form id="profileForm">
             <label for="username">الاسم:</label>
             <input type="text" id="username" name="username" required>
+
+            <label for="phone">رقم الهاتف:</label>
+            <input type="text" id="phone" name="phone" readonly>
+
             <label for="newPhone">رقم هاتف إضافي:</label>
             <input type="text" id="newPhone" name="newPhone">
+
             <label for="nationality">الجنسية:</label>
             <input type="text" id="nationality" name="nationality">
+
             <label for="city">المدينة:</label>
             <input type="text" id="city" name="city">
+
             <label for="experienceYears">عدد سنين الخبرة:</label>
             <input type="number" id="experienceYears" name="experienceYears">
+
             <label for="age">العمر:</label>
             <input type="number" id="age" name="age">
+
+            <label for="profession">المهنة:</label>
+            <select id="profession" name="profession">
+                <option value="سباك">سباك</option>
+                <option value="نجار">نجار</option>
+                <option value="حداد">حداد</option>
+                <option value="خرسانة">خرسانة</option>
+                <option value="بناء">بناء</option>
+                <option value="مهندس">مهندس</option>
+                <option value="مقاول">مقاول</option>
+                <option value="عامل">عامل</option>
+                <option value="مبلط (سطى سيراميك)">مبلط (سطى سيراميك)</option>
+                <option value="دهان">دهان</option>
+                <option value="كهربائي">كهربائي</option>
+                <option value="سباك">سباك</option>
+                <!-- أضف باقي المهن هنا -->
+            </select>
+
             <label for="profilePicture">الصورة الشخصية:</label>
             <input type="file" id="profilePicture" name="profilePicture">
-            <label for="serviceImages">صور الخدمات:</label>
+
+            <label for="serviceImages">صور للخدمات التي قدمتها:</label>
             <input type="file" id="serviceImages" name="serviceImages" multiple>
+            <p>صور للخدمات التي قدمتها:</p>
+
             <button type="submit">حفظ التغييرات</button>
         </form>
+
+        <button id="homeButton">الصفحة الرئيسية</button>
     </main>
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
