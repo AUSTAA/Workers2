@@ -1,4 +1,3 @@
-// تهيئة Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
     authDomain: "omran-16f44.firebaseapp.com",
@@ -15,16 +14,6 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// تنسيق والتحقق من رقم الهاتف باستخدام libphonenumber-js
-function formatPhoneNumber(phoneNumber) {
-    const parsedNumber = libphonenumber.parsePhoneNumberFromString(phoneNumber);
-    if (parsedNumber && parsedNumber.isValid()) {
-        return parsedNumber.format('E.164');
-    } else {
-        throw new Error('رقم الهاتف غير صالح');
-    }
-}
-
 // إرسال رمز التحقق
 document.getElementById('sendCode').addEventListener('click', async () => {
     const phoneNumber = document.getElementById('phone').value;
@@ -40,9 +29,8 @@ document.getElementById('sendCode').addEventListener('click', async () => {
     }
 });
 
-// تسجيل الدخول باستخدام رمز التحقق
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+// تحقق من رمز التحقق
+document.getElementById('verifyCode').addEventListener('click', async () => {
     const code = document.getElementById('code').value;
     try {
         const result = await window.confirmationResult.confirm(code);
@@ -65,34 +53,5 @@ googleSignInButton.addEventListener('click', function() {
         })
         .catch((error) => {
             console.error("Error signing in with Google:", error);
-        });
-});
-
-// التعامل مع نموذج التسجيل
-const registrationForm = document.getElementById('registrationForm');
-registrationForm.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const username = document.getElementById('username').value;
-    const phone = document.getElementById('phone').value;
-    const password = document.getElementById('password').value;
-
-    // تسجيل المستخدم باستخدام البريد الإلكتروني وكلمة المرور
-    auth.createUserWithEmailAndPassword(`${phone}@example.com`, password)
-        .then((userCredential) => {
-            // حفظ بيانات المستخدم في Firestore
-            db.collection("users").doc(userCredential.user.uid).set({
-                username: username,
-                phone: phone
-            })
-            .then(() => {
-                console.log("تم حفظ بيانات المستخدم في Firestore.");
-                window.location.href = `profile.html?userId=${userCredential.user.uid}`;
-            })
-            .catch((error) => {
-                console.error("خطأ في حفظ بيانات المستخدم في Firestore:", error);
-            });
-        })
-        .catch((error) => {
-            console.error("خطأ في إنشاء المستخدم:", error);
         });
 });
