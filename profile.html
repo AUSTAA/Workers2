@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الصفحة الشخصية</title>
+    <title>الملف الشخصي</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
@@ -12,20 +12,25 @@
 </head>
 <body dir="rtl">
     <header>
-        <h1>الصفحة الشخصية</h1>
+        <h1>الملف الشخصي</h1>
         <button id="homeButton">الصفحة الرئيسية</button>
-        <button id="editProfileButton">تعديل الصفحة الشخصية</button>
+        <button id="editProfileButton">تعديل الملف الشخصي</button>
     </header>
     <main>
-        <div>
-            <img id="profilePictureDisplay" src="" alt="الصورة الشخصية" width="150">
-            <p id="usernameDisplay"></p>
-            <p id="phoneDisplay"></p>
-            <p id="nationalityDisplay"></p>
-            <p id="cityDisplay"></p>
-            <p id="experienceYearsDisplay"></p>
-            <p id="ageDisplay"></p>
-            <div id="serviceImagesDisplay"></div>
+        <div id="profileData">
+            <p id="username"></p>
+            <p id="phone"></p>
+            <p id="newPhone"></p>
+            <p id="nationality"></p>
+            <p id="city"></p>
+            <p id="experienceYears"></p>
+            <p id="age"></p>
+            <p id="profession"></p>
+            <img id="profilePicture" src="" alt="الصورة الشخصية">
+            <div id="serviceImagesContainer">
+                <p>صور للخدمات التي قدمتها:</p>
+                <div id="serviceImages"></div>
+            </div>
         </div>
     </main>
     <footer>
