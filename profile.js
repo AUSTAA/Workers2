@@ -21,38 +21,35 @@ auth.onAuthStateChanged((user) => {
         const userId = user.uid;
         const userDocRef = db.collection('users').doc(userId);
 
-        userDocRef.get().then((doc) => {
+        userDocRef.get().then(async (doc) => {
             if (doc.exists) {
                 const userData = doc.data();
-                document.getElementById('usernameDisplay').innerText = `الاسم: ${userData.username || ''}`;
-                document.getElementById('phoneDisplay').innerText = `رقم الهاتف: ${userData.phone || ''}`;
-                document.getElementById('nationalityDisplay').innerText = `الجنسية: ${userData.nationality || ''}`;
-                document.getElementById('cityDisplay').innerText = `المدينة: ${userData.city || ''}`;
-                document.getElementById('experienceYearsDisplay').innerText = `عدد سنين الخبرة: ${userData.experienceYears || ''}`;
-                document.getElementById('ageDisplay').innerText = `العمر: ${userData.age || ''}`;
+                document.getElementById('username').textContent = `الاسم: ${userData.username}`;
+                document.getElementById('phone').textContent = `رقم الهاتف: ${userData.phone}`;
+                document.getElementById('newPhone').textContent = userData.newPhone ? `رقم هاتف إضافي: ${userData.newPhone}` : '';
+                document.getElementById('nationality').textContent = `الجنسية: ${userData.nationality}`;
+                document.getElementById('city').textContent = `المدينة: ${userData.city}`;
+                document.getElementById('experienceYears').textContent = `عدد سنين الخبرة: ${userData.experienceYears}`;
+                document.getElementById('age').textContent = `العمر: ${userData.age}`;
+                document.getElementById('profession').textContent = `المهنة: ${userData.profession}`;
 
+                // تحميل الصورة الشخصية
                 const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
-                profilePictureRef.getDownloadURL().then((url) => {
-                    document.getElementById('profilePictureDisplay').src = url;
-                }).catch((error) => {
-                    console.error("Error getting profile picture:", error);
-                });
+                const profilePictureUrl = await profilePictureRef.getDownloadURL();
+                document.getElementById('profilePicture').src = profilePictureUrl;
 
-                const serviceImagesRef = storage.ref().child(`users/${userId}/serviceImages/`);
-                serviceImagesRef.listAll().then((result) => {
-                    result.items.forEach((imageRef) => {
-                        imageRef.getDownloadURL().then((url) => {
-                            const img = document.createElement('img');
-                            img.src = url;
-                            img.width = 100;
-                            document.getElementById('serviceImagesDisplay').appendChild(img);
-                        }).catch((error) => {
-                            console.error("Error getting service image:", error);
-                        });
-                    });
-                }).catch((error) => {
-                    console.error("Error listing service images:", error);
-                });
+                // تحميل صور الخدمات
+                const serviceImagesContainer = document.getElementById('serviceImages');
+                serviceImagesContainer.innerHTML = ''; // مسح المحتوى الحالي
+                const serviceImagesRef = storage.ref().child(`users/${userId}/serviceImages`);
+                const serviceImagesSnapshot = await serviceImagesRef.listAll();
+                for (const itemRef of serviceImagesSnapshot.items) {
+                    const imageUrl = await itemRef.getDownloadURL();
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.alt = 'صورة خدمة';
+                    serviceImagesContainer.appendChild(img);
+                }
             } else {
                 console.log("No such document!");
             }
@@ -70,7 +67,7 @@ document.getElementById('homeButton').addEventListener('click', () => {
     window.location.href = 'index.html';
 });
 
-// زر لتعديل الصفحة الشخصية
+// زر لتعديل الملف الشخصي
 document.getElementById('editProfileButton').addEventListener('click', () => {
     window.location.href = 'edit-profile.html';
 });
