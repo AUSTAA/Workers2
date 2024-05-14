@@ -14,6 +14,16 @@ if (!firebase.apps.length) {
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// تنسيق والتحقق من رقم الهاتف باستخدام libphonenumber-js
+function formatPhoneNumber(phoneNumber) {
+    const parsedNumber = libphonenumber.parsePhoneNumberFromString(phoneNumber);
+    if (parsedNumber && parsedNumber.isValid()) {
+        return parsedNumber.format('E.164');
+    } else {
+        throw new Error('رقم الهاتف غير صالح');
+    }
+}
+
 // إرسال رمز التحقق
 document.getElementById('sendCode').addEventListener('click', async () => {
     const phoneNumber = document.getElementById('phone').value;
@@ -34,8 +44,17 @@ document.getElementById('verifyCode').addEventListener('click', async () => {
     const code = document.getElementById('code').value;
     try {
         const result = await window.confirmationResult.confirm(code);
+        const user = result.user;
         alert('تم تسجيل الدخول بنجاح');
-        window.location.href = `index.html`;
+        // يمكنك هنا حفظ بيانات المستخدم في Firestore إذا كنت ترغب في ذلك
+        db.collection("users").doc(user.uid).set({
+            phone: user.phoneNumber
+        }).then(() => {
+            console.log("تم حفظ بيانات المستخدم في Firestore.");
+            window.location.href = `profile.html?userId=${user.uid}`;
+        }).catch((error) => {
+            console.error("خطأ في حفظ بيانات المستخدم في Firestore:", error);
+        });
     } catch (error) {
         console.error('Error verifying code:', error);
         alert('رمز التحقق غير صحيح');
