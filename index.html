@@ -8,12 +8,25 @@
     <style>
         /* تنسيق الرابط للتسجيل */
         #registration-link {
-            color: inherit; /* استخدام نفس لون باقي النصوص */
-            margin: 10px 0 10px 10px; /* هامش من اليسار */
-            text-decoration: none; /* إزالة التأثير الافتراضي للرابط */
-            position: absolute; /* تحديد الوضع */
-            top: 10px; /* المسافة من الأعلى */
-            left: 10px; /* المسافة من اليسار */
+            color: inherit;
+            margin: 10px 0 10px 10px;
+            text-decoration: none;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
+        /* تنسيق زر الصفحة الشخصية */
+        #profile-link {
+            display: none; /* إخفاء الزر افتراضياً */
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -26,15 +39,14 @@
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="about.html">من نحن</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
-                <!-- روابط الصفحات الجديدة -->
                 <li><a href="carpenters.html">النجارين</a></li>
                 <li><a href="electricians.html">الكهربائيين</a></li>
                 <li><a href="plumbers.html">السباكين</a></li>
                 <li><a href="painters.html">الدهانين</a></li>
             </ul>
         </nav>
-        <!-- رابط التسجيل -->
         <a id="registration-link" href="registration.html">تسجيل</a>
+        <a id="profile-link" href="profile.html">الملف الشخصي</a>
     </header>
     <main>
         <section id="search">
@@ -58,5 +70,14 @@
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
+    <script>
+        // التحقق من صفحة الإحالة
+        document.addEventListener('DOMContentLoaded', () => {
+            const referrer = document.referrer;
+            if (referrer.includes('profile.html')) {
+                document.getElementById('profile-link').style.display = 'block';
+            }
+        });
+    </script>
 </body>
 </html>
