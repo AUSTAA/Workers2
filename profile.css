@@ -1,0 +1,97 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+header button {
+    background-color: white;
+    color: #4CAF50;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+}
+
+header button:hover {
+    background-color: #45a049;
+    color: white;
+}
+
+main {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+main h2 {
+    text-align: center;
+    color: #4CAF50;
+}
+
+.profile-section {
+    margin-bottom: 1.5rem;
+}
+
+.profile-section h3 {
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    color: #4CAF50;
+}
+
+.profile-section p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+#profilePicture {
+    display: block;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#serviceImagesContainer {
+    margin-top: 2rem;
+}
+
+#serviceImagesContainer p {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+#serviceImages img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 0.5rem;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #4CAF50;
+    color: white;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
