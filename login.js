@@ -1,5 +1,3 @@
-import { parsePhoneNumberFromString } from 'libphonenumber-js';
-
 // تهيئة Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
@@ -16,9 +14,9 @@ if (!firebase.apps.length) {
 
 const auth = firebase.auth();
 
-// تنسيق والتحقق من رقم الهاتف
+// تنسيق والتحقق من رقم الهاتف باستخدام libphonenumber-js
 function formatPhoneNumber(phoneNumber) {
-    const parsedNumber = parsePhoneNumberFromString(phoneNumber);
+    const parsedNumber = libphonenumber.parsePhoneNumberFromString(phoneNumber);
     if (parsedNumber && parsedNumber.isValid()) {
         return parsedNumber.format('E.164');
     } else {
@@ -54,3 +52,32 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         alert('رمز التحقق غير صحيح');
     }
 });
+تحديث ملف HTML لتضمين مكتبة libphonenumber-js:
+html
+نسخ الكود
+<!DOCTYPE html>
+<html>
+<head>
+    <title>صفحة تسجيل الدخول</title>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <script src="https://unpkg.com/libphonenumber-js@1.9.42/bundle/libphonenumber-js.min.js"></script>
+</head>
+<body>
+    <h1>تسجيل الدخول باستخدام رقم الهاتف</h1>
+    <form id="loginForm">
+        <label for="phone">رقم الهاتف:</label>
+        <input type="tel" id="phone" required><br>
+        <div id="recaptcha-container"></div>
+        <button type="button" id="sendCode">إرسال رمز التحقق</button><br>
+        
+        <label for="code">رمز التحقق:</label>
+        <input type="text" id="code"><br>
+        <button type="submit">تسجيل الدخول</button>
+    </form>
+
+    <script src="login.js"></script>
+</body>
+</html>
