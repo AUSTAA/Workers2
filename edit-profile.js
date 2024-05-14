@@ -30,6 +30,7 @@ auth.onAuthStateChanged((user) => {
                 document.getElementById('city').value = userData.city || '';
                 document.getElementById('experienceYears').value = userData.experienceYears || '';
                 document.getElementById('age').value = userData.age || '';
+                document.getElementById('profession').value = userData.profession || '';
             } else {
                 console.log("No such document!");
             }
@@ -52,6 +53,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     const city = document.getElementById('city').value;
     const experienceYears = document.getElementById('experienceYears').value;
     const age = document.getElementById('age').value;
+    const profession = document.getElementById('profession').value;
 
     const user = auth.currentUser;
     if (user) {
@@ -63,7 +65,8 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
             nationality,
             city,
             experienceYears,
-            age
+            age,
+            profession
         };
 
         if (newPhone) {
