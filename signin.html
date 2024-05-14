@@ -2,21 +2,23 @@
 <html>
 <head>
     <title>صفحة تسجيل الدخول</title>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
 </head>
 <body>
-    <h1>تسجيل الدخول</h1>
+    <h1>تسجيل الدخول باستخدام رقم الهاتف</h1>
     <form id="loginForm">
-        <label for="email">البريد الإلكتروني:</label>
-        <input type="email" id="email" required><br>
-        <label for="password">كلمة المرور:</label>
-        <input type="password" id="password" required><br>
+        <label for="phone">رقم الهاتف:</label>
+        <input type="tel" id="phone" required><br>
+        <div id="recaptcha-container"></div>
+        <button type="button" id="sendCode">إرسال رمز التحقق</button><br>
+        
+        <label for="code">رمز التحقق:</label>
+        <input type="text" id="code"><br>
         <button type="submit">تسجيل الدخول</button>
     </form>
-    <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
 
     <script src="login.js"></script>
 </body>
