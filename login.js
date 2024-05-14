@@ -47,6 +47,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
         const result = await window.confirmationResult.confirm(code);
         alert('تم تسجيل الدخول بنجاح');
         // يمكنك إعادة توجيه المستخدم أو تنفيذ أي منطق آخر هنا
+               window.location.href = `profile.html?userId=${userCredential.user.uid}`;
     } catch (error) {
         console.error('Error verifying code:', error);
         alert('رمز التحقق غير صحيح');
