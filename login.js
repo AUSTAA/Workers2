@@ -13,35 +13,49 @@ const firebaseConfig = {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 const auth = firebaseApp.auth();
 
-// معالجة نموذج تسجيل الدخول
+// إعداد reCAPTCHA
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    'size': 'normal',
+    'callback': (response) => {
+        console.log('reCAPTCHA solved');
+    },
+    'expired-callback': () => {
+        console.log('reCAPTCHA expired');
+    }
+});
+recaptchaVerifier.render().then((widgetId) => {
+    window.recaptchaWidgetId = widgetId;
+});
+
+// إرسال رمز التحقق
+const sendCodeButton = document.getElementById('sendCode');
+sendCodeButton.addEventListener('click', function() {
+    const phoneNumber = document.getElementById('phone').value;
+    const appVerifier = window.recaptchaVerifier;
+
+    auth.signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((confirmationResult) => {
+            window.confirmationResult = confirmationResult;
+            console.log("تم إرسال رمز التحقق");
+        })
+        .catch((error) => {
+            console.error("خطأ في إرسال رمز التحقق:", error);
+        });
+});
+
+// معالجة تسجيل الدخول
 const loginForm = document.getElementById('loginForm');
 loginForm.addEventListener('submit', function(event) {
     event.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const code = document.getElementById('code').value;
 
-    auth.signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            // إعادة توجيه المستخدم إلى صفحة ملفه الشخصي
+    window.confirmationResult.confirm(code)
+        .then((result) => {
+            const user = result.user;
+            console.log("تم تسجيل الدخول بنجاح:", user);
             window.location.href = `profile.html?userId=${user.uid}`;
         })
         .catch((error) => {
             console.error("خطأ في تسجيل الدخول:", error);
-        });
-});
-
-// تسجيل الدخول باستخدام Google
-const googleSignInButton = document.getElementById('googleSignIn');
-googleSignInButton.addEventListener('click', function() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider)
-        .then((result) => {
-            const user = result.user;
-            // إعادة توجيه المستخدم إلى صفحة ملفه الشخصي
-            window.location.href = `profile.html?userId=${user.uid}`;
-        })
-        .catch((error) => {
-            console.error("خطأ في تسجيل الدخول باستخدام Google:", error);
         });
 });
