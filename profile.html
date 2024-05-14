@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الملف الشخصي</title>
+    <title>الصفحة الشخصية</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
@@ -12,41 +12,21 @@
 </head>
 <body dir="rtl">
     <header>
-        <h1>الملف الشخصي</h1>
+        <h1>الصفحة الشخصية</h1>
+        <button id="homeButton">الصفحة الرئيسية</button>
+        <button id="editProfileButton">تعديل الصفحة الشخصية</button>
     </header>
     <main>
-        <form id="profileForm">
-            <label for="username">الاسم:</label>
-            <input type="text" id="username" name="username" required>
-
-            <label for="phone">رقم الهاتف (لا يمكن تغييره):</label>
-            <input type="tel" id="phone" name="phone" disabled>
-
-            <label for="newPhone">إضافة رقم هاتف آخر:</label>
-            <input type="tel" id="newPhone" name="newPhone">
-
-            <label for="nationality">الجنسية:</label>
-            <input type="text" id="nationality" name="nationality">
-
-            <label for="city">المدينة:</label>
-            <input type="text" id="city" name="city">
-
-            <label for="experienceYears">عدد سنين الخبرة:</label>
-            <input type="number" id="experienceYears" name="experienceYears">
-
-            <label for="age">العمر:</label>
-            <input type="number" id="age" name="age">
-
-            <label for="profilePicture">صورة شخصية:</label>
-            <input type="file" id="profilePicture" name="profilePicture">
-
-            <label for="serviceImages">صور الخدمات:</label>
-            <input type="file" id="serviceImages" name="serviceImages" multiple>
-
-            <button type="submit">حفظ التعديلات</button>
-        </form>
-
-        <button id="homeButton">الصفحة الرئيسية</button>
+        <div>
+            <img id="profilePictureDisplay" src="" alt="الصورة الشخصية" width="150">
+            <p id="usernameDisplay"></p>
+            <p id="phoneDisplay"></p>
+            <p id="nationalityDisplay"></p>
+            <p id="cityDisplay"></p>
+            <p id="experienceYearsDisplay"></p>
+            <p id="ageDisplay"></p>
+            <div id="serviceImagesDisplay"></div>
+        </div>
     </main>
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
