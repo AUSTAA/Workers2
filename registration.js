@@ -39,21 +39,22 @@ document.getElementById('sendCode').addEventListener('click', async () => {
     }
 });
 
-// تحقق من رمز التحقق
-document.getElementById('verifyCode').addEventListener('click', async () => {
+// تسجيل الدخول باستخدام رمز التحقق
+document.getElementById('verifyCode').addEventListener('click', async (e) => {
+    e.preventDefault();
     const code = document.getElementById('code').value;
+    const password = document.getElementById('password').value;
     try {
         const result = await window.confirmationResult.confirm(code);
         const user = result.user;
-        alert('تم تسجيل الدخول بنجاح');
-        // يمكنك هنا حفظ بيانات المستخدم في Firestore إذا كنت ترغب في ذلك
-        db.collection("users").doc(user.uid).set({
-            phone: user.phoneNumber
-        }).then(() => {
-            console.log("تم حفظ بيانات المستخدم في Firestore.");
-            window.location.href = `profile.html?userId=${user.uid}`;
+
+        // تعيين كلمة المرور
+        user.updatePassword(password).then(() => {
+            alert('تم التسجيل بنجاح');
+            window.location.href = 'profile.html';
         }).catch((error) => {
-            console.error("خطأ في حفظ بيانات المستخدم في Firestore:", error);
+            console.error('Error setting password:', error);
+            alert('خطأ في تعيين كلمة المرور.');
         });
     } catch (error) {
         console.error('Error verifying code:', error);
