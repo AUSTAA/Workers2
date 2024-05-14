@@ -17,17 +17,15 @@
     <main>
         <!-- نموذج التسجيل -->
         <form id="registrationForm">
-            <label for="password">الرمز:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">التسجيل</button>
+            <label for="phone">رقم الهاتف:</label>
+            <input type="tel" id="phone" name="phone" required>
+            <button type="button" id="sendCode">إرسال رمز التحقق</button>
+            <div id="recaptcha-container"></div>
+            
+            <label for="code">رمز التحقق:</label>
+            <input type="text" id="code" name="code" required>
+            <button type="button" id="verifyCode">تحقق من الرمز</button>
         </form>
-
-        <!-- زر إرسال رمز التحقق -->
-        <button id="sendCode">إرسال رمز التحقق</button>
-        
-        <!-- حقل إدخال رمز التحقق -->
-        <input type="text" id="code" name="code" placeholder="رمز التحقق">
-        <button id="verifyCode">تحقق من الرمز</button>
 
         <!-- زر تسجيل الدخول باستخدام Google -->
         <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
