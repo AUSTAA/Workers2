@@ -1,67 +1,23 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول</title>
-    <!-- FirebaseUI CSS -->
-    <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.css" />
+    <title>صفحة تسجيل الدخول</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage.js"></script>
 </head>
-<body dir="rtl">
-    <header>
-        <h1>تسجيل الدخول</h1>
-    </header>
-    <main>
-        <!-- FirebaseUI Container -->
-        <div id="firebaseui-auth-container"></div>
-    </main>
-    <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء</p>
-    </footer>
-    <!-- Firebase JavaScript -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { auth, PhoneAuthProvider, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-        import { AuthUI, signInSuccessUrl } from "https://www.gstatic.com/firebasejs/ui/6.0.1/firebase-ui-auth.js";
+<body>
+    <h1>تسجيل الدخول</h1>
+    <form id="loginForm">
+        <label for="email">البريد الإلكتروني:</label>
+        <input type="email" id="email" required><br>
+        <label for="password">كلمة المرور:</label>
+        <input type="password" id="password" required><br>
+        <button type="submit">تسجيل الدخول</button>
+    </form>
+    <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
 
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-      apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-      authDomain: "omran-16f44.firebaseapp.com",
-      projectId: "omran-16f44",
-      appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-    };
-
-        // Initialize Firebase
-        const firebaseApp = initializeApp(firebaseConfig);
-
-        // Initialize the FirebaseUI Widget using Firebase
-        const ui = new AuthUI(auth());
-
-        // FirebaseUI configurations
-        const uiConfig = {
-            signInSuccessUrl: 'profile.html', // Redirect URL after sign in
-            signInOptions: [
-                // Phone sign-in
-                {
-                    provider: PhoneAuthProvider.PROVIDER_ID,
-                    recaptchaParameters: {
-                        type: 'image', // 'audio' or 'image' or 'none'
-                        size: 'invisible', // 'invisible' or 'compact' or 'normal'
-                        badge: 'bottomleft' //' bottomright' or 'inline' applies to invisible.
-                    },
-                    defaultCountry: 'US', // Set default country to the United States (+1).
-                },
-                // Google sign-in
-                GoogleAuthProvider.PROVIDER_ID
-            ],
-            // Terms of service URL
-            tosUrl: '<your-tos-url>',
-        };
-
-        // Start the FirebaseUI auth widget
-        ui.start('#firebaseui-auth-container', uiConfig);
-    </script>
+    <script src="login.js"></script>
 </body>
 </html>
