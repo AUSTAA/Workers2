@@ -19,10 +19,19 @@
         <form id="registrationForm">
             <label for="username">الاسم:</label>
             <input type="text" id="username" name="username" required>
+            <label for="phone">رقم الهاتف:</label>
+            <input type="tel" id="phone" name="phone" required>
             <label for="password">الرمز:</label>
             <input type="password" id="password" name="password" required>
             <button type="submit">التسجيل</button>
         </form>
+
+        <!-- زر إرسال رمز التحقق -->
+        <button id="sendCode">إرسال رمز التحقق</button>
+        
+        <!-- حقل إدخال رمز التحقق -->
+        <input type="text" id="code" name="code" placeholder="رمز التحقق">
+        <button id="verifyCode">تحقق من الرمز</button>
 
         <!-- زر تسجيل الدخول باستخدام Google -->
         <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
