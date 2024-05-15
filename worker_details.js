@@ -82,7 +82,24 @@ if (workerId) {
 // التحقق من تسجيل الدخول
 auth.onAuthStateChanged((user) => {
     if (user) {
-        document.getElementById('rating-form').style.display = 'block';
+        const ratingForm = document.getElementById('rating-form');
+        
+        // التحقق مما إذا كان المستخدم قد قيم النجار من قبل
+        db.collection("users").doc(workerId).get()
+            .then((doc) => {
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const hasRated = userData.ratings && userData.ratings.some(r => r.userId === user.uid);
+                    if (!hasRated) {
+                        ratingForm.style.display = 'block';
+                    } else {
+                        ratingForm.innerHTML = "<p>لقد قمت بتقييم هذا النجار من قبل.</p>";
+                    }
+                }
+            })
+            .catch((error) => {
+                console.error("Error checking if user has rated: ", error);
+            });
     }
 });
 
@@ -90,15 +107,21 @@ auth.onAuthStateChanged((user) => {
 document.getElementById('submit-rating').addEventListener('submit', function (event) {
     event.preventDefault();
     const rating = document.querySelector('input[name="rating"]:checked').value;
-    db.collection("users").doc(workerId).update({
-        ratings: firebase.firestore.FieldValue.arrayUnion({
-            userId: auth.currentUser.uid,
-            rating: parseInt(rating, 10)
-        })
-    }).then(() => {
-        alert("تم إرسال التقييم بنجاح.");
-        window.location.reload();
-    }).catch((error) => {
-        console.error("Error submitting rating: ", error);
-    });
+    const currentUser = auth.currentUser;
+    
+    if (currentUser) {
+        db.collection("users").doc(workerId).update({
+            ratings: firebase.firestore.FieldValue.arrayUnion({
+                userId: currentUser.uid,
+                rating: parseInt(rating, 10)
+            })
+        }).then(() => {
+            alert("تم إرسال التقييم بنجاح.");
+            window.location.reload();
+        }).catch((error) => {
+            console.error("Error submitting rating: ", error);
+        });
+    } else {
+        alert("يجب تسجيل الدخول لتقديم التقييم.");
+    }
 });
