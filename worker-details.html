@@ -18,6 +18,9 @@
         main {
             padding: 20px;
         }
+        #rating-form {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body dir="rtl">
@@ -39,6 +42,22 @@
     <main>
         <div id="worker-details">
             <!-- سيتم ملء تفاصيل النجار ديناميكيًا -->
+            <p id="username"></p>
+            <p id="phone"></p>
+            <p id="newPhone"></p>
+            <p id="nationality"></p>
+            <p id="city"></p>
+            <p id="experienceYears"></p>
+            <p id="age"></p>
+            <p id="profession"></p>
+        </div>
+        <div id="rating-form" style="display: none;">
+            <h3>تقييم النجار</h3>
+            <form id="submit-rating">
+                <label for="rating">التقييم:</label>
+                <input type="number" id="rating" name="rating" min="1" max="5" required>
+                <button type="submit">إرسال التقييم</button>
+            </form>
         </div>
     </main>
     <footer>
@@ -46,6 +65,7 @@
     </footer>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script>
         // إعداد Firebase
         const firebaseConfig = {
@@ -60,6 +80,7 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
 
         // جلب معرّف النجار من عنوان URL
         function getQueryParam(param) {
@@ -76,15 +97,14 @@
                     if (doc.exists) {
                         const workerDetails = document.getElementById('worker-details');
                         const userData = doc.data();
-                        workerDetails.innerHTML = `
-                            <h2>${userData.username}</h2>
-                            <p>المدينة: ${userData.city}</p>
-                            <p>سنين الخبرة: ${userData.experienceYears}</p>
-                            <p>البريد الإلكتروني: ${userData.email}</p>
-                            <p>رقم الهاتف: ${userData.phone}</p>
-                            <p>التقييم: ${userData.rating}</p>
-                            <p>نبذة: ${userData.bio}</p>
-                        `;
+                        document.getElementById('username').textContent = `اسم المستخدم: ${userData.username}`;
+                        document.getElementById('phone').textContent = `رقم الهاتف: ${userData.phone}`;
+                        document.getElementById('newPhone').textContent = `رقم الهاتف الجديد: ${userData.newPhone}`;
+                        document.getElementById('nationality').textContent = `الجنسية: ${userData.nationality}`;
+                        document.getElementById('city').textContent = `المدينة: ${userData.city}`;
+                        document.getElementById('experienceYears').textContent = `سنين الخبرة: ${userData.experienceYears}`;
+                        document.getElementById('age').textContent = `العمر: ${userData.age}`;
+                        document.getElementById('profession').textContent = `المهنة: ${userData.profession}`;
                     } else {
                         document.getElementById('worker-details').innerHTML = "<p>لم يتم العثور على تفاصيل النجار.</p>";
                     }
@@ -96,6 +116,34 @@
         } else {
             document.getElementById('worker-details').innerHTML = "<p>معرّف النجار غير موجود في عنوان URL.</p>";
         }
+
+        // التحقق من تسجيل الدخول
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                document.getElementById('rating-form').style.display = 'block';
+            }
+        });
+
+        // إرسال التقييم
+        document.getElementById('submit-rating').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const rating = document.getElementById('rating').value;
+            if (workerId) {
+                db.collection("users").doc(workerId).update({
+                    ratings: firebase.firestore.FieldValue.arrayUnion({
+                        userId: auth.currentUser.uid,
+                        rating: parseInt(rating),
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    })
+                }).then(() => {
+                    alert("تم إرسال التقييم بنجاح!");
+                    document.getElementById('rating').value = '';
+                }).catch((error) => {
+                    console.error("Error submitting rating: ", error);
+                    alert("حدث خطأ أثناء إرسال التقييم. الرجاء المحاولة لاحقًا.");
+                });
+            }
+        });
     </script>
 </body>
 </html>
