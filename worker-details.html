@@ -3,85 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفاصيل النجار</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* أسلوب التنسيق هنا */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        header, footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-        }
-        main {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .profile-header img {
-            border-radius: 50%;
-            margin-right: 20px;
-        }
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
-        .profile-info {
-            text-align: right;
-        }
-        .profile-info p {
-            margin: 5px 0;
-        }
-        .services-images {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .services-images img {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-    </style>
+    <title>تفاصيل العامل</title>
+    <link rel="stylesheet" href="profile.css">
 </head>
 <body dir="rtl">
     <header>
-        <h1>تفاصيل النجار</h1>
+        <h1>تفاصيل العامل</h1>
+        <button id="homeButton">الصفحة الرئيسية</button>
     </header>
     <main>
-        <div class="profile-header">
-            <img id="profilePicture" src="" alt="الصورة الشخصية" width="100">
-            <div>
-                <h2 id="username"></h2>
-                <p id="profession"></p>
-            </div>
+        <h2>بيانات العامل</h2>
+        <div class="profile-section">
+            <img id="profilePicture" src="" alt="الصورة الشخصية">
+            <h3>المعلومات الشخصية</h3>
+            <p id="username"></p>
+            <p id="phone"></p>
+            <p id="newPhone"></p>
+            <p id="nationality"></p>
+            <p id="city"></p>
+            <p id="experienceYears"></p>
+            <p id="age"></p>
+            <p id="profession"></p>
         </div>
-        <div class="profile-info">
-            <p><strong>الاسم:</strong> <span id="username"></span></p>
-            <p><strong>الهاتف:</strong> <span id="phone"></span></p>
-            <p><strong>العمر:</strong> <span id="age"></span></p>
-            <p><strong>سنوات الخبرة:</strong> <span id="experienceYears"></span></p>
-            <p><strong>المدينة:</strong> <span id="city"></span></p>
-            <p><strong>المهنة:</strong> <span id="profession"></span></p>
-            <p><strong>الجنسية:</strong> <span id="nationality"></span></p>
-        </div>
-        <h3>صور الخدمات المقدمة:</h3>
-        <div class="services-images" id="services-images">
-            <!-- سيتم ملء هذه الصور ديناميكيًا -->
+        <div id="serviceImagesContainer">
+            <p>صور للخدمات التي قدمتها:</p>
+            <div id="serviceImages"></div>
         </div>
     </main>
     <footer>
@@ -89,57 +35,8 @@
     </footer>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-    <script>
-        // إعداد Firebase
-        const firebaseConfig = {
-  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-  authDomain: "omran-16f44.firebaseapp.com",
-  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-  projectId: "omran-16f44",
-  storageBucket: "omran-16f44.appspot.com",
-  messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-  measurementId: "G-PGZJ0T555G"
-};
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // استعراض معلومات النجار المحددة
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('id');
-
-            if (userId) {
-                db.collection("users").doc(userId).get()
-                    .then((doc) => {
-                        if (doc.exists) {
-                            const userData = doc.data();
-                            document.getElementById('profilePicture').src = userData.profilePicture;
-                            document.getElementById('username').innerText = userData.username;
-                            document.getElementById('phone').innerText = userData.phone;
-                            document.getElementById('age').innerText = userData.age;
-                            document.getElementById('experienceYears').innerText = userData.experienceYears;
-                            document.getElementById('city').innerText = userData.city;
-                            document.getElementById('profession').innerText = userData.profession;
-                            document.getElementById('nationality').innerText = userData.nationality;
-
-                            const servicesImages = document.getElementById('services-images');
-                            userData.servicesImages.forEach((url) => {
-                                const img = document.createElement('img');
-                                img.src = url;
-                                servicesImages.appendChild(img);
-                            });
-                        } else {
-                            console.error("No such document!");
-                        }
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching user data: ", error);
-                    });
-            } else {
-                console.error("No user ID provided in URL");
-            }
-        });
-    </script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <script src="workerDetails.js" defer></script>
 </body>
 </html>
