@@ -9,6 +9,8 @@ const firebaseConfig = {
     appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
     measurementId: "G-PGZJ0T555G"
 };
+
+const fir
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -101,4 +103,3 @@ document.getElementById('submit-rating').addEventListener('submit', function (ev
         console.error("Error submitting rating: ", error);
     });
 });
-          
