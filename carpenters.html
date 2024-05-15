@@ -6,61 +6,12 @@
     <title>النجارين - خدمات البناء</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        header, footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-        }
-        main {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
-        .worker-list {
-            list-style: none;
-            padding: 0;
-        }
-        .worker-list li {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-        }
-        .worker-list li h3 {
-            margin: 0 0 10px 0;
-        }
-        .worker-list li p {
-            margin: 5px 0;
-        }
+        /* أسلوب التنسيق هنا */
     </style>
 </head>
 <body dir="rtl">
     <header>
-        <h1>النجارين</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="about.html">من نحن</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="electricians.html">الكهربائيين</a></li>
-                <li><a href="plumbers.html">السباكين</a></li>
-                <li><a href="painters.html">الدهانين</a></li>
-            </ul>
-        </nav>
+        <!-- عنوان الصفحة -->
     </header>
     <main>
         <h2>قائمة النجارين المتاحين</h2>
@@ -69,20 +20,22 @@
         </ul>
     </main>
     <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء</p>
+        <!-- حقوق الطبع والنشر -->
     </footer>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script>
         // إعداد Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-            authDomain: "omran-16f44.firebaseapp.com",
-            projectId: "omran-16f44",
-            storageBucket: "omran-16f44.appspot.com",
-            messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
-        };
+  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+  authDomain: "omran-16f44.firebaseapp.com",
+  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+  projectId: "omran-16f44",
+  storageBucket: "omran-16f44.appspot.com",
+  messagingSenderId: "598982209417",
+  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+  measurementId: "G-PGZJ0T555G"
+};
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
@@ -97,7 +50,7 @@
                         <h3>${userData.username}</h3>
                         <p>المدينة: ${userData.city}</p>
                         <p>سنين الخبرة: ${userData.experienceYears}</p>
-                        <p><a href="profile.html?id=${doc.id}">عرض الملف الشخصي</a></p>
+                        <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
                     `;
                     workerList.appendChild(li);
                 });
