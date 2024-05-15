@@ -4,40 +4,142 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>الملف الشخصي</title>
-    <link rel="stylesheet" href="profile.css">
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-header img {
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .profile-info {
+            text-align: right;
+        }
+        .profile-info p {
+            margin: 5px 0;
+        }
+        .services-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .services-images img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body dir="rtl">
     <header>
         <h1>الملف الشخصي</h1>
-        <button id="homeButton">الصفحة الرئيسية</button>
-        <button id="editProfileButton">تعديل الملف الشخصي</button>
+        <nav>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+            </ul>
+        </nav>
     </header>
     <main>
-        <h2>بيانات المستخدم</h2>
-        <div class="profile-section">
-            <img id="profilePicture" src="" alt="الصورة الشخصية">
-            <h3>المعلومات الشخصية</h3>
-            <p id="username"></p>
-            <p id="phone"></p>
-            <p id="newPhone"></p>
-            <p id="nationality"></p>
-            <p id="city"></p>
-            <p id="experienceYears"></p>
-            <p id="age"></p>
-            <p id="profession"></p>
+        <div class="profile-header">
+            <img id="profile-picture" src="" alt="صورة شخصية" width="100">
+            <div>
+                <h2 id="username"></h2>
+                <p id="profession"></p>
+            </div>
         </div>
-        <div id="serviceImagesContainer">
-            <p>صور للخدمات التي قدمتها:</p>
-            <div id="serviceImages"></div>
+        <div class="profile-info">
+            <p><strong>رقم الهاتف:</strong> <span id="phone"></span></p>
+            <p><strong>المدينة:</strong> <span id="city"></span></p>
+            <p><strong>الجنسيه:</strong> <span id="nationality"></span></p>
+            <p><strong>العمر:</strong> <span id="age"></span></p>
+            <p><strong>سنين الخبرة:</strong> <span id="experienceYears"></span></p>
+        </div>
+        <h3>صور الخدمات المقدمة:</h3>
+        <div class="services-images" id="services-images">
+            <!-- سيتم ملء هذه الصور ديناميكيًا -->
         </div>
     </main>
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
-    <script src="profile.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script>
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+            authDomain: "omran-16f44.firebaseapp.com",
+            projectId: "omran-16f44",
+            storageBucket: "omran-16f44.appspot.com",
+            messagingSenderId: "598982209417",
+            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // جلب بيانات المستخدم وعرضها
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id');
+
+            if (userId) {
+                db.collection("users").doc(userId).get()
+                    .then((doc) => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+                            document.getElementById('profile-picture').src = userData.profilePicture;
+                            document.getElementById('username').innerText = userData.username;
+                            document.getElementById('profession').innerText = userData.profession;
+                            document.getElementById('phone').innerText = userData.phone;
+                            document.getElementById('city').innerText = userData.city;
+                            document.getElementById('nationality').innerText = userData.nationality;
+                            document.getElementById('age').innerText = userData.age;
+                            document.getElementById('experienceYears').innerText = userData.experienceYears;
+
+                            const servicesImages = document.getElementById('services-images');
+                            userData.servicesImages.forEach((url) => {
+                                const img = document.createElement('img');
+                                img.src = url;
+                                servicesImages.appendChild(img);
+                            });
+                        } else {
+                            console.error("No such document!");
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching user data: ", error);
+                    });
+            } else {
+                console.error("No user ID provided in URL");
+            }
+        });
+    </script>
 </body>
 </html>
