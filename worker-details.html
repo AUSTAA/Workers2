@@ -38,14 +38,25 @@
                 <h3>التقييم:</h3>
                 <div id="star-average" class="star-rating"></div>
             </div>
-            <form id="rating-form" style="display: none;">
-                <input type="radio" name="rating" value="1"> 1
-                <input type="radio" name="rating" value="2"> 2
-                <input type="radio" name="rating" value="3"> 3
-                <input type="radio" name="rating" value="4"> 4
-                <input type="radio" name="rating" value="5"> 5
-                <button type="submit">تقييم</button>
-            </form>
+        </div>
+        <div id="photos-section">
+            <h3>الصور</h3>
+            <div id="photos-container"></div>
+        </div>
+        <div id="comments-section">
+            <h3>التعليقات</h3>
+            <div id="comments-container"></div>
+            <button id="load-more-comments" style="display: none;">مزيد من التعليقات</button>
+            <div id="add-comment-form" style="display: none;">
+                <h4>إضافة تعليق</h4>
+                <form id="submit-comment">
+                    <textarea id="comment-text" placeholder="اكتب تعليقك هنا..."></textarea>
+                    <button type="submit">إرسال التعليق</button>
+                </form>
+            </div>
+            <div id="login-message" style="display: none;">
+                <p>لرؤية الصور والتفاصيل الرجاء <a href="login.html">تسجيل الدخول</a> أو <a href="registration.html">تسجيل</a>.</p>
+            </div>
         </div>
         <a href="carpenters.html" class="back-button">رجوع إلى القائمة السابقة</a>
         <a href="index.html" class="home-button">الصفحة الرئيسية</a>
@@ -53,9 +64,9 @@
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
     </footer>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js" crossorigin="anonymous"></script>
-    <script src="worker_details.js" crossorigin="anonymous"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="worker_details.js"></script>
 </body>
 </html>
