@@ -21,6 +21,8 @@ function getQueryParam(param) {
 }
 
 const workerId = getQueryParam('id');
+let displayedCommentsCount = 0;
+const commentsPerPage = 3;
 
 function displayWorkerDetails(userData) {
     document.getElementById('username').textContent = `اسم المستخدم: ${userData.username}`;
@@ -57,6 +59,68 @@ function displayAverageRating(ratings) {
     }
 }
 
+function displayPhotos(photos) {
+    const photosContainer = document.getElementById('photos-container');
+    photosContainer.innerHTML = ''; // تفريغ المحتوى الحالي
+    if (photos && photos.length > 0) {
+        photos.forEach(photoUrl => {
+            const img = document.createElement('img');
+            img.src = photoUrl;
+            img.alt = 'صورة من أعمال النجار';
+            img.style.width = '100px';
+            img.style.height = '100px';
+            img.style.margin = '5px';
+            img.style.cursor = 'pointer';
+            img.onclick = () => window.open(photoUrl, '_blank');
+            photosContainer.appendChild(img);
+        });
+    } else {
+        photosContainer.textContent = 'لا توجد صور بعد.';
+    }
+}
+
+function displayComments(comments) {
+    const commentsContainer = document.getElementById('comments-container');
+    commentsContainer.innerHTML = ''; // تفريغ المحتوى الحالي
+    const initialComments = comments.slice(0, commentsPerPage);
+    initialComments.forEach(comment => {
+        const commentDiv = document.createElement('div');
+        commentDiv.className = 'comment';
+        commentDiv.textContent = comment.text;
+        commentsContainer.appendChild(commentDiv);
+    });
+
+    displayedCommentsCount = initialComments.length;
+
+    if (comments.length > displayedCommentsCount) {
+        document.getElementById('load-more-comments').style.display = 'block';
+    }
+}
+
+document.getElementById('load-more-comments').addEventListener('click', function() {
+    db.collection("users").doc(workerId).get().then((doc) => {
+        if (doc.exists) {
+            const userData = doc.data();
+            const comments = userData.comments || [];
+            const moreComments = comments.slice(displayedCommentsCount, displayedCommentsCount + commentsPerPage);
+            moreComments.forEach(comment => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+                commentDiv.textContent = comment.text;
+                document.getElementById('comments-container').appendChild(commentDiv);
+            });
+
+            displayedCommentsCount += moreComments.length;
+
+            if (displayedCommentsCount >= comments.length) {
+                document.getElementById('load-more-comments').style.display = 'none';
+            }
+        }
+    }).catch((error) => {
+        console.error("Error loading more comments: ", error);
+    });
+});
+
 if (workerId) {
     // جلب تفاصيل النجار من Firestore باستخدام المعرّف
     db.collection("users").doc(workerId).get()
@@ -66,6 +130,12 @@ if (workerId) {
                 displayWorkerDetails(userData);
                 if (userData.ratings) {
                     displayAverageRating(userData.ratings);
+                }
+                if (userData.photos) {
+                    displayPhotos(userData.photos);
+                }
+                if (userData.comments) {
+                    displayComments(userData.comments);
                 }
             } else {
                 document.getElementById('worker-details').innerHTML = "<p>لم يتم العثور على تفاصيل النجار.</p>";
