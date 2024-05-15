@@ -7,17 +7,85 @@
     <link rel="stylesheet" href="styles.css">
     <style>
         /* أسلوب التنسيق هنا */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header, footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-header img {
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        .profile-info {
+            text-align: right;
+        }
+        .profile-info p {
+            margin: 5px 0;
+        }
+        .services-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .services-images img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body dir="rtl">
     <header>
-        <!-- عنوان الصفحة -->
+        <h1>تفاصيل النجار</h1>
     </header>
     <main>
-        <!-- عرض تفاصيل النجار -->
+        <div class="profile-header">
+            <img id="profile-picture" src="" alt="صورة شخصية" width="100">
+            <div>
+                <h2 id="username"></h2>
+                <p id="profession"></p>
+            </div>
+        </div>
+        <div class="profile-info">
+            <p><strong>الاسم:</strong> <span id="username"></span></p>
+            <p><strong>الهاتف:</strong> <span id="phone"></span></p>
+            <p><strong>العمر:</strong> <span id="age"></span></p>
+            <p><strong>سنوات الخبرة:</strong> <span id="experienceYears"></span></p>
+            <p><strong>المدينة:</strong> <span id="city"></span></p>
+            <p><strong>المهنة:</strong> <span id="profession"></span></p>
+            <p><strong>الجنسية:</strong> <span id="nationality"></span></p>
+        </div>
+        <h3>صور الخدمات المقدمة:</h3>
+        <div class="services-images" id="services-images">
+            <!-- سيتم ملء هذه الصور ديناميكيًا -->
+        </div>
     </main>
     <footer>
-        <!-- حقوق الطبع والنشر -->
+        <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
@@ -46,7 +114,21 @@
                     .then((doc) => {
                         if (doc.exists) {
                             const userData = doc.data();
-                            // عرض معلومات النجار هنا
+                            document.getElementById('profile-picture').src = userData.profilePicture;
+                            document.getElementById('username').innerText = userData.username;
+                            document.getElementById('phone').innerText = userData.phone;
+                            document.getElementById('age').innerText = userData.age;
+                            document.getElementById('experienceYears').innerText = userData.experienceYears;
+                            document.getElementById('city').innerText = userData.city;
+                            document.getElementById('profession').innerText = userData.profession;
+                            document.getElementById('nationality').innerText = userData.nationality;
+
+                            const servicesImages = document.getElementById('services-images');
+                            userData.servicesImages.forEach((url) => {
+                                const img = document.createElement('img');
+                                img.src = url;
+                                servicesImages.appendChild(img);
+                            });
                         } else {
                             console.error("No such document!");
                         }
