@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
@@ -39,18 +39,24 @@
                 <div id="star-average" class="star-rating"></div>
             </div>
         </div>
-        <div id="rating-form" style="display: none;">
-            <h3>تقييم النجار</h3>
-            <form id="submit-rating">
-                <div class="star-rating">
-                    <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 نجوم">☆</label>
-                    <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 نجوم">☆</label>
-                    <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 نجوم">☆</label>
-                    <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 نجوم">☆</label>
-                    <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 نجمة">☆</label>
-                </div>
-                <button type="submit">إرسال التقييم</button>
-            </form>
+        <div id="photos-section">
+            <h3>الصور</h3>
+            <div id="photos-container"></div>
+        </div>
+        <div id="comments-section">
+            <h3>التعليقات</h3>
+            <div id="comments-container"></div>
+            <button id="load-more-comments" style="display: none;">مزيد من التعليقات</button>
+            <div id="add-comment-form" style="display: none;">
+                <h4>إضافة تعليق</h4>
+                <form id="submit-comment">
+                    <textarea id="comment-text" placeholder="اكتب تعليقك هنا..."></textarea>
+                    <button type="submit">إرسال التعليق</button>
+                </form>
+            </div>
+            <div id="login-message" style="display: none;">
+                <p>لرؤية الصور والتفاصيل الرجاء <a href="login.html">تسجيل الدخول</a> أو <a href="registration.html">تسجيل</a>.</p>
+            </div>
         </div>
         <a href="carpenters.html" class="back-button">رجوع إلى القائمة السابقة</a>
         <a href="index.html" class="home-button">الصفحة الرئيسية</a>
