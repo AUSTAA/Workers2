@@ -24,23 +24,48 @@
     </header>
     <main>
         <div id="worker-details">
-            <p id="username"></p>
-            <p id="city"></p>
-            <p id="profession"></p>
-            <div class="additional-info">
-                <p id="phone"></p>
-                <p id="newPhone"></p>
-                <p id="nationality"></p>
-                <p id="experienceYears"></p>
-                <p id="age"></p>
-            </div>
+            <h2>تفاصيل العامل</h2>
+            <table>
+                <tr>
+                    <td>اسم المستخدم:</td>
+                    <td id="username"></td>
+                </tr>
+                <tr>
+                    <td>المدينة:</td>
+                    <td id="city"></td>
+                </tr>
+                <tr>
+                    <td>المهنة:</td>
+                    <td id="profession"></td>
+                </tr>
+                <tr class="additional-info">
+                    <td>رقم الهاتف:</td>
+                    <td id="phone"></td>
+                </tr>
+                <tr class="additional-info">
+                    <td>رقم الهاتف الجديد:</td>
+                    <td id="newPhone"></td>
+                </tr>
+                <tr class="additional-info">
+                    <td>الجنسية:</td>
+                    <td id="nationality"></td>
+                </tr>
+                <tr class="additional-info">
+                    <td>سنين الخبرة:</td>
+                    <td id="experienceYears"></td>
+                </tr>
+                <tr class="additional-info">
+                    <td>العمر:</td>
+                    <td id="age"></td>
+                </tr>
+            </table>
             <div id="average-rating">
                 <h3>التقييم:</h3>
                 <div id="star-average" class="star-rating"></div>
             </div>
         </div>
         <div id="rating-form" style="display: none;">
-            <h3>تقييم النجار</h3>
+            <h3>تقييم العامل</h3>
             <form id="submit-rating">
                 <div class="star-rating">
                     <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 نجوم">☆</label>
