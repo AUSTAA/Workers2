@@ -1,1 +1,48 @@
-
+body {
+    font-family: Arial, sans-serif;
+}
+header, footer {
+    background-color: #f8f8f8;
+    padding: 10px 20px;
+    text-align: center;
+}
+main {
+    padding: 20px;
+}
+#rating-form {
+    margin-top: 20px;
+}
+.additional-info {
+    display: none;
+}
+.star-rating {
+    direction: ltr;
+    display: inline-block;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    color: #ccc;
+    font-size: 24px;
+    padding: 0;
+    cursor: pointer;
+}
+.star-rating input:checked ~ label,
+.star-rating input:checked ~ label ~ label {
+    color: #f90;
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #fc0;
+}
+.back-button, .home-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+}
