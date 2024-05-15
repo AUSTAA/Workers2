@@ -6,7 +6,6 @@
     <title>تفاصيل النجار - خدمات البناء</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* أسلوب التنسيق هنا */
         body {
             font-family: Arial, sans-serif;
         }
@@ -20,6 +19,40 @@
         }
         #rating-form {
             margin-top: 20px;
+        }
+        .additional-info {
+            display: none;
+        }
+        .star-rating {
+            direction: ltr;
+            display: inline-block;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            color: #ccc;
+            font-size: 24px;
+            padding: 0;
+            cursor: pointer;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating input:checked ~ label ~ label {
+            color: #f90;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #fc0;
+        }
+        .back-button, .home-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
         }
     </style>
 </head>
@@ -43,22 +76,35 @@
         <div id="worker-details">
             <!-- سيتم ملء تفاصيل النجار ديناميكيًا -->
             <p id="username"></p>
-            <p id="phone"></p>
-            <p id="newPhone"></p>
-            <p id="nationality"></p>
             <p id="city"></p>
-            <p id="experienceYears"></p>
-            <p id="age"></p>
             <p id="profession"></p>
+            <div class="additional-info">
+                <p id="phone"></p>
+                <p id="newPhone"></p>
+                <p id="nationality"></p>
+                <p id="experienceYears"></p>
+                <p id="age"></p>
+            </div>
+            <div id="average-rating">
+                <h3>التقييم:</h3>
+                <div id="star-average" class="star-rating"></div>
+            </div>
         </div>
         <div id="rating-form" style="display: none;">
             <h3>تقييم النجار</h3>
             <form id="submit-rating">
-                <label for="rating">التقييم:</label>
-                <input type="number" id="rating" name="rating" min="1" max="5" required>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 نجوم">☆</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 نجوم">☆</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 نجوم">☆</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 نجوم">☆</label>
+                    <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 نجمة">☆</label>
+                </div>
                 <button type="submit">إرسال التقييم</button>
             </form>
         </div>
+        <a href="carpenters.html" class="back-button">رجوع إلى القائمة السابقة</a>
+        <a href="index.html" class="home-button">الصفحة الرئيسية</a>
     </main>
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
@@ -90,21 +136,51 @@
 
         const workerId = getQueryParam('id');
 
+        function displayWorkerDetails(userData) {
+            document.getElementById('username').textContent = `اسم المستخدم: ${userData.username}`;
+            document.getElementById('city').textContent = `المدينة: ${userData.city}`;
+            document.getElementById('profession').textContent = `المهنة: ${userData.profession}`;
+            if (auth.currentUser) {
+                document.querySelector('.additional-info').style.display = 'block';
+                document.getElementById('phone').textContent = `رقم الهاتف: ${userData.phone}`;
+                document.getElementById('newPhone').textContent = `رقم الهاتف الجديد: ${userData.newPhone}`;
+                document.getElementById('nationality').textContent = `الجنسية: ${userData.nationality}`;
+                document.getElementById('experienceYears').textContent = `سنين الخبرة: ${userData.experienceYears}`;
+                document.getElementById('age').textContent = `العمر: ${userData.age}`;
+            }
+        }
+
+        function displayAverageRating(ratings) {
+            const starAverage = document.getElementById('star-average');
+            starAverage.innerHTML = ''; // تفريغ المحتوى الحالي
+            if (ratings.length > 0) {
+                const totalRating = ratings.reduce((sum, r) => sum + r.rating, 0);
+                const averageRating = totalRating / ratings.length;
+                for (let i = 1; i <= 5; i++) {
+                    const star = document.createElement('span');
+                    star.textContent = '☆';
+                    if (i <= Math.round(averageRating)) {
+                        star.style.color = '#f90';
+                    } else {
+                        star.style.color = '#ccc';
+                    }
+                    starAverage.appendChild(star);
+                }
+            } else {
+                starAverage.textContent = 'لا توجد تقييمات بعد.';
+            }
+        }
+
         if (workerId) {
             // جلب تفاصيل النجار من Firestore باستخدام المعرّف
             db.collection("users").doc(workerId).get()
                 .then((doc) => {
                     if (doc.exists) {
-                        const workerDetails = document.getElementById('worker-details');
                         const userData = doc.data();
-                        document.getElementById('username').textContent = `اسم المستخدم: ${userData.username}`;
-                        document.getElementById('phone').textContent = `رقم الهاتف: ${userData.phone}`;
-                        document.getElementById('newPhone').textContent = `رقم الهاتف الجديد: ${userData.newPhone}`;
-                        document.getElementById('nationality').textContent = `الجنسية: ${userData.nationality}`;
-                        document.getElementById('city').textContent = `المدينة: ${userData.city}`;
-                        document.getElementById('experienceYears').textContent = `سنين الخبرة: ${userData.experienceYears}`;
-                        document.getElementById('age').textContent = `العمر: ${userData.age}`;
-                        document.getElementById('profession').textContent = `المهنة: ${userData.profession}`;
+                        displayWorkerDetails(userData);
+                        if (userData.ratings) {
+                            displayAverageRating(userData.ratings);
+                        }
                     } else {
                         document.getElementById('worker-details').innerHTML = "<p>لم يتم العثور على تفاصيل النجار.</p>";
                     }
@@ -116,34 +192,96 @@
         } else {
             document.getElementById('worker-details').innerHTML = "<p>معرّف النجار غير موجود في عنوان URL.</p>";
         }
-
         // التحقق من تسجيل الدخول
-        auth.onAuthStateChanged(user => {
+        auth.onAuthStateChanged((user) => {
             if (user) {
                 document.getElementById('rating-form').style.display = 'block';
             }
         });
 
         // إرسال التقييم
-        document.getElementById('submit-rating').addEventListener('submit', function(event) {
+        document.getElementById('submit-rating').addEventListener('submit', function (event) {
             event.preventDefault();
-            const rating = document.getElementById('rating').value;
-            if (workerId) {
-                db.collection("users").doc(workerId).update({
-                    ratings: firebase.firestore.FieldValue.arrayUnion({
-                        userId: auth.currentUser.uid,
-                        rating: parseInt(rating),
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    })
-                }).then(() => {
-                    alert("تم إرسال التقييم بنجاح!");
-                    document.getElementById('rating').value = '';
-                }).catch((error) => {
-                    console.error("Error submitting rating: ", error);
-                    alert("حدث خطأ أثناء إرسال التقييم. الرجاء المحاولة لاحقًا.");
-                });
-            }
+            const rating = document.querySelector('input[name="rating"]:checked').value;
+            db.collection("users").doc(workerId).update({
+                ratings: firebase.firestore.FieldValue.arrayUnion({
+                    userId: auth.currentUser.uid,
+                    rating: parseInt(rating, 10)
+                })
+            }).then(() => {
+                alert("تم إرسال التقييم بنجاح.");
+                window.location.reload();
+            }).catch((error) => {
+                console.error("Error submitting rating: ", error);
+            });
         });
+
+        // جلب معرّف النجار من عنوان URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        const workerId = getQueryParam('id');
+
+        function displayWorkerDetails(userData) {
+            document.getElementById('username').textContent = `اسم المستخدم: ${userData.username}`;
+            document.getElementById('city').textContent = `المدينة: ${userData.city}`;
+            document.getElementById('profession').textContent = `المهنة: ${userData.profession}`;
+            if (auth.currentUser) {
+                document.querySelector('.additional-info').style.display = 'block';
+                document.getElementById('phone').textContent = `رقم الهاتف: ${userData.phone}`;
+                document.getElementById('newPhone').textContent = `رقم الهاتف الجديد: ${userData.newPhone}`;
+                document.getElementById('nationality').textContent = `الجنسية: ${userData.nationality}`;
+                document.getElementById('experienceYears').textContent = `سنين الخبرة: ${userData.experienceYears}`;
+                document.getElementById('age').textContent = `العمر: ${userData.age}`;
+            }
+        }
+
+        function displayAverageRating(ratings) {
+            const starAverage = document.getElementById('star-average');
+            starAverage.innerHTML = ''; // تفريغ المحتوى الحالي
+            if (ratings.length > 0) {
+                const totalRating = ratings.reduce((sum, r) => sum + r.rating, 0);
+                const averageRating = totalRating / ratings.length;
+                for (let i = 1; i <= 5; i++) {
+                    const star = document.createElement('span');
+                    star.textContent = '☆';
+                    if (i <= Math.round(averageRating)) {
+                        star.style.color = '#f90';
+                    } else {
+                        star.style.color = '#ccc';
+                    }
+                    starAverage.appendChild(star);
+                }
+            } else {
+                starAverage.textContent = 'لا توجد تقييمات بعد.';
+            }
+        }
+
+        if (workerId) {
+            // جلب تفاصيل النجار من Firestore باستخدام المعرّف
+            db.collection("users").doc(workerId).get()
+                .then((doc) => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        displayWorkerDetails(userData);
+                        if (userData.ratings) {
+                            displayAverageRating(userData.ratings);
+                        }
+                    } else {
+                        document.getElementById('worker-details').innerHTML = "<p>لم يتم العثور على تفاصيل النجار.</p>";
+                    }
+                })
+                .catch((error) => {
+                    document.getElementById('worker-details').innerHTML = "<p>حدث خطأ أثناء جلب تفاصيل النجار. الرجاء المحاولة لاحقًا.</p>";
+                    console.error("Error fetching worker details: ", error);
+                });
+        } else {
+            document.getElementById('worker-details').innerHTML = "<p>معرّف النجار غير موجود في عنوان URL.</p>";
+        }
     </script>
 </body>
 </html>
+
+        
