@@ -38,14 +38,14 @@
                 <h3>التقييم:</h3>
                 <div id="star-average" class="star-rating"></div>
             </div>
-            <div id="photos-container"></div>
-            <div id="comments-container"></div>
-            <form id="add-comment-form" style="display: none;">
-                <input type="text" id="comment-text" placeholder="أضف تعليقًا...">
-                <button type="submit">إرسال التعليق</button>
+            <form id="rating-form" style="display: none;">
+                <input type="radio" name="rating" value="1"> 1
+                <input type="radio" name="rating" value="2"> 2
+                <input type="radio" name="rating" value="3"> 3
+                <input type="radio" name="rating" value="4"> 4
+                <input type="radio" name="rating" value="5"> 5
+                <button type="submit">تقييم</button>
             </form>
-            <button id="load-more-comments" style="display: none;">مزيد من التعليقات</button>
-            <p id="login-message" style="display: none;">لرؤية الصور والتعليقات، يرجى تسجيل الدخول.</p>
         </div>
         <a href="carpenters.html" class="back-button">رجوع إلى القائمة السابقة</a>
         <a href="index.html" class="home-button">الصفحة الرئيسية</a>
