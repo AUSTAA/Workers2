@@ -14,45 +14,61 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 const storage = firebase.storage();
 
-// جلب معرّف العامل من URL
+// جلب معرّف المستخدم من URL
 const urlParams = new URLSearchParams(window.location.search);
-const workerId = urlParams.get('id');
+const userId = urlParams.get('id');
 
-// جلب بيانات العامل عند تحميل الصفحة
-if (workerId) {
-    const workerDocRef = db.collection('workers').doc(workerId);
+// دالة لتحميل صورة من Firebase Storage
+async function loadImage(imageRef) {
+    try {
+        const imageUrl = await imageRef.getDownloadURL();
+        return imageUrl;
+    } catch (error) {
+        console.error("Error loading image:", error);
+        return null;
+    }
+}
 
-    workerDocRef.get().then(async (doc) => {
+// جلب بيانات المستخدم عند تحميل الصفحة
+if (userId) {
+    const userDocRef = db.collection('users').doc(userId);
+
+    userDocRef.get().then(async (doc) => {
         if (doc.exists) {
-            const workerData = doc.data();
-            document.getElementById('workerName').textContent = `الاسم: ${workerData.name}`;
-            document.getElementById('workerPhone').textContent = `رقم الهاتف: ${workerData.phone}`;
-            document.getElementById('workerNationality').textContent = `الجنسية: ${workerData.nationality}`;
-            document.getElementById('workerCity').textContent = `المدينة: ${workerData.city}`;
-            document.getElementById('workerExperienceYears').textContent = `عدد سنين الخبرة: ${workerData.experienceYears}`;
-            document.getElementById('workerAge').textContent = `العمر: ${workerData.age}`;
-            document.getElementById('workerProfession').textContent = `المهنة: ${workerData.profession}`;
+            const userData = doc.data();
+            document.getElementById('workerName').textContent = `الاسم: ${userData.username}`;
+            document.getElementById('workerPhone').textContent = `رقم الهاتف: ${userData.phone}`;
+            document.getElementById('workerNationality').textContent = `الجنسية: ${userData.nationality}`;
+            document.getElementById('workerCity').textContent = `المدينة: ${userData.city}`;
+            document.getElementById('workerExperienceYears').textContent = `عدد سنين الخبرة: ${userData.experienceYears}`;
+            document.getElementById('workerAge').textContent = `العمر: ${userData.age}`;
+            document.getElementById('workerProfession').textContent = `المهنة: ${userData.profession}`;
 
             // تحميل الصورة الشخصية
-            const profilePictureRef = storage.ref().child(`workers/${workerId}/profilePicture.jpg`);
-            try {
-                const profilePictureUrl = await profilePictureRef.getDownloadURL();
+            const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
+            const profilePictureUrl = await loadImage(profilePictureRef);
+            if (profilePictureUrl) {
                 document.getElementById('workerProfilePicture').src = profilePictureUrl;
-            } catch (error) {
-                console.log("No profile picture available:", error);
             }
 
             // تحميل صور الخدمات
             const serviceImagesContainer = document.getElementById('workerServiceImages');
             serviceImagesContainer.innerHTML = ''; // مسح المحتوى الحالي
-            const serviceImagesRef = storage.ref().child(`workers/${workerId}/serviceImages`);
+            const serviceImagesRef = storage.ref().child(`users/${userId}/serviceImages`);
             const serviceImagesSnapshot = await serviceImagesRef.listAll();
-            for (const itemRef of serviceImagesSnapshot.items) {
-                const imageUrl = await itemRef.getDownloadURL();
-                const img = document.createElement('img');
-                img.src = imageUrl;
-                img.alt = 'صورة خدمة';
-                serviceImagesContainer.appendChild(img);
+
+            if (serviceImagesSnapshot.items.length > 0) {
+                for (const itemRef of serviceImagesSnapshot.items) {
+                    const imageUrl = await loadImage(itemRef);
+                    if (imageUrl) {
+                        const img = document.createElement('img');
+                        img.src = imageUrl;
+                        img.alt = 'صورة خدمة';
+                        serviceImagesContainer.appendChild(img);
+                    }
+                }
+            } else {
+                console.log("No service images found for this user.");
             }
         } else {
             console.log("No such document!");
@@ -61,7 +77,7 @@ if (workerId) {
         console.error("Error getting document:", error);
     });
 } else {
-    console.log("No worker ID provided in URL");
+    console.log("No user ID provided in URL");
 }
 
 // زر للعودة إلى الصفحة الرئيسية
