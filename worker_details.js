@@ -54,7 +54,8 @@ function displayAverageRating(ratings) {
             starAverage.appendChild(star);
         }
     } else {
-        starAverage.textContent = 'لا توجد تقييمات بعد.';
+        starAverage.textContent = 'لا توجد تقييمات بعد
+          .';
     }
 }
 
@@ -128,16 +129,20 @@ if (workerId) {
             if (doc.exists) {
                 const userData = doc.data();
                 displayWorkerDetails(userData);
+                
+                // عرض صورة الملف الشخصي
+                if (userData['profilePicture.jpg']) {
+                    document.getElementById('profilePicture').src = userData['profilePicture.jpg'];
+                }
+
+                // عرض الصور المتعلقة بالخدمات
+                if (userData['serviceImages']) {
+                    displayPhotos(userData['serviceImages']);
+                }
+                
+                // عرض التقييمات والتعليقات إن وجدت
                 if (userData.ratings) {
                     displayAverageRating(userData.ratings);
-                }
-                if (userData.serviceImages) {
-                    // عرض الصور المتعلقة بالخدمات
-                    displayPhotos(userData.serviceImages);
-                }
-                if (userData.profilePicture) {
-                    // عرض صورة الملف الشخصي
-                    document.getElementById('profilePicture').src = userData.profilePicture;
                 }
                 if (userData.comments) {
                     displayComments(userData.comments);
@@ -147,8 +152,7 @@ if (workerId) {
             }
         })
         .catch((error) => {
-            document.getElementById('worker-details').innerHTML = "<p>حدث خطأ أثناء جلب تفاصيل النجار. الرجاء المحاولة لاحق
-                ًا.</p>";
+            document.getElementById('worker-details').innerHTML = "<p>حدث خطأ أثناء جلب تفاصيل النجار. الرجاء المحاولة لاحقًا.</p>";
             console.error("Error fetching worker details: ", error);
         });
 } else {
