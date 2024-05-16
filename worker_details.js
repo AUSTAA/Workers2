@@ -1,10 +1,10 @@
 const firebaseConfig = {
-    apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-    authDomain: "omran-16f44.firebaseapp.com",
-    projectId: "omran-16f44",
-    storageBucket: "omran-16f44.appspot.com",
-    messagingSenderId: "598982209417",
-    appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
 };
 
 if (!firebase.apps.length) {
@@ -18,7 +18,7 @@ const storage = firebase.storage();
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('id');
 
-// دالة لتحميل صورة من Firebase Storage
+// دالة لتحميل صورة من Firebase Storage باستخدام مسار محدد
 async function loadImage(imageRef) {
     try {
         const imageUrl = await imageRef.getDownloadURL();
