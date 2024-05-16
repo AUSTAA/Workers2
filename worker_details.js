@@ -1,13 +1,12 @@
-// إعداد Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-    authDomain: "omran-16f44.firebaseapp.com",
-    databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-    projectId: "omran-16f44",
-    storageBucket: "omran-16f44.appspot.com",
-    messagingSenderId: "598982209417",
-    appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-    measurementId: "G-PGZJ0T555G"
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_AUTH_DOMAIN",
+    databaseURL: "YOUR_DATABASE_URL",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_STORAGE_BUCKET",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -79,6 +78,7 @@ function displayPhotos(photos) {
     }
 }
 
+// جلب تعليقات العملاء
 function displayComments(comments) {
     const commentsContainer = document.getElementById('comments-container');
     commentsContainer.innerHTML = ''; // تفريغ المحتوى الحالي
@@ -121,8 +121,8 @@ document.getElementById('load-more-comments').addEventListener('click', function
     });
 });
 
+// عرض تفاصيل العامل
 if (workerId) {
-    // جلب تفاصيل النجار من Firestore باستخدام المعرّف
     db.collection("users").doc(workerId).get()
         .then((doc) => {
             if (doc.exists) {
@@ -131,8 +131,13 @@ if (workerId) {
                 if (userData.ratings) {
                     displayAverageRating(userData.ratings);
                 }
-                if (userData.photos) {
-                    displayPhotos(userData.photos);
+                if (userData.serviceImages) {
+                    // عرض الصور المتعلقة بالخدمات
+                    displayPhotos(userData.serviceImages);
+                }
+                if (userData.profilePicture) {
+                    // عرض صورة الملف الشخصي
+                    document.getElementById('profilePicture').src = userData.profilePicture;
                 }
                 if (userData.comments) {
                     displayComments(userData.comments);
@@ -142,7 +147,8 @@ if (workerId) {
             }
         })
         .catch((error) => {
-            document.getElementById('worker-details').innerHTML = "<p>حدث خطأ أثناء جلب تفاصيل النجار. الرجاء المحاولة لاحقًا.</p>";
+            document.getElementById('worker-details').innerHTML = "<p>حدث خطأ أثناء جلب تفاصيل النجار. الرجاء المحاولة لاحق
+                ًا.</p>";
             console.error("Error fetching worker details: ", error);
         });
 } else {
