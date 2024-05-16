@@ -1,12 +1,13 @@
+// إعداد Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-  authDomain: "omran-16f44.firebaseapp.com",
-  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-  projectId: "omran-16f44",
-  storageBucket: "omran-16f44.appspot.com",
-  messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-  measurementId: "G-PGZJ0T555G"
+    apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+    authDomain: "omran-16f44.firebaseapp.com",
+    databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+    projectId: "omran-16f44",
+    storageBucket: "omran-16f44.appspot.com",
+    messagingSenderId: "598982209417",
+    appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+    measurementId: "G-PGZJ0T555G"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -20,8 +21,6 @@ function getQueryParam(param) {
 }
 
 const workerId = getQueryParam('id');
-let displayedCommentsCount = 0;
-const commentsPerPage = 3;
 
 function displayWorkerDetails(userData) {
     document.getElementById('username').textContent = `اسم المستخدم: ${userData.username}`;
@@ -54,98 +53,19 @@ function displayAverageRating(ratings) {
             starAverage.appendChild(star);
         }
     } else {
-        starAverage.textContent = 'لا توجد تقييمات بعد
-          .';
+        starAverage.textContent = 'لا توجد تقييمات بعد.';
     }
 }
 
-function displayPhotos(photos) {
-    const photosContainer = document.getElementById('photos-container');
-    photosContainer.innerHTML = ''; // تفريغ المحتوى الحالي
-    if (photos && photos.length > 0) {
-        photos.forEach(photoUrl => {
-            const img = document.createElement('img');
-            img.src = photoUrl;
-            img.alt = 'صورة من أعمال النجار';
-            img.style.width = '100px';
-            img.style.height = '100px';
-            img.style.margin = '5px';
-            img.style.cursor = 'pointer';
-            img.onclick = () => window.open(photoUrl, '_blank');
-            photosContainer.appendChild(img);
-        });
-    } else {
-        photosContainer.textContent = 'لا توجد صور بعد.';
-    }
-}
-
-// جلب تعليقات العملاء
-function displayComments(comments) {
-    const commentsContainer = document.getElementById('comments-container');
-    commentsContainer.innerHTML = ''; // تفريغ المحتوى الحالي
-    const initialComments = comments.slice(0, commentsPerPage);
-    initialComments.forEach(comment => {
-        const commentDiv = document.createElement('div');
-        commentDiv.className = 'comment';
-        commentDiv.textContent = comment.text;
-        commentsContainer.appendChild(commentDiv);
-    });
-
-    displayedCommentsCount = initialComments.length;
-
-    if (comments.length > displayedCommentsCount) {
-        document.getElementById('load-more-comments').style.display = 'block';
-    }
-}
-
-document.getElementById('load-more-comments').addEventListener('click', function() {
-    db.collection("users").doc(workerId).get().then((doc) => {
-        if (doc.exists) {
-            const userData = doc.data();
-            const comments = userData.comments || [];
-            const moreComments = comments.slice(displayedCommentsCount, displayedCommentsCount + commentsPerPage);
-            moreComments.forEach(comment => {
-                const commentDiv = document.createElement('div');
-                commentDiv.className = 'comment';
-                commentDiv.textContent = comment.text;
-                document.getElementById('comments-container').appendChild(commentDiv);
-            });
-
-            displayedCommentsCount += moreComments.length;
-
-            if (displayedCommentsCount >= comments.length) {
-                document.getElementById('load-more-comments').style.display = 'none';
-            }
-        }
-    }).catch((error) => {
-        console.error("Error loading more comments: ", error);
-    });
-});
-
-// عرض تفاصيل العامل
 if (workerId) {
+    // جلب تفاصيل النجار من Firestore باستخدام المعرّف
     db.collection("users").doc(workerId).get()
         .then((doc) => {
             if (doc.exists) {
                 const userData = doc.data();
                 displayWorkerDetails(userData);
-                
-                // عرض صورة الملف الشخصي
-                if (userData['profilePicture.jpg']) {
-                    document.getElementById('profilePicture').src = userData['profilePicture.jpg'];
-                }
-
-                // عرض الصور المتعلقة بالخدمات
-                if (userData['serviceImages']) {
-                    displayPhotos(userData['serviceImages']);
-                }
-                
-                // عرض التقييمات والتعليقات إن وجدت
                 if (userData.ratings) {
                     displayAverageRating(userData.ratings);
-                }
-                if (userData.comments) {
-                    displayComments(userData.comments);
                 }
             } else {
                 document.getElementById('worker-details').innerHTML = "<p>لم يتم العثور على تفاصيل النجار.</p>";
