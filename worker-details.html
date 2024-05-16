@@ -1,65 +1,41 @@
+<!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفاصيل النجار - خدمات البناء</title>
-    <link rel="stylesheet" href="w-details.css">
+    <title>تفاصيل العامل</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
 </head>
 <body dir="rtl">
     <header>
-        <h1>تفاصيل النجار</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="about.html">من نحن</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="carpenters.html">النجارين</a></li>
-                <li><a href="electricians.html">الكهربائيين</a></li>
-                <li><a href="plumbers.html">السباكين</a></li>
-                <li><a href="painters.html">الدهانين</a></li>
-            </ul>
-        </nav>
+        <h1>تفاصيل العامل</h1>
+        <button id="homeButton">الصفحة الرئيسية</button>
     </header>
     <main>
-        <div id="worker-details">
-            <p id="username"></p>
-            <p id="city"></p>
-            <p id="profession"></p>
-            <div class="additional-info">
-                <p id="phone"></p>
-                <p id="newPhone"></p>
-                <p id="nationality"></p>
-                <p id="experienceYears"></p>
-                <p id="age"></p>
-            </div>
-            <div id="average-rating">
-                <h3>التقييم:</h3>
-                <div id="star-average" class="star-rating"></div>
-            </div>
+        <h2>بيانات العامل</h2>
+        <div class="worker-section">
+            <img id="workerProfilePicture" src="" alt="الصورة الشخصية">
+            <h3>المعلومات الشخصية</h3>
+            <p id="workerName"></p>
+            <p id="workerPhone"></p>
+            <p id="workerNationality"></p>
+            <p id="workerCity"></p>
+            <p id="workerExperienceYears"></p>
+            <p id="workerAge"></p>
+            <p id="workerProfession"></p>
         </div>
-        <div id="rating-form" style="display: none;">
-            <h3>تقييم النجار</h3>
-            <form id="submit-rating">
-                <div class="star-rating">
-                    <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 نجوم">☆</label>
-                    <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 نجوم">☆</label>
-                    <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 نجوم">☆</label>
-                    <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 نجوم">☆</label>
-                    <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 نجمة">☆</label>
-                </div>
-                <button type="submit">إرسال التقييم</button>
-            </form>
+        <div id="workerServiceImagesContainer">
+            <p>صور للخدمات التي قدمها:</p>
+            <div id="workerServiceImages"></div>
         </div>
-        <a href="carpenters.html" class="back-button">رجوع إلى القائمة السابقة</a>
-        <a href="index.html" class="home-button">الصفحة الرئيسية</a>
     </main>
     <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
+        <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
-    <script src="worker_details.js"></script>
+    <script src="worker-details.js" defer></script>
 </body>
 </html>
