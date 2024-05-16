@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تفاصيل العامل</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="profile.css">
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
@@ -16,10 +16,9 @@
         <button id="homeButton">الصفحة الرئيسية</button>
     </header>
     <main>
-        <h2>بيانات العامل</h2>
-        <div class="worker-section">
+        <div class="profile-section">
             <img id="workerProfilePicture" src="" alt="الصورة الشخصية">
-            <h3>المعلومات الشخصية</h3>
+            <h2>بيانات العامل</h2>
             <p id="workerName"></p>
             <p id="workerPhone"></p>
             <p id="workerNationality"></p>
@@ -29,7 +28,7 @@
             <p id="workerProfession"></p>
         </div>
         <div id="workerServiceImagesContainer">
-            <p>صور للخدمات التي قدمها:</p>
+            <h2>صور الخدمات</h2>
             <div id="workerServiceImages"></div>
         </div>
     </main>
