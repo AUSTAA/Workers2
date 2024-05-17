@@ -54,6 +54,8 @@ db.collection("users").doc(workerId).get()
                         const img = document.createElement('img');
                         img.src = imageUrl;
                         img.alt = 'صورة خدمة';
+                        img.style.maxWidth = '100%';
+                        img.style.marginBottom = '10px';
                         serviceImagesContainer.appendChild(img);
                     }).catch((error) => {
                         console.error("Error getting service image:", error);
@@ -62,9 +64,6 @@ db.collection("users").doc(workerId).get()
             }).catch((error) => {
                 console.error("Error getting service images:", error);
             });
-
-            // تحميل التقييمات والتعليقات
-            loadRatingsAndComments(workerId);
         } else {
             console.log("No such document!");
         }
@@ -73,86 +72,101 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
-// تحميل التقييمات والتعليقات
 function loadRatingsAndComments(workerId) {
-    const ratingsRef = db.collection("ratings").doc(workerId);
-    ratingsRef.get().then((doc) => {
-        if (doc.exists) {
-            const ratingData = doc.data();
-            const starRating = document.getElementById('starRating');
-            if (ratingData.rating) {
-                const rating = ratingData.rating;
-                document.querySelector(`input[name="rating"][value="${rating}"]`).checked = true;
+    // تحميل التقييمات
+    const ratingSection = document.getElementById('ratingSection');
+    const starRating = document.getElementById('starRating');
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+        const userId = user.uid;
+        const userRatingRef = db.collection("ratings").doc(`${workerId}_${userId}`);
+
+        // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
+        userRatingRef.get().then((doc) => {
+            if (doc.exists) {
+                const userRating = doc.data().rating;
+                document.querySelector(`input[name="rating"][value="${userRating}"]`).checked = true;
+                starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
             }
-            if (ratingData.comments) {
-                const commentsContainer = document.getElementById('commentsContainer');
-                commentsContainer.innerHTML = '';
-                ratingData.comments.forEach((comment) => {
-                    const commentDiv = document.createElement('div');
-                    commentDiv.textContent = comment;
-                    commentsContainer.appendChild(commentDiv);
-                });
-            }
+        });
+
+        // إضافة حدث للتقييم
+        starRating.addEventListener('change', (event) => {
+            const rating = event.target.value;
+            userRatingRef.set({ rating }).then(() => {
+                alert('تم إرسال التقييم بنجاح!');
+                starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+            }).catch((error) => {
+                console.error("Error submitting rating: ", error);
+            });
+        });
+    } else {
+        ratingSection.style.display = 'none';
+    }
+
+    // تحميل التعليقات
+    const commentsContainer = document.getElementById('commentsContainer');
+    db.collection("comments").where("workerId", "==", workerId).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const commentData = doc.data();
+                const commentElement = document.createElement('p');
+                commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
+                commentsContainer.appendChild(commentElement);
+            });
+        })
+        .catch((error) => {
+            console.error("Error getting comments: ", error);
+        });
+
+    // إرسال تعليق جديد
+    const commentInput = document.getElementById('commentInput');
+    const submitCommentButton = document.getElementById('submitComment');
+
+    submitCommentButton.addEventListener('click', () => {
+        const comment = commentInput.value.trim();
+        if (comment && user) {
+            const commentData = {
+                workerId,
+                username: user.displayName || user.email,
+                comment,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            db.collection("comments").add(commentData).then(() => {
+                const commentElement = document.createElement('p');
+                commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
+                commentsContainer.appendChild(commentElement);
+                commentInput.value = ''; // مسح التعليق
+            }).catch((error) => {
+                console.error("Error submitting comment: ", error);
+            });
+        } else if (!user) {
+            alert('يجب تسجيل الدخول لإرسال تعليق.');
         }
-    }).catch((error) => {
-        console.error("Error getting ratings and comments:", error);
     });
 }
 
-// تسجيل التقييم والتعليقات
-const ratingInputs = document.querySelectorAll('input[name="rating"]');
-ratingInputs.forEach((input) => {
-    input.addEventListener('change', () => {
-        const selectedRating = document.querySelector('input[name="rating"]:checked').value;
-        const user = auth.currentUser;
-        if (user) {
-            const ratingsRef = db.collection("ratings").doc(workerId);
-            ratingsRef.set({
-                rating: parseInt(selectedRating),
-            }, { merge: true }).then(() => {
-                alert('تم تسجيل تقييمك بنجاح');
-            }).catch((error) => {
-                console.error("Error saving rating:", error);
-            });
-        } else {
-            alert('يجب تسجيل الدخول لتقييم العامل');
-            document.getElementById('authButton').click();
-        }
-    });
-});
-
-document.getElementById('submitComment').addEventListener('click', () => {
-    const commentInput = document.getElementById('commentInput').value.trim();
-    if (commentInput) {
-        const user = auth.currentUser;
-        if (user) {
-            const ratingsRef = db.collection("ratings").doc(workerId);
-            ratingsRef.update({
-                comments: firebase.firestore.FieldValue.arrayUnion(commentInput)
-            }).then(() => {
-                loadRatingsAndComments(workerId);
-                document.getElementById('commentInput').value = '';
-                alert('تم تسجيل تعليقك بنجاح');
-            }).catch((error) => {
-                console.error("Error saving comment:", error);
-            });
-        } else {
-            alert('يجب تسجيل الدخول لكتابة تعليق');
-            document.getElementById('authButton').click();
-        }
+// التحقق من حالة تسجيل الدخول
+auth.onAuthStateChanged((user) => {
+    const authButton = document.getElementById('authButton');
+    if (user) {
+        authButton.style.display = 'none'; // إخفاء زر تسجيل الدخول إذا كان المستخدم مسجلاً الدخول
+        loadRatingsAndComments(workerId); // تحميل التقييمات والتعليقات بعد التأكد من حالة تسجيل الدخول
+    } else {
+        authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
+        authButton.addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
     }
 });
 
-// أزرار التنقل
-document.getElementById('backButton').addEventListener('click', () => {
-    window.history.back();
-});
-
+// العودة إلى الصفحة الرئيسية
 document.getElementById('homeButton').addEventListener('click', () => {
     window.location.href = 'index.html';
 });
 
-// زر تسجيل الدخول / حساب جديد
-document.getElementById('authButton').addEventListener('click', () => {
-    window.location.href = 'registration.html';
+// العودة إلى القائمة السابقة
+document.getElementById('backButton').addEventListener('click', () => {
+    window.history.back();
 });
