@@ -1,4 +1,3 @@
-<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -94,6 +93,9 @@
         </nav>
     </header>
     <main>
+
+        <input type="text" id="searchInput" placeholder="ابحث عن النجارين..."> <!-- حقل البحث -->
+        <button onclick="searchWorkers()">بحث</button> <!-- زر البحث -->
         <ul class="worker-list" id="worker-list">
             <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
@@ -120,6 +122,7 @@
 
         // جلب بيانات النجارين من Firestore
         function searchWorkers() {
+            const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
             const workerList = document.getElementById('worker-list');
             workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
 
@@ -131,15 +134,17 @@
                         querySnapshot.forEach((doc) => {                        const userData = doc.data();
                         const li = document.createElement('li');
                         li.classList.add('worker-box');
-                        // إضافة النجار إلى القائمة
-                        li.innerHTML = `
-                            <img src="${userData.image}" alt="${userData.username}">
-                            <h3>${userData.username}</h3>
-                            <p>المدينة: ${userData.city}</p>
-                            <p>سنين الخبرة: ${userData.experienceYears}</p>
-                            <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
-                        `;
-                        workerList.appendChild(li);
+                        if (!searchKeyword || userData.username.toLowerCase().includes(searchKeyword)) {
+                            // إضافة النجار إلى القائمة فقط إذا تطابقت مع الكلمة المدخلة أو لم يتم إدخال أي كلمة بحث
+                            li.innerHTML = `
+                                <img src="${userData.image}" alt="${userData.username}">
+                                <h3>${userData.username}</h3>
+                                <p>المدينة: ${userData.city}</p>
+                                <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
+                            `;
+                            workerList.appendChild(li);
+                        }
                     });
                 }
             })
