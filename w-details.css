@@ -11,22 +11,21 @@ header, footer {
     text-align: center;
 }
 
-header nav {
-    margin-bottom: 10px;
+header nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
-header nav button {
-    margin-right: 10px;
-    padding: 10px;
-    background-color: #4CAF50;
+header nav ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+header nav ul li a {
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-header nav button:last-child {
-    margin-right: 0;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 main {
@@ -35,6 +34,14 @@ main {
 
 .profile-section {
     margin-bottom: 20px;
+    text-align: center;
+}
+
+.profile-section img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 #workerServiceImagesContainer {
@@ -76,27 +83,30 @@ main {
     color: #fc0;
 }
 
-.comments-section {
+.back-button, .home-button, #authButton {
     margin-top: 20px;
-}
-
-.comments-section textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    text-decoration: none;
+    display: inline-block;
 }
 
-.comments-section button {
+#commentInput {
+    width: 100%;
+    height: 100px;
+    margin-top: 10px;
+}
+
+#submitComment {
+    display: block;
+    margin-top: 10px;
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
-
-.comments-section div {
-    margin-bottom: 10px;
 }
