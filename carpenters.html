@@ -9,6 +9,8 @@
         /* أسلوب التنسيق هنا */
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         header, footer {
             background-color: #f8f8f8;
@@ -17,16 +19,24 @@
         }
         main {
             padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* تنظيم الصور بناءً على عرض الشاشة */
+            gap: 20px; /* مسافة بين العناصر */
         }
-        .worker-list {
-            list-style-type: none;
-            padding: 0;
+        .worker-box {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+        }
+        .worker-box img {
+            width: 100%; /* جعل الصورة تمتد لتغطي المربع */
+            border-radius: 50%; /* تقريب حواف الصورة */
+            margin-bottom: 10px;
         }
         .worker-list li {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+            list-style-type: none;
+            margin-bottom: 20px;
         }
         .home-button {
             margin-top: 20px;
@@ -38,7 +48,9 @@
             text-decoration: none;
         }
         .logo {
-            margin-bottom: 20px;
+            display: block;
+            margin: 0 auto 20px; /* توسيط الصورة */
+            width: 200px; /* تحديد عرض الصورة */
         }
         .categories {
             display: none;
@@ -47,7 +59,7 @@
 </head>
 <body dir="rtl">
     <header>
-<img src="IMG_0607.webp" alt="نجارين" class="logo">
+        <img src="IMG_0607.webp" alt="نجارين" class="logo">
         <h1>خدمات البناء</h1>
         <nav>
             <ul>
@@ -65,7 +77,6 @@
         <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
     </header>
     <main>
-        <h2>قائمة النجارين المتاحين</h2>
         <ul class="worker-list" id="worker-list">
             <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
@@ -101,10 +112,13 @@
                         const userData = doc.data();
                         const li = document.createElement('li');
                         li.innerHTML = `
-                            <h3>${userData.username}</h3>
-                            <p>المدينة: ${userData.city}</p>
-                            <p>سنين الخبرة: ${userData.experienceYears}</p>
-                            <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
+                            <div class="worker-box">
+                                <img src="${userData.image}" alt="${userData.username}">
+                                <h3>${userData.username}</h3>
+                                <p>المدينة: ${userData.city}</p>
+                                <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
+                            </div>
                         `;
                         workerList.appendChild(li);
                     });
@@ -126,5 +140,3 @@
     </script>
 </body>
 </html>
-
-        
