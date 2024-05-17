@@ -6,72 +6,60 @@
     <title>النجارين - خدمات البناء</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* أسلوب التنسيق هنا */
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
         }
         header, footer {
             background-color: #f8f8f8;
             padding: 10px 20px;
             text-align: center;
         }
+        header img {
+            width: 100%;
+            height: auto;
+        }
         main {
             padding: 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* تنظيم الصور بناءً على عرض الشاشة */
-            gap: 20px; /* مسافة بين العناصر */
+        }
+        .worker-list {
+            display: flex;
+            flex-wrap: wrap;
+            list-style-type: none;
+            padding: 0;
+            justify-content: center;
         }
         .worker-box {
             border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px;
             border-radius: 5px;
-            padding: 20px;
+            width: 30%;
+            box-sizing: border-box;
             text-align: center;
-            width: 100%; /* جعل المربع يمتد لتغطية العرض */
-            height: auto; /* تحديد الارتفاع بناءً على حجم الصور */
         }
         .worker-box img {
-            max-width: 100%; /* جعل الصورة تمتد لتغطي المربع */
-            border-radius: 50%; /* تقريب حواف الصورة */
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
             margin-bottom: 10px;
-            width: 200px; /* تحديد عرض الصورة */
-            height: 200px; /* تحديد ارتفاع الصورة */
         }
-        .worker-list li {
-            list-style-type: none;
-            margin-bottom: 20px;
-        }
-        .home-button {
-            margin-top: 20px;
+        .home-button, .services-button {
+            margin: 10px;
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 5px;
             text-decoration: none;
-            display: block;
-            width: 100%; /* تحديد عرض الزر */
+            display: inline-block;
         }
-        .logo {
-            display: block;
-            margin: 0 auto 20px; /* توسيط الصورة */
-            width: 100%; /* تحديد عرض الصورة */
-            height: auto; /* تحديد الارتفاع بناءً على عرض الشاشة */
-            max-width: 600px; /* تحديد العرض الأقصى للصورة */
+        .nav-menu {
+            display: none;
+            flex-direction: column;
+            margin-top: 10px;
         }
         .categories {
             display: none;
-        }
-        .categories-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-        .categories-button:focus {
-            outline: none;
         }
     </style>
 </head>
@@ -79,17 +67,23 @@
     <header>
         <img src="IMG_0607.webp" alt="نجارين" class="logo">
         <h1>خدمات البناء</h1>
-        <nav>
-            <button id="showCategories" class="categories-button">خدمات البناء</button>
-            <ul class="categories">
+        <button id="showCategories" class="services-button">خدمات البناء</button>
+        <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
+        <nav class="nav-menu categories">
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="about.html">من نحن</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="carpenters.html">النجارين</a></li>
+                <li><a href="electricians.html">الكهربائيين</a></li>
+                <li><a href="plumbers.html">السباكين</a></li>
+                <li><a href="painters.html">الدهانين</a></li>
             </ul>
-            <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
         </nav>
     </header>
     <main>
+        <h2>قائمة النجارين المتاحين</h2>
         <ul class="worker-list" id="worker-list">
             <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
@@ -124,7 +118,7 @@
                     querySnapshot.forEach((doc) => {
                         const userData = doc.data();
                         const li = document.createElement('li');
-                        li.classList.add('worker-box'); // إضافة الكلاس للمربع
+                        li.classList.add('worker-box');
                         li.innerHTML = `
                             <img src="${userData.image}" alt="${userData.username}">
                             <h3>${userData.username}</h3>
