@@ -32,6 +32,38 @@ main {
     padding: 20px;
 }
 
+.profile-section {
+    margin-bottom: 20px;
+}
+
+.profile-section img {
+    max-width: 150px;
+    border-radius: 50%;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.profile-section h2 {
+    margin-bottom: 10px;
+}
+
+.profile-section p {
+    margin: 5px 0;
+}
+
+#workerServiceImagesContainer {
+    margin-top: 20px;
+}
+
+#workerServiceImagesContainer h2 {
+    margin-bottom: 10px;
+}
+
+#workerServiceImagesContainer img {
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
 .additional-info {
     display: none;
 }
@@ -71,4 +103,9 @@ main {
     border-radius: 5px;
     text-decoration: none;
     display: inline-block;
+    cursor: pointer;
+}
+
+.back-button:hover, .home-button:hover {
+    background-color: #45a049;
 }
