@@ -40,11 +40,14 @@
         .logo {
             margin-bottom: 20px;
         }
+        .categories {
+            display: none;
+        }
     </style>
 </head>
 <body dir="rtl">
     <header>
-        <img src="IMG_0607.webp" alt="نجارين" class="logo">
+        <img src="‏IMG_0607.webp‏" alt="نجارين" class="logo">
         <h1>خدمات البناء</h1>
         <nav>
             <ul>
@@ -58,13 +61,14 @@
                 <li><a href="painters.html">الدهانين</a></li>
             </ul>
         </nav>
+        <button id="showCategories">خدمات البناء</button>
+        <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
     </header>
     <main>
         <h2>قائمة النجارين المتاحين</h2>
         <ul class="worker-list" id="worker-list">
             <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
-        <a href="index.html" class="home-button">العودة للرئيسية</a>
     </main>
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
@@ -111,6 +115,16 @@
                 workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
                 console.error("Error fetching carpenters: ", error);
             });
+
+        // عرض أو إخفاء التصنيفات عند النقر على الزر
+        const showCategoriesButton = document.getElementById('showCategories');
+        const categories = document.querySelector('.categories');
+
+        showCategoriesButton.addEventListener('click', () => {
+            categories.style.display = categories.style.display === 'block' ? 'none' : 'block';
+        });
     </script>
 </body>
 </html>
+
+        
