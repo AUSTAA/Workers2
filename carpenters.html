@@ -77,7 +77,6 @@
     <header>
         <img src="IMG_0607.webp" alt="نجارين" class="logo">
         <h1>خدمات البناء</h1>
-        <button id="showCategories" class="services-button">خدمات البناء</button>
         <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
         <button class="menu-button" id="menuButton">&#9776;</button>
         <nav class="nav-menu categories" id="categoriesMenu">
@@ -97,7 +96,9 @@
         <h2>خدمات البناء</h2>
         <h3>النجارين</h3> <!-- عنوان النجارين تحت عنوان خدمات البناء -->
         <input type="text" id="searchInput" placeholder="ابحث عن النجارين..."> <!-- حقل البحث -->
-        <button onclick="searchWorkers()">بحث</button> <!-- زر البحث -->
+        <input type="text" id="cityInput" placeholder="المدينة...">
+        <input type="number" id="experienceInput" placeholder="سنوات الخبرة...">
+        <button onclick="searchWorkers()">الفلترة</button> <!-- زر البحث -->
         <ul class="worker-list" id="worker-list">
             <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
@@ -125,6 +126,8 @@
         // جلب بيانات النجارين من Firestore
         function searchWorkers() {
             const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+            const cityKeyword = document.getElementById('cityInput').value.toLowerCase();
+            const experienceKeyword = document.getElementById('experienceInput').value;
             const workerList = document.getElementById('worker-list');
             workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
 
@@ -136,7 +139,9 @@
                         querySnapshot.forEach((doc) => {                        const userData = doc.data();
                         const li = document.createElement('li');
                         li.classList.add('worker-box');
-                        if (!searchKeyword || userData.username.toLowerCase().includes(searchKeyword)) {
+                        const cityMatch = !cityKeyword || userData.city.toLowerCase().includes(cityKeyword);
+                        const experienceMatch = !experienceKeyword || userData.experienceYears >= experienceKeyword;
+                        if ((!searchKeyword || userData.username.toLowerCase().includes(searchKeyword)) && cityMatch && experienceMatch) {
                             // إضافة النجار إلى القائمة فقط إذا تطابقت مع الكلمة المدخلة أو لم يتم إدخال أي كلمة بحث
                             li.innerHTML = `
                                 <img src="${userData.image}" alt="${userData.username}">
@@ -171,5 +176,6 @@
 
     // عرض جميع النجارين عند تحميل الصفحة
     window.onload = searchWorkers;
-</script></body>
+</script>
+</body>
 </html>
