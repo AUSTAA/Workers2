@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تفاصيل العمال</title>
-    <link rel="stylesheet" href="w-details.css">
+    <link rel="stylesheet" href="profile.css">
 </head>
 <body dir="rtl">
     <header>
         <h1>تفاصيل العمال</h1>
-        <nav>
-            <button id="backButton">الرجوع للقائمة السابقة</button>
-            <button id="homeButton">الصفحة الرئيسية</button>
-            <button id="authButton">تسجيل الدخول / حساب جديد</button>
-        </nav>
+        <button id="homeButton">الصفحة الرئيسية</button>
+        <button id="backButton">الرجوع للقائمة السابقة</button>
+        <button id="authButton" style="display: none;">تسجيل الدخول / إنشاء حساب</button>
     </header>
     <main>
         <div class="profile-section">
@@ -31,21 +29,19 @@
             <h2>صور الخدمات</h2>
             <div id="workerServiceImages"></div>
         </div>
-        <div class="rating-section">
-            <h2>تقييم العامل</h2>
+        <div id="ratingSection">
+            <h2>التقييمات</h2>
             <div class="star-rating" id="starRating">
-                <input type="radio" id="star5" name="rating" value="5"><label for="star5">☆</label>
-                <input type="radio" id="star4" name="rating" value="4"><label for="star4">☆</label>
-                <input type="radio" id="star3" name="rating" value="3"><label for="star3">☆</label>
-                <input type="radio" id="star2" name="rating" value="2"><label for="star2">☆</label>
-                <input type="radio" id="star1" name="rating" value="1"><label for="star1">☆</label>
+                <input type="radio" name="rating" value="5" id="5"><label for="5">&#9733;</label>
+                <input type="radio" name="rating" value="4" id="4"><label for="4">&#9733;</label>
+                <input type="radio" name="rating" value="3" id="3"><label for="3">&#9733;</label>
+                <input type="radio" name="rating" value="2" id="2"><label for="2">&#9733;</label>
+                <input type="radio" name="rating" value="1" id="1"><label for="1">&#9733;</label>
             </div>
-        </div>
-        <div class="comments-section">
             <h2>التعليقات</h2>
             <div id="commentsContainer"></div>
-            <textarea id="commentInput" placeholder="أضف تعليقًا"></textarea>
-            <button id="submitComment">إرسال</button>
+            <textarea id="commentInput" placeholder="اكتب تعليقك هنا..."></textarea>
+            <button id="submitComment">إرسال التعليق</button>
         </div>
     </main>
     <footer>
@@ -55,6 +51,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
-    <script src="worker-details.js" defer></script>
+    <script src="worker-details.js"></script>
 </body>
 </html>
