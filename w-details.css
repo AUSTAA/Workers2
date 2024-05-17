@@ -11,21 +11,22 @@ header, footer {
     text-align: center;
 }
 
-header nav ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+header nav {
+    margin-bottom: 10px;
 }
 
-header nav ul li {
-    display: inline-block;
-    margin-right: 20px;
-}
-
-header nav ul li a {
+header nav button {
+    margin-right: 10px;
+    padding: 10px;
+    background-color: #4CAF50;
     color: white;
-    text-decoration: none;
-    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+header nav button:last-child {
+    margin-right: 0;
 }
 
 main {
@@ -34,21 +35,6 @@ main {
 
 .profile-section {
     margin-bottom: 20px;
-}
-
-.profile-section img {
-    max-width: 150px;
-    border-radius: 50%;
-    display: block;
-    margin-bottom: 20px;
-}
-
-.profile-section h2 {
-    margin-bottom: 10px;
-}
-
-.profile-section p {
-    margin: 5px 0;
 }
 
 #workerServiceImagesContainer {
@@ -62,10 +48,6 @@ main {
 #workerServiceImagesContainer img {
     max-width: 100%;
     margin-bottom: 10px;
-}
-
-.additional-info {
-    display: none;
 }
 
 .star-rating {
@@ -94,18 +76,27 @@ main {
     color: #fc0;
 }
 
-.back-button, .home-button {
+.comments-section {
     margin-top: 20px;
+}
+
+.comments-section textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.comments-section button {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
     border: none;
     border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
     cursor: pointer;
 }
 
-.back-button:hover, .home-button:hover {
-    background-color: #45a049;
+.comments-section div {
+    margin-bottom: 10px;
 }
