@@ -44,7 +44,7 @@
             border-radius: 50%;
             margin-bottom: 10px;
         }
-        .home-button, .services-button {
+        .home-button, .filter-button {
             margin: 10px;
             padding: 10px 20px;
             background-color: #4CAF50;
@@ -98,7 +98,8 @@
         <input type="text" id="searchInput" placeholder="ابحث عن النجارين..."> <!-- حقل البحث -->
         <input type="text" id="cityInput" placeholder="المدينة...">
         <input type="number" id="experienceInput" placeholder="سنوات الخبرة...">
-        <button onclick="searchWorkers()">الفلترة</button> <!-- زر البحث -->
+        <button onclick="filterWorkers()">الفلترة</button> <!-- زر الفلترة -->
+        <button onclick="resetFilters()">إعادة تعيين</button> <!-- زر إعادة التعيين -->
         <ul class="worker-list" id="worker-list">
             <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
@@ -123,11 +124,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // جلب بيانات النجارين من Firestore
-        function searchWorkers() {
-            const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
-            const cityKeyword = document.getElementById('cityInput').value.toLowerCase();
-            const experienceKeyword = document.getElementById('experienceInput').value;
+        // جلب بيانات النجارين من Firestore وعرضها
+        function fetchAndDisplayWorkers() {
             const workerList = document.getElementById('worker-list');
             workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
 
@@ -136,13 +134,10 @@
                     if (querySnapshot.empty) {
                         workerList.innerHTML = "<p>لا يوجد نجارين متاحين في الوقت الحالي.</p>";
                     } else {
-                        querySnapshot.forEach((doc) => {                        const userData = doc.data();
-                        const li = document.createElement('li');
-                        li.classList.add('worker-box');
-                        const cityMatch = !cityKeyword || userData.city.toLowerCase().includes(cityKeyword);
-                        const experienceMatch = !experienceKeyword || userData.experienceYears >= experienceKeyword;
-                        if ((!searchKeyword || userData.username.toLowerCase().includes(searchKeyword)) && cityMatch && experienceMatch) {
-                            // إضافة النجار إلى القائمة فقط إذا تطابقت مع الكلمة المدخلة أو لم يتم إدخال أي كلمة بحث
+                        querySnapshot.forEach((doc) => {
+                            const userData = doc.data();
+                            const li = document.createElement('li');
+                            li.classList.add('worker-box');
                             li.innerHTML = `
                                 <img src="${userData.image}" alt="${userData.username}">
                                 <h3>${userData.username}</h3>
@@ -151,31 +146,65 @@
                                 <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
                             `;
                             workerList.appendChild(li);
-                        }
-                    });
-                }
-            })
-            .catch((error) => {
-                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
-                console.error("Error fetching carpenters: ", error);
-            });
-    }
+                        });
+                    }
+                })
+                .catch((error) => {
+                    workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
+                    console.error("Error fetching carpenters: ", error);
+                });
+        }
 
-    // عرض أو إخفاء التصنيفات عند النقر على الزر
-    const showCategoriesButton = document.getElementById('showCategories');
-    const categoriesMenu = document.getElementById('categoriesMenu');
+        // البحث والفلترة عن النجارين
+        function filterWorkers() {
+            const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+            const cityKeyword = document.getElementById('cityInput').value.toLowerCase();
+            const experienceKeyword = parseInt(document.getElementById('experienceInput').value);
+            
+            const workerList = document.getElementById('worker-list');
+            workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
 
-    showCategoriesButton.addEventListener('click', () => {
-        categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-    });
+            db.collection("users").where("profession", "==", "نجار").get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.empty) {
+                        workerList.innerHTML = "<p>لا يوجد نجارين متاحين في الوقت الحالي.</p>";
+                    } else {
+                        querySnapshot.forEach((doc) => {
+                            const userData = doc.data();
+                            const li = document.createElement('li');
+                            li.classList.add('worker-box');
+                            const searchMatch = !searchKeyword || userData.username.toLowerCase().includes(searchKeyword);
+                            const cityMatch = !cityKeyword || userData.city.toLowerCase().includes(cityKeyword);
+                            const experienceMatch = !isNaN(experienceKeyword) && userData.experienceYears >= experienceKeyword;
+                            if (searchMatch && cityMatch && experienceMatch) {
+                                li.innerHTML = `
+                                    <img src="${userData.image}" alt="${userData.username}">
+                                    <h3>${userData.username}</h3>
+                                    <p>المدينة: ${userData.city}</p>
+                                    <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                    <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
+                                `;
+                                workerList.appendChild(li);
+                            }
+                        });
+                    }
+                })
+                .catch((error) => {
+                    workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
+                    console.error("Error fetching carpenters: ", error);
+                });
+        }
 
-    const menuButton = document.getElementById('menuButton');
-    menuButton.addEventListener('click', () => {
-        categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-    });
+        // إعادة تعيين الفلاتر وعرض جميع النجارين
+        function resetFilters() {
+            document.getElementById('searchInput').value = "";
+            document.getElementById('cityInput').value = "";
+            document.getElementById('experienceInput').value = "";
+            fetchAndDisplayWorkers();
+        }
 
-    // عرض جميع النجارين عند تحميل الصفحة
-    window.onload = searchWorkers;
-</script>
+        // عرض جميع النجارين عند تحميل الصفحة
+        window.onload = fetchAndDisplayWorkers;
+    </script>
 </body>
 </html>
