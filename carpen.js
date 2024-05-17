@@ -13,10 +13,9 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // جلب بيانات النجارين من Firestore
-function searchWorkers() {
-    const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+function loadCarpenters() {
     const workerList = document.getElementById('worker-list');
-    workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
+    workerList.innerHTML = ""; // تفريغ القائمة قبل بدء التحميل
 
     db.collection("users").where("profession", "==", "نجار").get()
         .then((querySnapshot) => {
@@ -27,17 +26,14 @@ function searchWorkers() {
                     const userData = doc.data();
                     const li = document.createElement('li');
                     li.classList.add('worker-box');
-                    if (!searchKeyword || userData.username.toLowerCase().includes(searchKeyword)) {
-                        // إضافة النجار إلى القائمة فقط إذا تطابقت مع الكلمة المدخلة أو لم يتم إدخال أي كلمة بحث
-                        li.innerHTML = `
-                            <img src="${userData.image}" alt="${userData.username}">
-                            <h3>${userData.username}</h3>
-                            <p>المدينة: ${userData.city}</p>
-                            <p>سنين الخبرة: ${userData.experienceYears}</p>
-                            <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
-                        `;
-                        workerList.appendChild(li);
-                    }
+                    li.innerHTML = `
+                        <img src="${userData.image}" alt="${userData.username}">
+                        <h3>${userData.username}</h3>
+                        <p>المدينة: ${userData.city}</p>
+                        <p>سنين الخبرة: ${userData.experienceYears}</p>
+                        <p><a href="worker-details.html?id=${doc.id}" class="details-link">تفاصيل</a></p>
+                    `;
+                    workerList.appendChild(li);
                 });
             }
         })
@@ -55,5 +51,5 @@ menuButton.addEventListener('click', () => {
     categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
 });
 
-// عرض جميع النجارين عند تحميل الصفحة
-window.onload = searchWorkers;
+// تحميل النجارين عند تحميل الصفحة
+window.onload = loadCarpenters;
