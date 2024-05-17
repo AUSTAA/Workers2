@@ -46,6 +46,7 @@
             border: none;
             border-radius: 5px;
             text-decoration: none;
+            display: block;
         }
         .logo {
             display: block;
@@ -55,6 +56,16 @@
         .categories {
             display: none;
         }
+        .categories-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .categories-button:focus {
+            outline: none;
+        }
     </style>
 </head>
 <body dir="rtl">
@@ -62,19 +73,14 @@
         <img src="IMG_0607.webp" alt="نجارين" class="logo">
         <h1>خدمات البناء</h1>
         <nav>
-            <ul>
-                <li><a href="index.html">الرئيسية</a></li>
+            <button id="showCategories" class="categories-button">خدمات البناء</button>
+            <ul class="categories">
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="about.html">من نحن</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="carpenters.html">النجارين</a></li>
-                <li><a href="electricians.html">الكهربائيين</a></li>
-                <li><a href="plumbers.html">السباكين</a></li>
-                <li><a href="painters.html">الدهانين</a></li>
             </ul>
+            <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
         </nav>
-        <button id="showCategories">خدمات البناء</button>
-        <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
     </header>
     <main>
         <ul class="worker-list" id="worker-list">
