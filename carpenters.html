@@ -5,131 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>النجارين - خدمات البناء</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        header, footer {
-            background-color: #f8f8f8;
-            padding: 10px 20px;
-            text-align: center;
-        }
-        header img {
-            width: 100%;
-            height: auto;
-        }
-        main {
-            padding: 20px;
-        }
-        .worker-list {
-            display: flex;
-            flex-wrap: wrap;
-            list-style-type: none;
-            padding: 0;
-            justify-content: center;
-        }
-        .worker-box {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            width: 30%;
-            height: 200px;
-            box-sizing: border-box;
-            text-align: center;
-            overflow: hidden;
-        }
-        .worker-box img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-        .home-button, .filter-button {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .nav-menu {
-            display: none;
-            flex-direction: column;
-            margin-top: 10px;
-        }
-        .categories {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-        .menu-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            margin-top: 10px;
-        }
-        .filter-input {
-            margin-bottom: 10px;
-        }
+        /* إضافة الستايل هنا */
     </style>
 </head>
 <body dir="rtl">
     <header>
-        <img src="IMG_0607.webp" alt="نجارين" class="logo">
-        <h1>خدمات البناء</h1>
-        <button id="filterButton" class="filter-button" onclick="toggleFilter()">فلترة النجارين</button>
-        <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
-        <button class="menu-button" id="menuButton">&#9776;</button>
-        <nav class="nav-menu categories" id="categoriesMenu">
-            <ul>
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="about.html">من نحن</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="carpenters.html">النجارين</a></li>
-                <li><a href="electricians.html">الكهربائيين</a></li>
-                <li><a href="plumbers.html">السباكين</a></li>
-                <li><a href="painters.html">الدهانين</a></li>
-            </ul>
-        </nav>
+        <!-- إضافة الهيدر هنا -->
     </header>
     <main>
-        <h2>خدمات البناء</h2>
-        <h3>النجارين</h3>
-        <div id="filterFields" style="display: none;">
-            <input type="text" id="cityInput" class="filter-input" placeholder="المدينة">
-            <input type="number" id="experienceInput" class="filter-input" placeholder="سنين الخبرة">
-            <input type="number" id="ratingInput" class="filter-input" placeholder="التقييم (من 1 إلى 5)">
-            <button onclick="applyFilters()">فلترة</button>
-        </div>
-        <ul class="worker-list" id="worker-list">
-            <!-- سيتم ملء هذه القائمة ديناميكيًا -->
-        </ul>
+        <!-- إضافة مربع البحث وقائمة النجارين هنا -->
     </main>
     <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
+        <!-- إضافة الفوتر هنا -->
     </footer>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script>
-        // إعداد Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-            authDomain: "omran-16f44.firebaseapp.com",
-            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-            projectId: "omran-16f44",
-            storageBucket: "omran-16f44.appspot.com",
-            messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-            measurementId: "G-PGZJ0T555G"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // تحميل جميع النجارين عند تحميل الصفحة
+        window.onload = searchWorkers;
 
-        // جلب بيانات النجارين من Firestore
+        // عرض جميع النجارين أو تطبيق الفلترة بناءً على البحث
         function searchWorkers() {
             const workerList = document.getElementById('worker-list');
             workerList.innerHTML = "";
@@ -137,8 +30,7 @@
             db.collection("users").where("profession", "==", "نجار").get()
                 .then((querySnapshot) => {
                     if (querySnapshot.empty) {
-                        workerList.innerHTML = "<p>لا يوجد نجارين متاحين في الوقت الحالي
-                            .</p>";
+                        workerList.innerHTML = "<p>لا يوجد نجارين متاحين في الوقت الحالي.</p>";
                     } else {
                         querySnapshot.forEach((doc) => {
                             const userData = doc.data();
@@ -161,17 +53,7 @@
                 });
         }
 
-        // عرض أو إخفاء حقول الفلترة
-        function toggleFilter() {
-            const filterFields = document.getElementById('filterFields');
-            if (filterFields.style.display === 'none') {
-                filterFields.style.display = 'block';
-            } else {
-                filterFields.style.display = 'none';
-            }
-        }
-
-        // تطبيق الفلترة على قائمة النجارين
+        // تطبيق الفلترة عند الضغط على زر "فلترة"
         function applyFilters() {
             const cityInput = document.getElementById('cityInput').value.trim().toLowerCase();
             const experienceInput = document.getElementById('experienceInput').value.trim();
@@ -211,9 +93,6 @@
                     console.error("Error fetching carpenters: ", error);
                 });
         }
-
-        // عرض جميع النجارين عند تحميل الصفحة
-        window.onload = searchWorkers;
     </script>
 </body>
 </html>
