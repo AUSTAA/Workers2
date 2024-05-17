@@ -4,74 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>النجارين - خدمات البناء</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        header, footer {
-            background-color: #f8f8f8;
-            padding: 10px 20px;
-            text-align: center;
-        }
-        header img {
-            width: 100%;
-            height: auto;
-        }
-        main {
-            padding: 20px;
-        }
-        .worker-list {
-            display: flex;
-            flex-wrap: wrap;
-            list-style-type: none;
-            padding: 0;
-            justify-content: center;
-        }
-        .worker-box {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            width: 30%;
-            height: 200px; /* ضبط الارتفاع ليكون نصف الطول السابق */
-            box-sizing: border-box;
-            text-align: center;
-            overflow: hidden; /* لإخفاء الفائض */
-        }
-        .worker-box img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-        .home-button, .services-button {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .nav-menu {
-            display: none;
-            flex-direction: column;
-            margin-top: 10px;
-        }
-        .categories {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-        }
-        .menu-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body dir="rtl">
     <header>
@@ -107,69 +40,6 @@
     </footer>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-    <script>
-        // إعداد Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-            authDomain: "omran-16f44.firebaseapp.com",
-            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-            projectId: "omran-16f44",
-            storageBucket: "omran-16f44.appspot.com",
-            messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-            measurementId: "G-PGZJ0T555G"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        // جلب بيانات النجارين من Firestore
-        function searchWorkers() {
-            const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
-            const workerList = document.getElementById('worker-list');
-            workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
-
-            db.collection("users").where("profession", "==", "نجار").get()
-                .then((querySnapshot) => {
-                    if (querySnapshot.empty) {
-                        workerList.innerHTML = "<p>لا يوجد نجارين متاحين في الوقت الحالي.</p>";
-                    } else {
-                        querySnapshot.forEach((doc) => {                        const userData = doc.data();
-                        const li = document.createElement('li');
-                        li.classList.add('worker-box');
-                        if (!searchKeyword || userData.username.toLowerCase().includes(searchKeyword)) {
-                            // إضافة النجار إلى القائمة فقط إذا تطابقت مع الكلمة المدخلة أو لم يتم إدخال أي كلمة بحث
-                            li.innerHTML = `
-                                <img src="${userData.image}" alt="${userData.username}">
-                                <h3>${userData.username}</h3>
-                                <p>المدينة: ${userData.city}</p>
-                                <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
-                            `;
-                            workerList.appendChild(li);
-                        }
-                    });
-                }
-            })
-            .catch((error) => {
-                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
-                console.error("Error fetching carpenters: ", error);
-            });
-    }
-
-    // عرض أو إخفاء التصنيفات عند النقر على الزر
-    const showCategoriesButton = document.getElementById('showCategories');
-    const categoriesMenu = document.getElementById('categoriesMenu');
-
-    showCategoriesButton.addEventListener('click', () => {
-        categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    const menuButton = document.getElementById('menuButton');
-    menuButton.addEventListener('click', () => {
-        categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // عرض جميع النجارين عند تحميل الصفحة
-    window.onload = searchWorkers;
-</script></body>
+    <script src="carpen.js"></script>
+</body>
 </html>
