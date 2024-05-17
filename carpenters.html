@@ -28,11 +28,15 @@
             border-radius: 5px;
             padding: 20px;
             text-align: center;
+            width: 100%; /* جعل المربع يمتد لتغطية العرض */
+            height: auto; /* تحديد الارتفاع بناءً على حجم الصور */
         }
         .worker-box img {
-            width: 100%; /* جعل الصورة تمتد لتغطي المربع */
+            max-width: 100%; /* جعل الصورة تمتد لتغطي المربع */
             border-radius: 50%; /* تقريب حواف الصورة */
             margin-bottom: 10px;
+            width: 200px; /* تحديد عرض الصورة */
+            height: 200px; /* تحديد ارتفاع الصورة */
         }
         .worker-list li {
             list-style-type: none;
@@ -47,11 +51,14 @@
             border-radius: 5px;
             text-decoration: none;
             display: block;
+            width: 100%; /* تحديد عرض الزر */
         }
         .logo {
             display: block;
             margin: 0 auto 20px; /* توسيط الصورة */
-            width: 200px; /* تحديد عرض الصورة */
+            width: 100%; /* تحديد عرض الصورة */
+            height: auto; /* تحديد الارتفاع بناءً على عرض الشاشة */
+            max-width: 600px; /* تحديد العرض الأقصى للصورة */
         }
         .categories {
             display: none;
@@ -117,14 +124,13 @@
                     querySnapshot.forEach((doc) => {
                         const userData = doc.data();
                         const li = document.createElement('li');
+                        li.classList.add('worker-box'); // إضافة الكلاس للمربع
                         li.innerHTML = `
-                            <div class="worker-box">
-                                <img src="${userData.image}" alt="${userData.username}">
-                                <h3>${userData.username}</h3>
-                                <p>المدينة: ${userData.city}</p>
-                                <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
-                            </div>
+                            <img src="${userData.image}" alt="${userData.username}">
+                            <h3>${userData.username}</h3>
+                            <p>المدينة: ${userData.city}</p>
+                            <p>سنين الخبرة: ${userData.experienceYears}</p>
+                            <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
                         `;
                         workerList.appendChild(li);
                     });
