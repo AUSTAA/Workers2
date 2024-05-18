@@ -241,22 +241,26 @@
         function checkLoginAndRedirect(workerId) {
             auth.onAuthStateChanged(user => {
                 if (user) {
-                    window.location.href = `worker-details.html?id=${workerId}`;
+                    // إذا كان المستخدم مسجل الدخول، يتم إعادة التوجيه إلى صفحة عرض التفاصيل
+                    window.location.href = `workerDetails.html?workerId=${workerId}`;
                 } else {
-                    alert("يجب تسجيل حساب أو تسجيل الدخول أولاً.");
+                    // إذا لم يكن المستخدم مسجل الدخول، يتم عرض رسالة
+                    alert("الرجاء تسجيل الدخول لعرض التفاصيل.");
                 }
             });
         }
 
-        // عرض أو إخفاء التصنيفات عند النقر على الزر
-        const menuButton = document.getElementById('menuButton');
-        const categoriesMenu = document.getElementById('categoriesMenu');
+        // إظهار القائمة الجانبية عند النقر على زر القائمة
+        document.getElementById('menuButton').onclick = function() {
+            const categoriesMenu = document.getElementById('categoriesMenu');
+            if (categoriesMenu.style.display === 'none' || categoriesMenu.style.display === '') {
+                categoriesMenu.style.display = 'flex';
+            } else {
+                categoriesMenu.style.display = 'none';
+            }
+        };
 
-        menuButton.addEventListener('click', () => {
-            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // عرض جميع النجارين عند تحميل الصفحة
+        // استدعاء دالة البحث عند تحميل الصفحة لعرض جميع النجارين افتراضيًا
         window.onload = searchWorkers;
     </script>
 </body>
