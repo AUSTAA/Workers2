@@ -84,6 +84,23 @@
             font-size: 24px;
             margin-top: 10px;
         }
+        .rating {
+            display: inline-block;
+            unicode-bidi: bidi-override;
+            direction: rtl;
+            font-size: 24px;
+        }
+        .rating > span {
+            display: inline-block;
+            position: relative;
+            width: 1.1em;
+        }
+        .rating > span:hover:before,
+        .rating > span:hover ~ span:before {
+            content: "\2605";
+            position: absolute;
+            color: gold;
+        }
     </style>
 </head>
 <body dir="rtl">
@@ -121,32 +138,31 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
     <script>
         // إعداد Firebase
         const firebaseConfig = {
-  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-  authDomain: "omran-16f44.firebaseapp.com",
-  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-  projectId: "omran-16f44",
-  storageBucket: "omran-16f44.appspot.com",
-  messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-  measurementId: "G-PGZJ0T555G"
-};
+            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+            authDomain: "omran-16f44.firebaseapp.com",
+            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+            projectId: "omran-16f44",
+            storageBucket: "omran-16f44.appspot.com",
+            messagingSenderId: "598982209417",
+            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+            measurementId: "G-PGZJ0T555G"
+        };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const storage = firebase.storage(); // إضافة الدعم لتخزين Firebase
 
         // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
         auth.onAuthStateChanged(user => {
             const loginButton = document.getElementById('loginButton');
             if (user) {
-                // إذا كان المستخدم مسجل الدخول
-                loginButton.style.display = 'none';
+                // إذا كان المستخدم مسجل الدخول، يتم إخفاء زر تسجيل الدخول:
+```html
+loginButton.style.display = 'none';
             } else {
-                // إذا لم يكن المستخدم مسجل الدخول
+                // إذا لم يكن المستخدم مسجل الدخول، يتم عرض زر تسجيل الدخول
                 loginButton.style.display = 'inline-block';
                 loginButton.onclick = () => window.location.href = 'registration.html';
             }
@@ -174,22 +190,12 @@
                             const userData = doc.data();
                             const li = document.createElement('li');
                             li.classList.add('worker-box');
-
-                            // تحميل صور النجارين
-                            const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
-                            profilePictureRef.getDownloadURL().then((url) => {
-                                const image = document.createElement('img');
-                                image.src = url;
-                                image.alt = userData.username;
-                                li.appendChild(image);
-                            }).catch((error) => {
-                                console.error("Error getting profile picture:", error);
-                            });
-
-                            li.innerHTML += `
+                            li.innerHTML = `
+                                <img src="${userData.image}" alt="${userData.username}">
                                 <h3>${userData.username}</h3>
                                 <p>المدينة: ${userData.city}</p>
                                 <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                <p class="rating">التقييم: ${userData.rating}</p>
                                 <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
                             `;
                             workerList.appendChild(li);
