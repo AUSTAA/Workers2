@@ -129,7 +129,7 @@
         <input type="text" id="searchInput" placeholder="ابحث عن النجارين بالمدينة..."> <!-- حقل البحث -->
         <button onclick="searchWorkers()">بحث</button> <!-- زر البحث -->
         <ul class="worker-list" id="worker-list">
-            <!-- سيتم ملء هذه القائمة ديناميكيًا -->
+            <!-- سيتم ملء هذه القائمة ديناميًا -->
         </ul>
     </main>
     <footer>
@@ -159,8 +159,7 @@
             const loginButton = document.getElementById('loginButton');
             if (user) {
                 // إذا كان المستخدم مسجل الدخول، يتم إخفاء زر تسجيل الدخول:
-```html
-loginButton.style.display = 'none';
+                loginButton.style.display = 'none';
             } else {
                 // إذا لم يكن المستخدم مسجل الدخول، يتم عرض زر تسجيل الدخول
                 loginButton.style.display = 'inline-block';
@@ -195,7 +194,7 @@ loginButton.style.display = 'none';
                                 <h3>${userData.username}</h3>
                                 <p>المدينة: ${userData.city}</p>
                                 <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <p class="rating">التقييم: ${userData.rating}</p>
+                                <p class="rating">التقييم: ${userData.rating ? userData.rating : 'لا يوجد تقييم'}</p>
                                 <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
                             `;
                             workerList.appendChild(li);
@@ -232,3 +231,4 @@ loginButton.style.display = 'none';
     </script>
 </body>
 </html>
+```
