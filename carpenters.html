@@ -121,6 +121,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
     <script>
         // إعداد Firebase
         const firebaseConfig = {
@@ -136,6 +137,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
+        const storage = firebase.storage();
 
         // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
         auth.onAuthStateChanged(user => {
@@ -150,7 +152,7 @@
             }
         });
 
-        // جلب بيانات النجارين من Firestore
+        // جلب بيانات النجارين من Firestore وتحميل الصور من Firebase Storage
         function searchWorkers() {
             const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
             const workerList = document.getElementById('worker-list');
@@ -172,14 +174,29 @@
                             const userData = doc.data();
                             const li = document.createElement('li');
                             li.classList.add('worker-box');
-                            li.innerHTML = `
-                                <img src="${userData.image}" alt="${userData.username}">
-                                <h3>${userData.username}</h3>
-                                <p>المدينة: ${userData.city}</p>
-                                <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
-                            `;
-                            workerList.appendChild(li);
+
+                            // تحميل الصورة الشخصية
+                            const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
+                            profilePictureRef.getDownloadURL().then((url) => {
+                                li.innerHTML = `
+                                    <img src="${url}" alt="${userData.username}">
+                                    <h3>${userData.username}</h3>
+                                    <p>المدينة: ${userData.city}</p>
+                                    <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                    <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
+                                `;
+                                workerList.appendChild(li);
+                            }).catch((error) => {
+                                console.error("Error getting profile picture:", error);
+                                li.innerHTML = `
+                                    <img src="default-profile.jpg" alt="${userData.username}">
+                                    <h3>${userData.username}</h3>
+                                    <p>المدينة: ${userData.city}</p>
+                                    <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                    <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
+                                `;
+                                workerList.appendChild(li);
+                            });
                         });
                     }
                 })
@@ -204,10 +221,9 @@
         const menuButton = document.getElementById('menuButton');
         const categoriesMenu = document.getElementById('categoriesMenu');
 
-        menuButton.addEventListener('click', () => {
-            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-        });
-
+        menuButton.addEventListener('click
+', () => {
+            categoriesMenu.style.display = categoriesMenu.style.display
         // عرض جميع النجارين عند تحميل الصفحة
         window.onload = searchWorkers;
     </script>
