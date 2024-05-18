@@ -122,27 +122,30 @@
 
         // جلب بيانات النجارين من Firestore
         function searchWorkers() {
-            const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
-            const workerList = document.getElementById('worker-list');
-            workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
+    const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+    const workerList = document.getElementById('worker-list');
+    workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
 
-            db.collection("users").where("profession", "==", "نجار").where("city", "==", searchCity).get()
-                .then((querySnapshot) => {
-                    if (querySnapshot.empty) {
-                        workerList.innerHTML = "<p>لا يوجد نجارين متاحين في هذه المدينة.</p>";
-                    } else {
-                        querySnapshot.forEach((doc) => {                        const userData = doc.data();
-                        const li = document.createElement('li');
-                        li.classList.add('worker-box');
-                        // إضافة النجار إلى القائمة
+    db.collection("users").where("profession", "==", "نجار").get()
+        .then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                workerList.innerHTML = "<p>لا يوجد نجارين متاحين في الوقت الحالي.</p>";
+            } else {
+                querySnapshot.forEach((doc) => {
+                    const userData = doc.data();
+                    const li = document.createElement('li');
+                    li.classList.add('worker-box');
+                    // إضافة النجار إلى القائمة فقط إذا تطابقت مع الكلمة المدخلة أو لم يتم إدخال أي كلمة بحث
+                    if (!searchKeyword || userData.username.toLowerCase().includes(searchKeyword) || userData.city.toLowerCase().includes(searchKeyword)) {
                         li.innerHTML = `
                             <img src="${userData.image}" alt="${userData.username}">
                             <h3>${userData.username}</h3>
                             <p>المدينة: ${userData.city}</p>
                             <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                                    <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
-                    `;
-                    workerList.appendChild(li);
+                            <p><a href="worker-details.html?id=${userData.userId}">عرض التفاصيل</a></p>
+                        `;
+                        workerList.appendChild(li);
+                    }
                 });
             }
         })
@@ -151,14 +154,6 @@
             console.error("Error fetching carpenters: ", error);
         });
 }
-
-// عرض أو إخفاء التصنيفات عند النقر على الزر
-const menuButton = document.getElementById('menuButton');
-const categoriesMenu = document.getElementById('categoriesMenu');
-
-menuButton.addEventListener('click', () => {
-    categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-});
 
 // عرض جميع النجارين عند تحميل الصفحة
 window.onload = searchWorkers;
