@@ -194,16 +194,46 @@
                                 <h3>${userData.username}</h3>
                                 <p>المدينة: ${userData.city}</p>
                                 <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <p class="rating">التقييم: ${userData.rating ? userData.rating : 'لا يوجد تقييم'}</p>
+                                <p id="rating_${doc.id}">التقييم: جاري التحميل...</p>
                                 <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
                             `;
                             workerList.appendChild(li);
+                            loadRatings(doc.id); // تحميل التقييمات لكل عامل
                         });
                     }
                 })
                 .catch((error) => {
                     workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
                     console.error("Error fetching carpenters: ", error);
+                });
+        }
+
+        // جلب التقييمات وعرضها بناءً على workerId
+        function loadRatings(workerId) {
+            const ratingDisplay = document.getElementById(`rating_${workerId}`);
+            const ratingsRef = db.collection("ratings").where("workerId", "==", workerId);
+
+            ratingsRef.get()
+                .then((querySnapshot) => {
+                    let totalRating = 0;
+                    let numberOfRatings = 0;
+
+                    querySnapshot.forEach((doc) => {
+                        const ratingData = doc.data();
+                        totalRating += ratingData.rating;
+                        numberOfRatings++;
+                    });
+
+                    if (numberOfRatings > 0) {
+                        const averageRating = totalRating / numberOfRatings;
+                        ratingDisplay.textContent = `التقييم: ${averageRating.toFixed(1)} / 5`;
+                    } else {
+                        ratingDisplay.textContent = "لا يوجد تقييمات بعد";
+                    }
+                })
+                .catch((error) => {
+                    console.error                    console.error("Error fetching ratings: ", error);
+                    ratingDisplay.textContent = "لا يوجد تقييمات بعد";
                 });
         }
 
@@ -231,4 +261,3 @@
     </script>
 </body>
 </html>
-```
