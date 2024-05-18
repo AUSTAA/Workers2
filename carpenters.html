@@ -1,3 +1,5 @@
+تحقق من هده الاخطاء في الكود 
+
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -103,8 +105,8 @@
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
     </footer>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script>
         // إعداد Firebase
         const firebaseConfig = {
@@ -131,38 +133,37 @@
                     if (querySnapshot.empty) {
                         workerList.innerHTML = "<p>لا يوجد نجارين متاحين في هذه المدينة.</p>";
                     } else {
-                        querySnapshot.forEach((doc) => {                        
-                            const userData = doc.data();
-                            const li = document.createElement('li');
-                            li.classList.add('worker-box');
-                            // إضافة النجار إلى القائمة
-                            li.innerHTML = `
-                                <img src="${userData.image}" alt="${userData.username}">
-                                <h3>${userData.username}</h3>
-                                <p>المدينة: ${userData.city}</p>
-                                <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
-                            `;
-                            workerList.appendChild(li);
-                        });
-                    }
-                })
-                .catch((error) => {
-                    workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
-                    console.error("Error fetching carpenters: ", error);
+                        querySnapshot.forEach((doc) => {                        const userData = doc.data();
+                        const li = document.createElement('li');
+                        li.classList.add('worker-box');
+                        // إضافة النجار إلى القائمة
+                        li.innerHTML = `
+                            <img src="${userData.image}" alt="${userData.username}">
+                            <h3>${userData.username}</h3>
+                            <p>المدينة: ${userData.city}</p>
+                            <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                                    <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
+                    `;
+                    workerList.appendChild(li);
                 });
-        }
-
-        // عرض أو إخفاء التصنيفات عند النقر على الزر
-        const menuButton = document.getElementById('menuButton');
-        const categoriesMenu = document.getElementById('categoriesMenu');
-
-        menuButton.addEventListener('click', () => {
-            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
+            }
+        })
+        .catch((error) => {
+            workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
+            console.error("Error fetching carpenters: ", error);
         });
+}
 
-        // عرض جميع النجارين عند تحميل الصفحة
-        window.onload = searchWorkers;
-    </script>
+// عرض أو إخفاء التصنيفات عند النقر على الزر
+const menuButton = document.getElementById('menuButton');
+const categoriesMenu = document.getElementById('categoriesMenu');
+
+menuButton.addEventListener('click', () => {
+    categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
+});
+
+// عرض جميع النجارين عند تحميل الصفحة
+window.onload = searchWorkers;
+        </script>
 </body>
 </html>
