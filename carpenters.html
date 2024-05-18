@@ -1,5 +1,3 @@
-تحقق من هده الاخطاء في الكود 
-
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -35,10 +33,10 @@
             margin: 10px;
             border-radius: 5px;
             width: 30%;
-            height: 200px; /* ضبط الارتفاع ليكون نصف الطول السابق */
+            height: 200px;
             box-sizing: border-box;
             text-align: center;
-            overflow: hidden; /* لإخفاء الفائض */
+            overflow: hidden;
         }
         .worker-box img {
             max-width: 100%;
@@ -105,19 +103,19 @@
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
     </footer>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js"></script>
     <script>
         // إعداد Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-            authDomain: "omran-16f44.firebaseapp.com",
-            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-            projectId: "omran-16f44",
-            storageBucket: "omran-16f44.appspot.com",
-            messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-            measurementId: "G-PGZJ0T555G"
+            apiKey: "Your_API_Key",
+            authDomain: "Your_Auth_Domain",
+            databaseURL: "Your_Database_URL",
+            projectId: "Your_Project_ID",
+            storageBucket: "Your_Storage_Bucket",
+            messagingSenderId: "Your_Messaging_Sender_ID",
+            appId: "Your_App_ID",
+            measurementId: "Your_Measurement_ID"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -126,10 +124,11 @@
         function searchWorkers() {
             const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
             const workerList = document.getElementById('worker-list');
-            workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
 
             db.collection("users").where("profession", "==", "نجار").where("city", "==", searchCity).get()
                 .then((querySnapshot) => {
+                    workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
+
                     if (querySnapshot.empty) {
                         workerList.innerHTML = "<p>لا يوجد نجارين متاحين في هذه المدينة.</p>";
                     } else {
@@ -142,28 +141,29 @@
                             <h3>${userData.username}</h3>
                             <p>المدينة: ${userData.city}</p>
                             <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                                    <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
-                    `;
-                    workerList.appendChild(li);
-                });
-            }
-        })
-        .catch((error) => {
-            workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
-            console.error("Error fetching carpenters: ", error);
+                            <p><a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a></p>
+                        `;
+                        workerList.appendChild(li);
+                    });
+                }
+            })
+            .catch((error) => {
+                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارينين. الرجاء المحاولة لاحقًا.</p>";
+                console.error("Error fetching carpenters: ", error);
+            });
+        }
+
+        // عرض أو إخفاء التصنيفات عند النقر على الزر
+        const menuButton = document.getElementById('menuButton');
+        const categoriesMenu = document.getElementById('categoriesMenu');
+
+        menuButton.addEventListener('click', () => {
+            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
         });
-}
 
-// عرض أو إخفاء التصنيفات عند النقر على الزر
-const menuButton = document.getElementById('menuButton');
-const categoriesMenu = document.getElementById('categoriesMenu');
-
-menuButton.addEventListener('click', () => {
-    categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-});
-
-// عرض جميع النجارين عند تحميل الصفحة
-window.onload = searchWorkers;
-        </script>
+        // عرض جميع النجارين عند تحميل الصفحة
+        window.onload = searchWorkers;
+    </script>
 </body>
 </html>
+```
