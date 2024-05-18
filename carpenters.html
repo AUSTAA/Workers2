@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -73,12 +75,10 @@
 </head>
 <body dir="rtl">
     <header>
-        <img src="IMG_0607.webp" alt="نجارين" class="logo">
-        <h1>خدمات البناء</h1>
-        <h2>النجارين</h2>
-
-        <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
-        <button class="menu-button" id="menuButton">&#9776;</button>
+        <!-- الزر لعرض القائمة -->
+        <button id="showCategories" class="menu-button">&#9776;</button>
+        <!-- نهاية الشيفرة الحالية -->
+        
         <nav class="nav-menu categories" id="categoriesMenu">
             <ul>
                 <li><a href="index.html">الرئيسية</a></li>
@@ -93,9 +93,10 @@
         </nav>
     </header>
     <main>
-
-        <input type="text" id="searchInput" placeholder="ابحث عن النجارين..."> <!-- حقل البحث -->
-        <button onclick="searchWorkers()">بحث</button> <!-- زر البحث -->
+        <!-- حقل البحث -->
+        <input type="text" id="searchInput" placeholder="ابحث عن النجارين..."> 
+        <!-- زر البحث -->
+        <button onclick="searchWorkers()">بحث</button> 
         <ul class="worker-list" id="worker-list">
             <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
@@ -131,7 +132,8 @@
                     if (querySnapshot.empty) {
                         workerList.innerHTML = "<p>لا يوجد نجارين متاحين في الوقت الحالي.</p>";
                     } else {
-                        querySnapshot.forEach((doc) => {                        const userData = doc.data();
+                        querySnapshot.forEach((doc) => {                      
+                            const userData = doc.data();
                         const li = document.createElement('li');
                         li.classList.add('worker-box');
                         if (!searchKeyword || userData.username.toLowerCase().includes(searchKeyword)) {
@@ -159,11 +161,6 @@
     const categoriesMenu = document.getElementById('categoriesMenu');
 
     showCategoriesButton.addEventListener('click', () => {
-        categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    const menuButton = document.getElementById('menuButton');
-    menuButton.addEventListener('click', () => {
         categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
     });
 
