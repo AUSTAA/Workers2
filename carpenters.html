@@ -84,22 +84,37 @@
             font-size: 24px;
             margin-top: 10px;
         }
-        .rating {
-            display: inline-block;
-            unicode-bidi: bidi-override;
+        .rating-section {
+            margin-top: 20px;
+        }
+        .star-rating {
             direction: rtl;
-            font-size: 24px;
-        }
-        .rating > span {
+            unicode-bidi: bidi-override;
             display: inline-block;
-            position: relative;
-            width: 1.1em;
+            font-size: 25px;
         }
-        .rating > span:hover:before,
-        .rating > span:hover ~ span:before {
-            content: "\2605";
-            position: absolute;
-            color: gold;
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+        .star-rating label {
+            color: #ddd;
+            float: right;
+        }
+        .star-rating label:hover,
+        .star-rating label:hover ~ label,
+        .star-rating input[type="radio"]:checked ~ label {
+            color: #f8d320;
+        }
+        #commentsContainer {
+            margin-top: 20px;
+        }
+        #commentsContainer p {
+            text-align: right;
+            direction: rtl;
+        }
+        #commentInput {
+            width: 100%;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -129,7 +144,7 @@
         <input type="text" id="searchInput" placeholder="ابحث عن النجارين بالمدينة..."> <!-- حقل البحث -->
         <button onclick="searchWorkers()">بحث</button> <!-- زر البحث -->
         <ul class="worker-list" id="worker-list">
-            <!-- سيتم ملء هذه القائمة ديناميًا -->
+            <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
     </main>
     <footer>
@@ -138,6 +153,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
     <script>
         // إعداد Firebase
         const firebaseConfig = {
@@ -147,19 +163,23 @@
             projectId: "omran-16f44",
             storageBucket: "omran-16f44.appspot.com",
             messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+            appId: "1:598982209417:web:dc9cbddd485aa1ea52bbb58",
             measurementId: "G-PGZJ0T555G"
         };
+
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
+        const storage = firebase.storage(); // إضافة الدعم لتخزين Firebase
 
         // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
         auth.onAuthStateChanged(user => {
             const loginButton = document.getElementById('loginButton');
             if (user) {
+                // إذا كان المستخدم مسجل الدخول
                 loginButton.style.display = 'none';
             } else {
+                // إذا لم يكن المستخدم مسجل الدخول
                 loginButton.style.display = 'inline-block';
                 loginButton.onclick = () => window.location.href = 'registration.html';
             }
@@ -185,54 +205,51 @@
                     } else {
                         querySnapshot.forEach((doc) => {
                             const userData = doc.data();
-                            const workerId = doc.id;
                             const li = document.createElement('li');
                             li.classList.add('worker-box');
-                            li.innerHTML = `
-                                <img src="${userData.image}" alt="${userData.username}">
+
+                            // تحميل صور النجارين
+                            const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
+                            profilePictureRef.getDownloadURL().then((url) => {
+                                const image = document.createElement('img');
+                                image.src = url;
+                                image.alt = userData.username;
+                                li.appendChild(image);
+                            }).catch((error) => {
+                                console.error("Error getting profile picture:", error);
+                            });
+
+                            li.innerHTML += `
                                 <h3>${userData.username}</h3>
                                 <p>المدينة: ${userData.city}</p>
                                 <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <p class="rating" id="rating_${workerId}">التقييم: ${userData.rating ? userData.rating : 'لا يوجد تقييم'}</p>
-                                <a href="#" onclick="checkLoginAndRedirect('${workerId}')">عرض التفاصيل</a>
+                                <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
                             `;
                             workerList.appendChild(li);
-                            loadRatings(workerId); // تحميل التقييمات لكل نجار
+
+                            // إضافة عرض التقييمات والتعليقات
+                            const ratingSection = document.createElement('div');
+                            ratingSection.classList.add('rating-section');
+                            ratingSection.innerHTML = `
+                                <h3>التقييمات</h3>
+                                <div class="star-rating" id="starRating_${doc.id}">
+                                    <input type="radio" name="rating_${doc.id}" value="5" id="5_${doc.id}"><label for="5_${doc.id}">&#9733;</label>
+                                    <input type="radio" name="rating_${doc.id}" value="4" id="4_${doc.id}"><label for="4_${doc.id}">&#9733;</label>
+                                    <input type="radio" name="rating_${doc.id}" value="3" id="3_${doc.id}"><label for="3_${doc.id}">&#9733;</label>
+                                    <input type="radio" name="rating_${doc.id}" value="2" id="2_${doc.id}"><label for="2_${doc.id}">&#9733;</label>
+                                    <input type="radio" name="rating_${doc.id}" value="1" id="1_${doc.id}"><label for="1_${doc.id}">&#9733;</label>
+                                </div>
+                                <div id="commentsContainer_${doc.id}"></div>
+                                <textarea id="commentInput_${doc.id}" placeholder="اكتب تعليقك هنا..."></textarea>
+                                <button onclick="submitComment('${doc.id}')">إرسال التعليق</button>
+                            `;
+                            li.appendChild(ratingSection);
                         });
                     }
                 })
                 .catch((error) => {
                     workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
                     console.error("Error fetching carpenters: ", error);
-                });
-        }
-
-        // تحميل التقييمات وعرضها
-        function loadRatings(workerId) {
-            const ratingDisplay = document.getElementById(`rating_${workerId}`);
-            const ratingsRef = db.collection("ratings").where("workerId", "==", workerId);
-
-            ratingsRef.get()
-                .then((querySnapshot) => {
-                    let totalRating = 0;
-                    let numberOfRatings = 0;
-
-                    querySnapshot.forEach((doc) => {
-                        totalRating += doc.data().rating;
-                        numberOfRatings++;
-                    });
-
-                    if (numberOfRatings > 0) {
-                        const averageRating = (totalRating / numberOfRatings).toFixed(1);
-                        ratingDisplay.textContent = `التقييم: ${averageRating}`;
-                    } else {
-                        ratingDisplay.textContent = "لا يوجد تقييمات بعد";
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error fetching ratings: ", error);
-
-                        ratingDisplay.textContent = "خطأ في جلب التقييمات";
                 });
         }
 
@@ -246,6 +263,95 @@
                 }
             });
         }
+
+        // إرسال التعليق
+        function submitComment(workerId) {
+            const commentInput = document.getElementById(`commentInput_${workerId}`);
+            const comment = commentInput.value.trim();
+            const user = auth.currentUser;
+
+            if (comment && user) {
+                const commentData = {
+                    workerId,
+                    username: user.displayName || user.email,
+                    comment,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                db.collection("comments").add(commentData)
+                    .then(() => {
+                        // إعادة تحميل التعليقات بعد إضافة تعليق جديد
+                        loadComments(workerId);
+                        commentInput.value = ''; // مسح حقل التعليق
+                    })
+                    .catch((error) => {
+                        console.error("Error submitting comment:", error);
+                    });
+            } else if (!user) {
+                alert('يجب تسجيل الدخول لإضافة تعليق.');
+            }
+        }
+
+        // تحميل التعليقات للنجار المحدد
+        function loadComments(workerId) {
+            const commentsContainer = document.getElementById(`commentsContainer_${workerId}`);
+            commentsContainer.innerHTML = ''; // مسح التعليقات السابقة
+
+            db.collection("comments").where("workerId", "==", workerId).get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        const commentData = doc.data();
+                        const commentElement = document.createElement('p');
+                        commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
+                        commentsContainer.appendChild(commentElement);
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error loading comments:", error);
+                });
+        }
+
+        // تحميل التقييمات والتعليقات
+        function loadRatingsAndComments(workerId) {
+            loadComments(workerId); // تحميل التعليقات
+            const starRating = document.getElementById(`starRating_${workerId}`);
+            const user = auth.currentUser;
+
+            if (user) {
+                const userId = user.uid;
+                const userRatingRef = db.collection("ratings").doc(`${workerId}_${userId}`);
+
+                // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
+                userRatingRef.get().then((doc) => {
+                    if (doc.exists) {
+                        const userRating = doc.data().rating;
+                        document.querySelector(`input[name="rating_${workerId}"][value="${userRating}"]`).checked = true;
+                        starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+                    }
+                });
+
+                // إضافة حدث للتقييم
+                starRating.addEventListener('change', (event) => {
+                    const rating = event.target.value;
+                    userRatingRef.set({ rating }).then(() => {
+                        alert('تم إرسال التقييم بنجاح!');
+                        starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+                    }).catch((error) => {
+                        console.error("Error submitting rating: ", error);
+                    });
+                });
+            }
+        }
+
+        // العودة إلى الصفحة الرئيسية
+        document.getElementById('homeButton').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        // العودة إلى القائمة السابقة
+        document.getElementById('backButton').addEventListener('click', () => {
+            window.history.back();
+        });
 
         // عرض أو إخفاء التصنيفات عند النقر على الزر
         const menuButton = document.getElementById('menuButton');
