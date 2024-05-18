@@ -4,119 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>النجارين - خدمات البناء</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        header, footer {
-            background-color: #f8f8f8;
-            padding: 10px 20px;
-            text-align: center;
-        }
-        header img {
-            width: 100%;
-            height: auto;
-        }
-        main {
-            padding: 20px;
-        }
-        .worker-list {
-            display: flex;
-            flex-wrap: wrap;
-            list-style-type: none;
-            padding: 0;
-            justify-content: center;
-        }
-        .worker-box {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin: 10px;
-            border-radius: 5px;
-            width: 30%;
-            box-sizing: border-box;
-            text-align: center;
-            overflow: hidden;
-        }
-        .worker-box img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-        .worker-box h3 {
-            margin: 10px 0;
-        }
-        .worker-box p {
-            margin: 5px 0;
-        }
-        .worker-box a {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .home-button, .services-button, .login-button {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .nav-menu {
-            display: none;
-            flex-direction: column;
-            margin-top: 10px;
-        }
-        .categories {
-            flex-direction: column;
-            align-items: center;
-        }
-        .menu-button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-            margin-top: 10px;
-        }
-        .rating-section {
-            margin-top: 20px;
-        }
-        .star-rating {
-            direction: rtl;
-            unicode-bidi: bidi-override;
-            display: inline-block;
-            font-size: 25px;
-        }
-        .star-rating input[type="radio"] {
-            display: none;
-        }
-        .star-rating label {
-            color: #ddd;
-            float: right;
-        }
-        .star-rating label:hover,
-        .star-rating label:hover ~ label,
-        .star-rating input[type="radio"]:checked ~ label {
-            color: #f8d320;
-        }
-        #commentsContainer {
-            margin-top: 20px;
-        }
-        #commentsContainer p {
-            text-align: right;
-            direction: rtl;
-        }
-        #commentInput {
-            width: 100%;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="carpen.css"> <!-- رابط ملف CSS الخارجي -->
 </head>
 <body dir="rtl">
     <header>
@@ -125,7 +13,6 @@
         <h2>النجارين</h2>
         
         <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
-        <button id="loginButton" class="login-button" style="display: none;">تسجيل الدخول</button>
         <button id="menuButton" class="menu-button">&#9776;</button>
         <nav class="nav-menu categories" id="categoriesMenu">
             <ul>
@@ -187,182 +74,107 @@
 
         // جلب بيانات النجارين من Firestore
         function searchWorkers() {
-            const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
+            const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();     
             const workerList = document.getElementById('worker-list');
 
-            let query;
-            if (searchCity) {
-                query = db.collection("users").where("profession", "==", "نجار").where("city", "==", searchCity);
-            } else {
-                query = db.collection("users").where("profession", "==", "نجار");
-            }
-
-            query.get()
-                .then((querySnapshot) => {
-                    workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
-                    if (querySnapshot.empty) {
-                        workerList.innerHTML = "<p>لا يوجد نجارين متاحين.</p>";
-                    } else {
-                        querySnapshot.forEach((doc) => {
-                            const userData = doc.data();
-                            const li = document.createElement('li');
-                            li.classList.add('worker-box');
-
-                            // تحميل صور النجارين
-                            const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
-                            profilePictureRef.getDownloadURL().then((url) => {
-                                const image = document.createElement('img');
-                                image.src = url;
-                                image.alt = userData.username;
-                                li.appendChild(image);
-                            }).catch((error) => {
-                                console.error("Error getting profile picture:", error);
-                            });
-
-                            li.innerHTML += `
-                                <h3>${userData.username}</h3>
-                                <p>المدينة: ${userData.city}</p>
-                                <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
-                            `;
-                            workerList.appendChild(li);
-
-                            // إضافة عرض التقييمات والتعليقات
-                            const ratingSection = document.createElement('div');
-                            ratingSection.classList.add('rating-section');
-                            ratingSection.innerHTML = `
-                                <h3>التقييمات</h3>
-                                <div class="star-rating" id="starRating_${doc.id}">
-                                    <input type="radio" name="rating_${doc.id}" value="5" id="5_${doc.id}"><label for="5_${doc.id}">&#9733;</label>
-                                    <input type="radio" name="rating_${doc.id}" value="4" id="4_${doc.id}"><label for="4_${doc.id}">&#9733;</label>
-                                    <input type="radio" name="rating_${doc.id}" value="3" id="3_${doc.id}"><label for="3_${doc.id}">&#9733;</label>
-                                    <input type="radio" name="rating_${doc.id}" value="2" id="2_${doc.id}"><label for="2_${doc.id}">&#9733;</label>
-                                    <input type="radio" name="rating_${doc.id}" value="1" id="1_${doc.id}"><label for="1_${doc.id}">&#9733;</label>
-                                </div>
-                                <div id="commentsContainer_${doc.id}"></div>
-                                <textarea id="commentInput_${doc.id}" placeholder="اكتب تعليقك هنا..."></textarea>
-                                <button onclick="submitComment('${doc.id}')">إرسال التعليق</button>
-                            `;
-                            li.appendChild(ratingSection);
-                        });
-                    }
-                })
-                .catch((error) => {
-                    workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
-                    console.error("Error fetching carpenters: ", error);
-                });
+        let query;
+        if (searchCity) {
+            query = db.collection("users").where("profession", "==", "نجار").where("city", "==", searchCity);
+        } else {
+            query = db.collection("users").where("profession", "==", "نجار");
         }
 
-        // التحقق من تسجيل الدخول قبل إعادة التوجيه إلى صفحة عرض التفاصيل
-        function checkLoginAndRedirect(workerId) {
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    window.location.href = `worker-details.html?id=${workerId}`;
+        query.get()
+            .then((querySnapshot) => {
+                workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
+                if (querySnapshot.empty) {
+                    workerList.innerHTML = "<p>لا يوجد نجارين متاحين.</p>";
                 } else {
-                    alert("يجب تسجيل حساب أو تسجيل الدخول أولاً.");
-                }
-            });
-        }
-
-        // إرسال التعليق
-        function submitComment(workerId) {
-            const commentInput = document.getElementById(`commentInput_${workerId}`);
-            const comment = commentInput.value.trim();
-            const user = auth.currentUser;
-
-            if (comment && user) {
-                const commentData = {
-                    workerId,
-                    username: user.displayName || user.email,
-                    comment,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                db.collection("comments").add(commentData)
-                    .then(() => {
-                        // إعادة تحميل التعليقات بعد إضافة تعليق جديد
-                        loadComments(workerId);
-                        commentInput.value = ''; // مسح حقل التعليق
-                    })
-                    .catch((error) => {
-                        console.error("Error submitting comment:", error);
-                    });
-            } else if (!user) {
-                alert('يجب تسجيل الدخول لإضافة تعليق.');
-            }
-        }
-
-        // تحميل التعليقات للنجار المحدد
-        function loadComments(workerId) {
-            const commentsContainer = document.getElementById(`commentsContainer_${workerId}`);
-            commentsContainer.innerHTML = ''; // مسح التعليقات السابقة
-
-            db.collection("comments").where("workerId", "==", workerId).get()
-                .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                        const commentData = doc.data();
-                        const commentElement = document.createElement('p');
-                        commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
-                        commentsContainer.appendChild(commentElement);
+                        const userData = doc.data();
+                        const li = document.createElement('li');
+                        li.classList.add('worker-box');
+
+                        // تحميل صور النجارين
+                        const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
+                        profilePictureRef.getDownloadURL().then((url) => {
+                            const image = document.createElement('img');
+                            image.src = url;
+                            image.alt = userData.username;
+                            li.appendChild(image);
+                        }).catch((error) => {
+                            console.error("Error getting profile picture:", error);
+                        });
+
+                        li.innerHTML += `
+                            <h3>${userData.username}</h3>
+                            <p>المدينة: ${userData.city}</p>
+                            <p>سنين الخبرة: ${userData.experienceYears}</p>
+                        `;
+                        workerList.appendChild(li);
+
+                        // عرض التقييمات
+                        const ratingSection = document.createElement('div');
+                        ratingSection.classList.add('rating-section');
+                        ratingSection.innerHTML = `
+                            <h3>التقييمات</h3>
+                            <div class="star-rating" id="starRating_${doc.id}">
+                                <!-- سيتم ملء التقييمات هنا ديناميكيًا -->
+                            </div>
+                        `;
+                        li.appendChild(ratingSection);
+                        
+                        // تحميل التقييمات
+                        loadRatings(doc.id);
                     });
-                })
-                .catch((error) => {
-                    console.error("Error loading comments:", error);
-                });
+                }
+            })
+            .catch((error) => {
+                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
+                console.error("Error fetching carpenters: ", error);
+            });
+    }
+
+    // تحميل التقييمات للنجار المحدد
+    function loadRatings(workerId) {
+        const starRating = document.getElementById(`starRating_${workerId}`);
+        const avgRating = 4.5; // قيمة التقييم المتوسطة (قم بتغييرها حسب البيانات الفعلية)
+
+        // إنشاء نجوم التقييم المتوسطة
+        for (let i = 0; i < avgRating; i++) {
+            const star = document.createElement('span');
+            star.innerHTML = '&#9733;'; // نجمة ممتلئة
+            starRating.appendChild(star);
         }
 
-        // تحميل التقييمات والتعليقات
-        function loadRatingsAndComments(workerId) {
-            loadComments(workerId); // تحميل التعليقات
-            const starRating = document.getElementById(`starRating_${workerId}`);
-            const user = auth.currentUser;
-
-            if (user) {
-                const userId = user.uid;
-                const userRatingRef = db.collection("ratings").doc(`${workerId}_${userId}`);
-
-                // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
-                userRatingRef.get().then((doc) => {
-                    if (doc.exists) {
-                        const userRating = doc.data().rating;
-                        document.querySelector(`input[name="rating_${workerId}"][value="${userRating}"]`).checked = true;
-                        starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
-                    }
-                });
-
-                // إضافة حدث للتقييم
-                starRating.addEventListener('change', (event) => {
-                    const rating = event.target.value;
-                    userRatingRef.set({ rating }).then(() => {
-                        alert('تم إرسال التقييم بنجاح!');
-                        starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
-                    }).catch((error) => {
-                        console.error("Error submitting rating: ", error);
-                    });
-                });
-            }
+        // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
+        for (let i = 0; i < 5 - avgRating; i++) {
+            const star = document.createElement('span');
+            star.innerHTML = '&#9734;'; // نجمة فارغة
+            starRating.appendChild(star);
         }
+    }
 
-        // العودة إلى الصفحة الرئيسية
-        document.getElementById('homeButton').addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
+    // العودة إلى الصفحة الرئيسية
+    document.getElementById('homeButton').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
 
-        // العودة إلى القائمة السابقة
-        document.getElementById('backButton').addEventListener('click', () => {
-            window.history.back();
-        });
+    // العودة إلى القائمة السابقة
+    document.getElementById('backButton').addEventListener('click', () => {
+        window.history.back();
+    });
 
-        // عرض أو إخفاء التصنيفات عند النقر على الزر
-        const menuButton = document.getElementById('menuButton');
-        const categoriesMenu = document.getElementById('categoriesMenu');
+    // عرض أو إخفاء التصنيفات عند النقر على الزر
+    const menuButton = document.getElementById('menuButton');
+    const categoriesMenu = document.getElementById('categoriesMenu');
 
-        menuButton.addEventListener('click', () => {
-            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-        });
+    menuButton.addEventListener('click', () => {
+        categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
+    });
 
-        // عرض جميع النجارين عند تحميل الصفحة
-        window.onload = searchWorkers;
-    </script>
+    // عرض جميع النجارين عند تحميل الصفحة
+    window.onload = searchWorkers;
+</script>
 </body>
 </html>
