@@ -58,7 +58,7 @@
             text-decoration: none;
             border-radius: 5px;
         }
-        .home-button, .services-button {
+        .home-button, .services-button, .login-button {
             margin: 10px;
             padding: 10px 20px;
             background-color: #4CAF50;
@@ -91,8 +91,9 @@
         <img src="IMG_0607.webp" alt="نجارين" class="logo">
         <h1>خدمات البناء</h1>
         <h2>النجارين</h2>
-
+        
         <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
+        <button id="loginButton" class="login-button" style="display: none;">تسجيل الدخول</button>
         <button id="menuButton" class="menu-button">&#9776;</button>
         <nav class="nav-menu categories" id="categoriesMenu">
             <ul>
@@ -118,6 +119,7 @@
         <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
     </footer>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script>
         // إعداد Firebase
@@ -133,13 +135,26 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+        auth.onAuthStateChanged(user => {
+            const loginButton = document.getElementById('loginButton');
+            if (user) {
+                // إذا كان المستخدم مسجل الدخول
+                loginButton.style.display = 'none';
+            } else {
+                // إذا لم يكن المستخدم مسجل الدخول
+                loginButton.style.display = 'inline-block';
+                loginButton.onclick = () => window.location.href = 'registration.html';
+            }
+        });
 
         // جلب بيانات النجارين من Firestore
         function searchWorkers() {
             const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
             const workerList = document.getElementById('worker-list');
 
-            // تحديد الاستعلام بناءً على ما إذا كان حقل البحث فارغًا أو لا
             let query;
             if (searchCity) {
                 query = db.collection("users").where("profession", "==", "نجار").where("city", "==", searchCity);
@@ -157,13 +172,12 @@
                             const userData = doc.data();
                             const li = document.createElement('li');
                             li.classList.add('worker-box');
-                            // إضافة النجار إلى القائمة
                             li.innerHTML = `
                                 <img src="${userData.image}" alt="${userData.username}">
                                 <h3>${userData.username}</h3>
                                 <p>المدينة: ${userData.city}</p>
                                 <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <a href="worker-details.html?id=${doc.id}">عرض التفاصيل</a>
+                                <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
                             `;
                             workerList.appendChild(li);
                         });
@@ -173,6 +187,17 @@
                     workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
                     console.error("Error fetching carpenters: ", error);
                 });
+        }
+
+        // التحقق من تسجيل الدخول قبل إعادة التوجيه إلى صفحة عرض التفاصيل
+        function checkLoginAndRedirect(workerId) {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    window.location.href = `worker-details.html?id=${workerId}`;
+                } else {
+                    alert("يجب تسجيل حساب أو تسجيل الدخول أولاً.");
+                }
+            });
         }
 
         // عرض أو إخفاء التصنيفات عند النقر على الزر
