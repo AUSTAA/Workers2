@@ -140,21 +140,32 @@
         // تحميل التقييمات للنجار المحدد
         function loadRatings(workerId) {
             const starRating = document.getElementById(`starRating_${workerId}`);
-            const avgRating = 4.5; // قيمة التقييم المتوسطة (قم بتغييرها حسب البيانات الفعلية)
+            db.collection("ratings").where("workerId", "==", workerId).get()
+                .then((querySnapshot) => {
+                    let totalRating = 0;
+                    let numberOfRatings = 0;
+                    querySnapshot.forEach((doc) => {
+                        totalRating += doc.data().rating;
+                        numberOfRatings++;
+                    });
+                    const avgRating = numberOfRatings ? (totalRating / numberOfRatings) : 0;
 
-            // إنشاء نجوم التقييم المتوسطة
-            for (let i = 0; i < avgRating; i++) {
-                const star = document.createElement('span');
-                star.innerHTML = '&#9733;'; // نجمة ممتلئة
-                starRating.appendChild(star);
-            }
-
-            // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
-            for (let i = 0; i < 5 - avgRating; i++) {
-                const star = document.createElement('span');
-                star.innerHTML = '&#9734;'; // نجمة فارغة
-                starRating.appendChild(star);
-            }
+                    // إنشاء نجوم التقييم
+                    starRating.innerHTML = ""; // تفريغ النجوم القديمة
+                    for (let i = 0; i < Math.floor(avgRating); i++) {
+                        const star = document.createElement('span');
+                        star.innerHTML = '&#9733;'; // نجمة ممتلئة
+                        starRating.appendChild(star);
+                    }
+                    for (let i = Math.floor(avgRating); i < 5; i++) {
+                        const star = document.createElement('span');
+                        star.innerHTML = '&#9734;'; // نجمة فارغة
+                        starRating.appendChild(star);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching ratings: ", error);
+                });
         }
 
         // التحقق من تسجيل الدخول قبل إعادة التوجيه إلى صفحة عرض التفاصيل
