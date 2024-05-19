@@ -138,58 +138,25 @@
         }
 
         // تحميل التقييمات للنجار المحدد
-        function loadRatings(workerId) {
-            const starRating = document.getElementById(`starRating_${workerId}`);
-            const ratingsRef = db.collection("users").doc(workerId).collection("ratings");
+        // تحميل التقييمات للنجار المحدد
+function loadRatings(workerId) {
+    const starRating = document.getElementById(`starRating_${workerId}`);
+    const avgRating = 4.5; // قيمة التقييم المتوسطة (قم بتغييرها حسب البيانات الفعلية)
 
-            ratingsRef.get().then((ratingsSnapshot) => {
-                if (ratingsSnapshot.empty) {
-                    starRating.innerHTML = "<p>لا يوجد تقييمات بعد.</p>";
-                    return;
-                }
+    // إنشاء نجوم التقييم المتوسطة
+    for (let i = 0; i < avgRating; i++) {
+        const star = document.createElement('span');
+        star.innerHTML = '&#9733;'; // نجمة ممتلئة
+        starRating.appendChild(star);
+    }
 
-                let totalRating = 0;
-                let numberOfRatings = ratingsSnapshot.size;
-
-                ratingsSnapshot.forEach((ratingDoc) => {
-                    totalRating += ratingDoc.data().rating;
-                });
-
-                const avgRating = numberOfRatings > 0 ? totalRating / numberOfRatings : 0;
-                const roundedAvgRating = Math.round(avgRating * 2) / 2; // التقريب لأقرب نصف
-
-                // إنشاء نجوم التقييم المتوسطة
-                for (let i = 0; i < Math.floor(roundedAvgRating); i++) {
-                    const star = document.createElement('span');
-                    star.innerHTML = '&#9733;'; // نجمة ممتلئة
-                    starRating.appendChild(star);
-                }
-
-                // إضافة نصف نجمة إذا كان التقييم يحتوي على نصف
-                if (roundedAvgRating % 1 !== 0) {
-                    const halfStar = document.createElement('span');
-                    halfStar.innerHTML = '&#9733;'; // نصف نجمة
-                    halfStar.style.color = "transparent";
-                    halfStar.style.clipPath = "polygon(0 0, 50% 0, 50% 100%, 0 100%)";
-                    starRating.appendChild(halfStar);
-
-                    const halfStarOverlay = document.createElement('span');
-                    halfStarOverlay.innerHTML = '&#9734;';
-                    halfStarOverlay.style.clipPath = "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)";
-                    starRating.appendChild(halfStarOverlay);
-                }
-
-                // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
-                for (let i = 0; i < 5 - Math.ceil(roundedAvgRating); i++) {
-                    const star = document.createElement('span');
-                    star.innerHTML = '&#9734;'; // نجمة فارغة
-                    starRating.appendChild(star);
-                }
-            }).catch((error) => {
-                console.error("Error fetching ratings: ", error);
-                starRating.innerHtml = "<p>حدث خطأ أثناء جلب التقييمات.</p>";
-            });
-        }
+    // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
+    for (let i = 0; i < 5 - avgRating; i++) {
+        const star = document.createElement('span');
+        star.innerHTML = '&#9734;'; // نجمة فارغة
+        starRating.appendChild(star);
+    }
+}
 
         // التحقق من تسجيل الدخول قبل إعادة التوجيه إلى صفحة عرض التفاصيل
         function checkLoginAndRedirect(workerId) {
