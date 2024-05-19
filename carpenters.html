@@ -116,38 +116,45 @@
         }
 
         // تحميل التقييمات للنجار المحدد
-        function loadRatings(workerId) {
-            const starRating = document.getElementById(`starRating_${workerId}`);
-            
-            db.collection("users").doc(workerId).get().then((doc) => {
-                if (doc.exists) {
-                    const userData = doc.data();
-                    const avgRating = userData.rating; // افترض أن التقييم المتوسط موجود في حقل rating
+        // تحميل التقييمات للنجار المحدد
+function loadRatings(workerId) {
+    const starRating = document.getElementById(`starRating_${workerId}`);
 
-                    // التحقق مما إذا كان التقييم معرفًا
-                    if (avgRating !== undefined) {
-                        // إنشاء نجوم التقييم المتوسطة
-                        for (let i = 0; i < avgRating; i++) {
-                            const star = document.createElement('span');
-                            star.innerHTML = '&#9733;'; // نجمة ممتلئة
-                            starRating.appendChild(star);
-                        }
+    const workerRef = db.collection("users").doc(workerId);
 
-                        // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
-                        for (let i = 0; i < 5 - avgRating; i++) {
-                            const star = document.createElement('span');
-                            star.innerHTML = '&#9734;'; // نجمة فارغة
-                            starRating.appendChild(star);
-                        }
-                    } else {
-                        // إخفاء التقييم إذا لم يتم تحديده
-                        starRating.style.display = 'none';
-                    }
+    // الاشتراك في تغييرات الوثائق للنجار
+    workerRef.onSnapshot((doc) => {
+        if (doc.exists) {
+            const userData = doc.data();
+            const avgRating = userData.rating; // افترض أن التقييم المتوسط موجود في حقل rating
+
+            // التحقق مما إذا كان التقييم معرفًا
+            if (avgRating !== undefined) {
+                // مسح التقييمات السابقة قبل إضافة التقييمات الجديدة
+                starRating.innerHTML = "";
+
+                // إنشاء نجوم التقييم المتوسطة
+                for (let i = 0; i < avgRating; i++) {
+                    const star = document.createElement('span');
+                    star.innerHTML = '&#9733;'; // نجمة ممتلئة
+                    starRating.appendChild(star);
                 }
-            }).catch((error) => {
-                console.error("Error getting ratings:", error);
-            });
+
+                // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
+                for (let i = 0; i < 5 - avgRating; i++) {
+                    const star = document.createElement('span');
+                    star.innerHTML = '&#9734;'; // نجمة فارغة
+                    starRating.appendChild(star);
+                }
+            } else {
+                // إخفاء التقييم إذا لم يتم تحديده
+                starRating.style.display = 'none';
+            }
         }
+    }, (error) => {
+        console.error("Error getting ratings:", error);
+    });
+}
 
         // عرض أو إخفاء التصنيفات عند النقر على الزر
         const menuButton = document.getElementById('menuButton');
