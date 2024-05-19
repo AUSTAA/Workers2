@@ -75,106 +75,108 @@
         // جلب بيانات النجارين من Firestore
         function searchWorkers() {
             const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
-                    const workerList = document.getElementById('worker-list');
+            const workerList = document.getElementById('worker-list');
 
-        let query;
-        if (searchCity) {
-            query = db.collection("users").where("profession", "==", "نجار").where("city", "==", searchCity);
-        } else {
-            query = db.collection("users").where("profession", "==", "نجار");
-        }
+            let query;
+            if (searchCity) {
+                query = db.collection("users").where("profession", "==", "نجار").where("city", "==", searchCity);
+            } else {
+                query = db.collection("users").where("profession", "==", "نجار");
+            }
 
-        query.get()
-            .then((querySnapshot) => {
-                workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
-                if (querySnapshot.empty) {
-                    workerList.innerHTML = "<p>لا يوجد نجارين متاحين.</p>";
-                } else {
-                    querySnapshot.forEach((doc) => {
-                        const userData = doc.data();
-                        const li = document.createElement('li');
-                        li.classList.add('worker-box');
+            query.get()
+                .then((querySnapshot) => {
+                    workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
+                    if (querySnapshot.empty) {
+                        workerList.innerHTML = "<p>لا يوجد نجارين متاحين.</p>";
+                    } else {
+                        querySnapshot.forEach((doc) => {
+                            const userData = doc.data();
+                            const li = document.createElement('li');
+                            li.classList.add('worker-box');
 
-                        // تحميل صور النجارين
-                        const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
-                        profilePictureRef.getDownloadURL().then((url) => {
-                            const image = document.createElement('img');
-                            image.src = url;
-                            image.alt = userData.username;
-                            li.appendChild(image);
-                        }).catch((error) => {
-                            console.error("Error getting profile picture:", error);
+                            // تحميل صور النجارين
+                            const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
+                            profilePictureRef.getDownloadURL().then((url) => {
+                                const image = document.createElement('img');
+                                image.src = url;
+                                image.alt = userData.username;
+                                li.appendChild(image);
+                            }).catch((error) => {
+                                console.error("Error getting profile picture:", error);
+                            });
+
+                            li.innerHTML += `
+                                <h3>${userData.username}</h3>
+                                <p>المدينة: ${userData.city}</p>
+                                <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
+                            `;
+                            workerList.appendChild(li);
+
+                            // عرض التقييمات
+                            const ratingSection = document.createElement('div');
+                            ratingSection.classList.add('rating-section');
+                            ratingSection.innerHTML = `
+                                <h3>التقييمات</h3>
+                                <div class="star-rating" id="starRating_${doc.id}">
+                                    <!-- سيتم ملء التقييمات هنا ديناميكيًا -->
+                                </div>
+                            `;
+                            li.appendChild(ratingSection);
+                            
+                            // تحميل التقييمات
+                            loadRatings(doc.id);
                         });
+                    }
+                })
+                .catch((error) => {
+                    workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
+                    console.error("Error fetching carpenters: ", error);
+                });
+        }
 
-                        li.innerHTML += `
-                            <h3>${userData.username}</h3>
-                            <p>المدينة: ${userData.city}</p>
-                            <p>سنين الخبرة: ${userData.experienceYears}</p>
-                        `;
-                        workerList.appendChild(li);
+        // تحميل التقييمات للنجار المحدد
+        function loadRatings(workerId) {
+            const starRating = document.getElementById(`starRating_${workerId}`);
+            const avgRating = 4.5; // قيمة التقييم المتوسطة (قم بتغييرها حسب البيانات الفعلية)
 
-                        // عرض التقييمات
-                        const ratingSection = document.createElement('div');
-                        ratingSection.classList.add('rating-section');
-                        ratingSection.innerHTML = `
-                            <h3>التقييمات</h3>
-                            <div class="star-rating" id="starRating_${doc.id}">
-                                <!-- سيتم ملء التقييمات هنا ديناميكيًا -->
-                            </div>
-                        `;
-                        li.appendChild(ratingSection);
-                        
-                        // تحميل التقييمات
-                        loadRatings(doc.id);
-                    });
+            // إنشاء نجوم التقييم المتوسطة
+            for (let i = 0; i < avgRating; i++) {
+                const star = document.createElement('span');
+                star.innerHTML = '&#9733;'; // نجمة ممتلئة
+                starRating.appendChild(star);
+            }
+
+            // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
+            for (let i = 0; i < 5 - avgRating; i++) {
+                const star = document.createElement('span');
+                star.innerHTML = '&#9734;'; // نجمة فارغة
+                starRating.appendChild(star);
+            }
+        }
+
+        // التحقق من تسجيل الدخول قبل إعادة التوجيه إلى صفحة عرض التفاصيل
+        function checkLoginAndRedirect(workerId) {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    window.location.href = `worker-details.html?id=${workerId}`;
+                } else {
+                    alert("يجب تسجيل حساب أو تسجيل الدخول أولاً.");
                 }
-            })
-            .catch((error) => {
-                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
-                console.error("Error fetching carpenters: ", error);
             });
-    }
-
-    // تحميل التقييمات للنجار المحدد
-    function loadRatings(workerId) {
-        const starRating = document.getElementById(`starRating_${workerId}`);
-        const avgRating = 4.5; // قيمة التقييم المتوسطة (قم بتغييرها حسب البيانات الفعلية)
-
-        // إنشاء نجوم التقييم المتوسطة
-        for (let i = 0; i < avgRating; i++) {
-            const star = document.createElement('span');
-            star.innerHTML = '&#9733;'; // نجمة ممتلئة
-            starRating.appendChild(star);
         }
 
-        // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
-        for (let i = 0; i < 5 - avgRating; i++) {
-            const star = document.createElement('span');
-            star.innerHTML = '&#9734;'; // نجمة فارغة
-            starRating.appendChild(star);
-        }
-    }
+        // عرض أو إخفاء التصنيفات عند النقر على الزر
+        const menuButton = document.getElementById('menuButton');
+        const categoriesMenu = document.getElementById('categoriesMenu');
 
-    // العودة إلى الصفحة الرئيسية
-    document.getElementById('homeButton').addEventListener('click', () => {
-        window.location.href = 'index.html';
-    });
+        menuButton.addEventListener('click', () => {
+            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
+        });
 
-    // العودة إلى القائمة السابقة
-    document.getElementById('backButton').addEventListener('click', () => {
-        window.history.back();
-    });
-
-    // عرض أو إخفاء التصنيفات عند النقر على الزر
-    const menuButton = document.getElementById('menuButton');
-    const categoriesMenu = document.getElementById('categoriesMenu');
-
-    menuButton.addEventListener('click', () => {
-        categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // عرض جميع النجارين عند تحميل الصفحة
-    window.onload = searchWorkers;
-</script>
+        // عرض جميع النجارين عند تحميل الصفحة
+        window.onload = searchWorkers;
+    </script>
 </body>
 </html>
