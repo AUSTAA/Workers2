@@ -72,7 +72,7 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
-function loadRatingsAndComments(workerId) {
+function loadRatingsAndComments(userId) {
     // تحميل التقييمات
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
@@ -80,7 +80,7 @@ function loadRatingsAndComments(workerId) {
 
     if (user) {
         const userId = user.uid;
-        const userRatingRef = db.collection("ratings").doc(`${workerId}_${userId}`);
+        const userRatingRef = db.collection("ratings").doc(`${userId}_${userId}`);
 
         // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
         userRatingRef.get().then((doc) => {
