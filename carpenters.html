@@ -88,70 +88,47 @@
 
             query.get()
                 .then((querySnapshot) => {
-                    const workers = [];
                     workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
                     if (querySnapshot.empty) {
                         workerList.innerHTML = "<p>لا يوجد نجارين متاحين.</p>";
                     } else {
                         querySnapshot.forEach((doc) => {
                             const userData = doc.data();
-                            workers.push({ id: doc.id, data: userData });
-                        });
+                            const li = document.createElement('li');
+                            li.classList.add('worker-box');
 
-                        // جلب التقييمات لكل نجار وترتيبهم بناءً على الأعلى تقييماً
-                        Promise.all(workers.map(worker => {
-                            return db.collection('ratings').where('workerId', '==', worker.id).get()
-                                .then(snapshot => {
-                                    let totalRating = 0;
-                                    snapshot.forEach(ratingDoc => {
-                                        totalRating += ratingDoc.data().rating;
-                                    });
-                                    worker.avgRating = snapshot.size ? totalRating / snapshot.size : 0;
-                                    return worker;
-                                });
-                        })).then(sortedWorkers => {
-                            sortedWorkers.sort((a, b) => b.avgRating - a.avgRating);
-
-                            sortedWorkers.forEach(worker => {
-                                const li = document.createElement('li');
-                                li.classList.add('worker-box');
-
-                                // تحميل صور النجارين
-                                const profilePictureRef = storage.ref().child(`users/${worker.id}/profilePicture.jpg`);
-                                profilePictureRef.getDownloadURL().then((url) => {
-                                    const image = document.createElement('img');
-                                    image.src = url;
-                                    image.alt = worker.data.username;
-                                    li.appendChild(image);
-                                }).catch((error) => {
-                                    console.error("Error getting profile picture:", error);
-                                });
-
-                                li.innerHTML += `
-                                    <h3>${worker.data.username}</h3>
-                                    <p>المدينة: ${worker.data.city}</p>
-                                    <p>سنين الخبرة: ${worker.data.experienceYears}</p>
-                                    <button onclick="showDetails('${worker.id}')">تفاصيل</button>
-                                `;
-                                workerList.appendChild(li);
-
-                                // عرض التقييمات
-                                const ratingSection = document.createElement('div');
-                                ratingSection.classList.add('rating-section');
-                                ratingSection.innerHTML = `
-                                    <h3>التقييمات</h3>
-                                    <div class="star-rating" id="starRating_${worker.id}">
-                                        <!-- سيتم ملء التقييمات هنا ديناميكيًا -->
-                                    </div>
-                                `;
-                                li.appendChild(ratingSection);
-
-                                // عرض التقييمات
-                                displayRatings(worker.id, worker.avgRating);
-
-                                // استماع للتغييرات في التقييمات
-                                listenToRatingChanges(worker.id);
+                            // تحميل صور النجارين
+                            const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
+                            profilePictureRef.getDownloadURL().then((url) => {
+                                const image = document.createElement('img');
+                                image.src = url;
+                                image.alt = userData.username;
+                                li.appendChild(image);
+                            }).catch((error) => {
+                                console.error("Error getting profile picture:", error);
                             });
+
+                            li.innerHTML += `
+                                <h3>${userData.username}</h3>
+                                <p>المدينة: ${userData.city}</p>
+                                <p>سنين الخبرة: ${userData.experienceYears}</p>
+                                <button onclick="showDetails('${doc.id}')">تفاصيل</button>
+                            `;
+                            workerList.appendChild(li);
+
+                            // عرض التقييمات
+                            const ratingSection = document.createElement('div');
+                            ratingSection.classList.add('rating-section');
+                            ratingSection.innerHTML = `
+                                <h3>التقييمات</h3>
+                                <div class="star-rating" id="starRating_${doc.id}">
+                                    <!-- سيتم ملء التقييمات هنا ديناميكيًا -->
+                                </div>
+                            `;
+                            li.appendChild(ratingSection);
+                            
+                            // تحميل التقييمات
+                            loadRatings(doc.id);
                         });
                     }
                 })
@@ -161,45 +138,24 @@
                 });
         }
 
-        // عرض التقييمات
-        function displayRatings(workerId, avgRating) {
+        // تحميل التقييمات للنجار المحدد
+        function loadRatings(workerId) {
             const starRating = document.getElementById(`starRating_${workerId}`);
-            if (starRating) {
-                // تفريغ التقييمات الحالية
-                starRating.innerHTML = '';
+            const avgRating = 4.5; // قيمة التقييم المتوسطة (قم بتغييرها حسب البيانات الفعلية)
 
-                // إنشاء نجوم التقييم المتوسطة
-                for (let i = 0; i < Math.floor(avgRating); i++) {
-                    const star = document.createElement('span');
-                    star.innerHTML = '&#9733;'; // نجمة ممتلئة
-                    starRating.appendChild(star);
-                }
-
-                // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
-                for (let i = 0; i < 5 - Math.floor(avgRating); i++) {
-                    const star = document.createElement('span');
-                    star.innerHTML = '&#9734;'; // نجمة فارغة
-                    starRating.appendChild(star);
-                }
-
-                // عرض التقييم المتوسط بشكل رقمي
-                const ratingValue = document.createElement('span');
-                ratingValue.textContent = ` (${avgRating.toFixed(1)})`;
-                starRating.appendChild(ratingValue);
+            // إنشاء نجوم التقييم المتوسطة
+            for (let i = 0; i < avgRating; i++) {
+                const star = document.createElement('span');
+                star.innerHTML = '&#9733;'; // نجمة ممتلئة
+                starRating.appendChild(star);
             }
-        }
 
-        // الاستماع للتغييرات في التقييمات
-        function listenToRatingChanges(workerId) {
-            db.collection('ratings').where('workerId', '==', workerId)
-                .onSnapshot(snapshot => {
-                    let totalRating = 0;
-                    snapshot.forEach(ratingDoc => {
-                        totalRating += ratingDoc.data().rating;
-                    });
-                    const avgRating = snapshot.size ? totalRating / snapshot.size : 0;
-                    displayRatings(workerId, avgRating);
-                });
+            // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
+            for (let i = 0; i < 5 - avgRating; i++) {
+                const star = document.createElement('span');
+                star.innerHTML = '&#9734;'; // نجمة فارغة
+                starRating.appendChild(star);
+            }
         }
 
         // عرض صفحة تفاصيل النجار
