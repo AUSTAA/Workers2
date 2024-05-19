@@ -143,6 +143,11 @@
             const ratingsRef = db.collection("users").doc(workerId).collection("ratings");
 
             ratingsRef.get().then((ratingsSnapshot) => {
+                if (ratingsSnapshot.empty) {
+                    starRating.innerHTML = "<p>لا يوجد تقييمات بعد.</p>";
+                    return;
+                }
+
                 let totalRating = 0;
                 let numberOfRatings = ratingsSnapshot.size;
 
@@ -175,14 +180,14 @@
                 }
 
                 // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
-                for (let i = 0; i < 5 - Math.ceil(roundedAvgRating); i++)
-                     {
+                for (let i = 0; i < 5 - Math.ceil(roundedAvgRating); i++) {
                     const star = document.createElement('span');
                     star.innerHTML = '&#9734;'; // نجمة فارغة
                     starRating.appendChild(star);
                 }
             }).catch((error) => {
                 console.error("Error fetching ratings: ", error);
+                starRating.innerHtml = "<p>حدث خطأ أثناء جلب التقييمات.</p>";
             });
         }
 
