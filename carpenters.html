@@ -157,6 +157,7 @@
         // جلب التقييمات لكل عامل
         function loadRatings(workerId) {
             const starRating = document.getElementById(`starRating_${workerId}`);
+            if (!starRating) return; // التأكد من وجود العنصر قبل محاولة التعديل عليه
             const workerRef = db.collection("ratings").doc(workerId);
 
             workerRef.onSnapshot((doc) => {
