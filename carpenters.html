@@ -116,7 +116,7 @@
         }
 
         // تحميل التقييمات للنجار المحدد
-        // تحميل التقييمات للنجار المحدد
+        // تحميل التقييمات للنجار المحدد وتحديثها بشكل ديناميكي
 function loadRatings(workerId) {
     const starRating = document.getElementById(`starRating_${workerId}`);
     const workerRef = db.collection("users").doc(workerId);
