@@ -158,20 +158,31 @@
 
 
 
-function loadRatings(workerId) {
-    const starRating = document.getElementById(`starRating_${workerId}`);
-    const workerRef = db.collection("ratings").doc(workerId);
+function loadRatings() {
+    const ratingsContainer = document.getElementById('ratingsContainer');
 
-    // الاشتراك في تغييرات الوثائق للتقييمات
-    workerRef.onSnapshot((doc) => {
-        if (doc.exists) {
+    // جلب جميع المستندات في مجموعة التقييمات
+    db.collection("ratings").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
             const ratingData = doc.data();
             const rating = ratingData.rating;
+            const workerId = doc.id;
 
-            // مسح التقييمات السابقة قبل إضافة التقييم الجديد
-            starRating.innerHTML = "";
+            // إنشاء عنصر لعرض التقييم
+            const ratingElement = document.createElement('div');
+            ratingElement.classList.add('rating');
+
+            // إضافة معرف العامل
+            ratingElement.dataset.workerId = workerId;
+
+            // إنشاء عنصر لعرض معرف العامل
+            const workerIdElement = document.createElement('p');
+            workerIdElement.textContent = `Worker ID: ${workerId}`;
+            ratingElement.appendChild(workerIdElement);
 
             // إنشاء نجوم التقييم
+            const starRating = document.createElement('div');
+            starRating.classList.add('star-rating');
             for (let i = 0; i < rating; i++) {
                 const star = document.createElement('span');
                 star.innerHTML = '&#9733;'; // نجمة ممتلئة
@@ -184,11 +195,11 @@ function loadRatings(workerId) {
                 star.innerHTML = '&#9734;'; // نجمة فارغة
                 starRating.appendChild(star);
             }
-        } else {
-            // إخفاء التقييم إذا لم يتم تحديده
-            starRating.style.display = 'none';
-        }
-    }, (error) => {
+
+            ratingElement.appendChild(starRating);
+            ratingsContainer.appendChild(ratingElement);
+        });
+    }).catch((error) => {
         console.error("Error getting ratings:", error);
     });
 }
