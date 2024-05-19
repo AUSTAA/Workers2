@@ -119,7 +119,6 @@
         // تحميل التقييمات للنجار المحدد
 function loadRatings(workerId) {
     const starRating = document.getElementById(`starRating_${workerId}`);
-
     const workerRef = db.collection("users").doc(workerId);
 
     // الاشتراك في تغييرات الوثائق للنجار
