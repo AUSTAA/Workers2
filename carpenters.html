@@ -64,29 +64,27 @@
     <script>
         // إعداد Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-            authDomain: "omran-16f44.firebaseapp.com",
-            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-            projectId: "omran-16f44",
-            storageBucket: "omran-16f44.appspot.com",
-            messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485aa1ea52bbb58",
-            measurementId: "G-PGZJ0T555G"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
         };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const storage = firebase.storage(); // إضافة الدعم لتخزين Firebase
+        const storage = firebase.storage();
 
         // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
         auth.onAuthStateChanged(user => {
             const loginButton = document.getElementById('loginButton');
             if (user) {
-                // إذا كان المستخدم مسجل الدخول
                 loginButton.style.display = 'none';
             } else {
-                // إذا لم يكن المستخدم مسجل الدخول
                 loginButton.style.display = 'inline-block';
                 loginButton.onclick = () => window.location.href = 'registration.html';
             }
@@ -144,7 +142,7 @@
                                 </div>
                             `;
                             li.appendChild(ratingSection);
-                            
+
                             // تحميل وعرض التقييمات بواسطة نجوم
                             loadRatings(doc.id);
                         });
@@ -156,53 +154,36 @@
                 });
         }
 
+        // جلب التقييمات لكل عامل
+        function loadRatings(workerId) {
+            const starRating = document.getElementById(`starRating_${workerId}`);
+            const workerRef = db.collection("ratings").doc(workerId);
 
+            workerRef.onSnapshot((doc) => {
+                if (doc.exists) {
+                    const ratingData = doc.data();
+                    const rating = ratingData.rating;
 
-function loadRatings() {
-    const ratingsContainer = document.getElementById('ratingsContainer');
+                    starRating.innerHTML = "";
 
-    // جلب جميع المستندات في مجموعة التقييمات
-    db.collection("ratings").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            const ratingData = doc.data();
-            const rating = ratingData.rating;
-            const workerId = doc.id;
+                    for (let i = 0; i < rating; i++) {
+                        const star = document.createElement('span');
+                        star.innerHTML = '&#9733;';
+                        starRating.appendChild(star);
+                    }
 
-            // إنشاء عنصر لعرض التقييم
-            const ratingElement = document.createElement('div');
-            ratingElement.classList.add('rating');
-
-            // إضافة معرف العامل
-            ratingElement.dataset.workerId = workerId;
-
-            // إنشاء عنصر لعرض معرف العامل
-            const workerIdElement = document.createElement('p');
-            workerIdElement.textContent = `Worker ID: ${workerId}`;
-            ratingElement.appendChild(workerIdElement);
-
-            // إنشاء نجوم التقييم
-            const starRating = document.createElement('div');
-            starRating.classList.add('star-rating');
-            for (let i = 0; i < rating; i++) {
-                const star = document.createElement('span');
-                star.innerHTML = '&#9733;'; // نجمة ممتلئة
-                starRating.appendChild(star);
-            }
-
-            // إنشاء نجوم التقييم الفارغة
-            for (let i = 0; i < 5 - rating; i++) {
-                const star = document.createElement('span');
-                star.innerHTML = '&#9734;'; // نجمة فارغة
-                starRating.appendChild(star);
-            }
-
-            ratingElement.appendChild(starRating);
-            ratingsContainer.appendChild(ratingElement);
-        });
-    }).catch((error) => {
-        console.error("Error getting ratings:", error);
-    });
-}
+                    for (let i = 0; i < 5 - rating; i++) {
+                        const star = document.createElement('span');
+                        star.innerHTML = '&#9734;';
+                        starRating.appendChild(star);
+                    }
+                } else {
+                    starRating.style.display = 'none';
+                }
+            }, (error) => {
+                console.error("Error getting ratings:", error);
+            });
+        }
 
         // التحقق من تسجيل الدخول قبل إعادة التوجيه إلى صفحة عرض التفاصيل
         function checkLoginAndRedirect(workerId) {
