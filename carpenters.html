@@ -156,38 +156,42 @@
                 });
         }
 
-        // تحميل وعرض التقييمات بواسطة نجوم
+        // ... الكود السابق
+
+// تحميل التقييمات للنجار المحدد
 function loadRatings(workerId) {
     const starRating = document.getElementById(`starRating_${workerId}`);
-    
-    // استعلام عن التقييم من Firestore
-    db.collection("ratings").doc(workerId).get()
-        .then((doc) => {
-            if (doc.exists) {
-                const ratingData = doc.data();
-                const rating = ratingData.rating; // قيمة التقييم
-                
-                // عرض التقييم بواسطة نجوم
-                for (let i = 0; i < rating; i++) {
-                    const star = document.createElement('span');
-                    star.innerHTML = '&#9733;'; // نجمة ممتلئة
-                    starRating.appendChild(star);
-                }
+    const workerRef = db.collection("ratings").doc(workerId);
 
-                // إنشاء نجوم التقييم الفارغة (حسب القيمة المتبقية)
-                for (let i = 0; i < 5 - rating; i++) {
-                    const star = document.createElement('span');
-                    star.innerHTML = '&#9734;'; // نجمة فارغة
-                    starRating.appendChild(star);
-                }
-            } else {
-                // في حالة عدم وجود تقييمات
-                starRating.innerHTML = "<p>لا توجد تقييمات حتى الآن.</p>";
+    // الاشتراك في تغييرات الوثائق للتقييمات
+    workerRef.onSnapshot((doc) => {
+        if (doc.exists) {
+            const ratingData = doc.data();
+            const rating = ratingData.rating;
+
+            // مسح التقييمات السابقة قبل إضافة التقييم الجديد
+            starRating.innerHTML = "";
+
+            // إنشاء نجوم التقييم
+            for (let i = 0; i < rating; i++) {
+                const star = document.createElement('span');
+                star.innerHTML = '&#9733;'; // نجمة ممتلئة
+                starRating.appendChild(star);
             }
-        })
-        .catch((error) => {
-            console.error("Error getting ratings:", error);
-        });
+
+            // إنشاء نجوم التقييم الفارغة
+            for (let i = 0; i < 5 - rating; i++) {
+                const star = document.createElement('span');
+                star.innerHTML = '&#9734;'; // نجمة فارغة
+                starRating.appendChild(star);
+            }
+        } else {
+            // إخفاء التقييم إذا لم يتم تحديده
+            starRating.style.display = 'none';
+        }
+    }, (error) => {
+        console.error("Error getting ratings:", error);
+    });
 }
 
         // التحقق من تسجيل الدخول قبل إعادة التوجيه إلى صفحة عرض التفاصيل
