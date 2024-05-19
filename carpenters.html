@@ -12,7 +12,7 @@
         <h1>خدمات البناء</h1>
         <h2>النجارين</h2>
         
-        <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
+        <button onclick="window.location.href='index.html'" class="home-button" id="homeButton">العودة للرئيسية</button>
         <button id="menuButton" class="menu-button">&#9776;</button>
         <nav class="nav-menu categories" id="categoriesMenu">
             <ul>
@@ -44,14 +44,14 @@
     <script>
         // إعداد Firebase
         const firebaseConfig = {
-            apiKey: "Your-API-Key",
-            authDomain: "Your-Auth-Domain",
-            databaseURL: "Your-Database-URL",
-            projectId: "Your-Project-ID",
-            storageBucket: "Your-Storage-Bucket",
-            messagingSenderId: "Your-Sender-ID",
-            appId: "Your-App-ID",
-            measurementId: "Your-Measurement-ID"
+            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+            authDomain: "omran-16f44.firebaseapp.com",
+            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+            projectId: "omran-16f44",
+            storageBucket: "omran-16f44.appspot.com",
+            messagingSenderId: "598982209417",
+            appId: "1:598982209417:web:dc9cbddd485aa1ea52bbb58",
+            measurementId: "G-PGZJ0T555G"
         };
 
         firebase.initializeApp(firebaseConfig);
@@ -62,19 +62,21 @@
         // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
         auth.onAuthStateChanged(user => {
             const loginButton = document.getElementById('loginButton');
-            if (user) {
-                // إذا كان المستخدم مسجل الدخول
-                loginButton.style.display = 'none';
-            } else {
-                // إذا لم يكن المستخدم مسجل الدخول
-                loginButton.style.display = 'inline-block';
-                loginButton.onclick = () => window.location.href = 'registration.html';
+            if (loginButton) {
+                if (user) {
+                    // إذا كان المستخدم مسجل الدخول
+                    loginButton.style.display = 'none';
+                } else {
+                    // إذا لم يكن المستخدم مسجل الدخول
+                    loginButton.style.display = 'inline-block';
+                    loginButton.onclick = () => window.location.href = 'registration.html';
+                }
             }
         });
 
         // جلب بيانات النجارين من Firestore
         function searchWorkers() {
-            const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();     
+            const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
             const workerList = document.getElementById('worker-list');
 
             let query;
@@ -124,7 +126,7 @@
                             `;
                             li.appendChild(ratingSection);
                             
-                                                       // تحميل التقييمات
+                            // تحميل التقييمات
                             loadRatings(doc.id);
                         });
                     }
@@ -156,22 +158,30 @@
         }
 
         // العودة إلى الصفحة الرئيسية
-        document.getElementById('homeButton').addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
+        const homeButton = document.getElementById('homeButton');
+        if (homeButton) {
+            homeButton.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+        }
 
         // العودة إلى القائمة السابقة
-        document.getElementById('backButton').addEventListener('click', () => {
-            window.history.back();
-        });
+        const backButton = document.getElementById('backButton');
+        if (backButton) {
+            backButton.addEventListener('click', () => {
+                window.history.back();
+            });
+        }
 
         // عرض أو إخفاء التصنيفات عند النقر على الزر
         const menuButton = document.getElementById('menuButton');
         const categoriesMenu = document.getElementById('categoriesMenu');
 
-        menuButton.addEventListener('click', () => {
-            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
-        });
+        if (menuButton && categoriesMenu) {
+            menuButton.addEventListener('click', () => {
+                categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
+            });
+        }
 
         // عرض جميع النجارين عند تحميل الصفحة
         window.onload = searchWorkers;
