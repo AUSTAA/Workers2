@@ -156,6 +156,7 @@
 
                     if (numRatings > 0) {
                         const avgRating = totalRating / numRatings;
+                        starRating.innerHTML = ""; // تفريغ التقييمات قبل ملئها
 
                         // إنشاء نجوم التقييم المتوسطة
                         for (let i = 0; i < Math.floor(avgRating); i++) {
@@ -200,9 +201,8 @@
             categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
         });
 
-        // عرض جميع النجارين عند تحميل الصفحة 
+        // عرض جميع النجارين عند تحميل الصفحة
         window.onload = searchWorkers;
-</script>
+    </script>
 </body>
 </html>
-```
