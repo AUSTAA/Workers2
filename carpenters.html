@@ -3,44 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>النجارين - خدمات البناء</title>
+    <title>النجارين</title>
     <link rel="stylesheet" href="carpen.css">
 </head>
 <body dir="rtl">
     <header>
-        <img src="IMG_0607.webp" alt="نجارين" class="logo">
-        <h1>خدمات البناء</h1>
-        <h2>النجارين</h2>
-        <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
-        <button id="loginButton" class="login-button" style="display: none;">تسجيل الدخول</button>
-        <button id="menuButton" class="menu-button">&#9776;</button>
-        <nav class="nav-menu categories" id="categoriesMenu">
-            <ul>
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="services.html">الخدمات</a></li>
-                <li><a href="about.html">من نحن</a></li>
-                <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="carpenters.html">النجارين</a></li>
-                <li><a href="electricians.html">الكهربائيين</a></li>
-                <li><a href="plumbers.html">السباكين</a></li>
-                <li><a href="painters.html">الدهانين</a></li>
-            </ul>
-        </nav>
+        <h1>قائمة النجارين</h1>
+        <button id="homeButton">الصفحة الرئيسية</button>
+        <button id="authButton" style="display: none;">تسجيل الدخول / إنشاء حساب</button>
     </header>
     <main>
-        <input type="text" id="searchInput" placeholder="ابحث عن النجارين بالمدينة...">
-        <button onclick="searchWorkers()">بحث</button>
-        <ul class="worker-list" id="worker-list">
-            <!-- سيتم ملء هذه القائمة ديناميكيًا -->
-        </ul>
+        <div id="carpentersList"></div>
     </main>
     <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
+        <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
     <script>
         // إعداد Firebase
         const firebaseConfig = {
@@ -50,105 +30,42 @@
             projectId: "omran-16f44",
             storageBucket: "omran-16f44.appspot.com",
             messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485aa1ea52bbb58",
+            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
             measurementId: "G-PGZJ0T555G"
         };
-
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const storage = firebase.storage();
 
-        auth.onAuthStateChanged(user => {
-            const loginButton = document.getElementById('loginButton');
-            if (user) {
-                loginButton.style.display = 'none';
-            } else {
-                loginButton.style.display = 'inline-block';
-                loginButton.onclick = () => window.location.href = 'registration.html';
-            }
-        });
+        function calculateAverageRating(ratings) {
+            if (!ratings || ratings.length === 0) return 0;
+            const total = ratings.reduce((acc, rating) => acc + rating.rating, 0);
+            return total / ratings.length;
+        }
 
-        function searchWorkers() {
-            const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
-            const workerList = document.getElementById('worker-list');
-
-            let query;
-            if (searchCity) {
-                query = db.collection("users").where("profession", "==", "نجار").where("city", "==", searchCity);
-            } else {
-                query = db.collection("users").where("profession", "==", "نجار");
-            }
-
-            query.get()
-                .then((querySnapshot) => {
-                    workerList.innerHTML = "";
-                    if (querySnapshot.empty) {
-                        workerList.innerHTML = "<p>لا يوجد نجارين متاحين.</p>";
-                    } else {
-                        querySnapshot.forEach((doc) => {
-                            const userData = doc.data();
-                            const li = document.createElement('li');
-                            li.classList.add('worker-box');
-
-                            const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
-                            profilePictureRef.getDownloadURL().then((url) => {
-                                const image = document.createElement('img');
-                                image.src = url;
-                                image.alt = userData.username;
-                                li.appendChild(image);
-                            }).catch((error) => {
-                                console.error("Error getting profile picture:", error);
-                            });
-
-                            li.innerHTML += `
-                                <h3>${userData.username}</h3>
-                                <p>المدينة: ${userData.city}</p>
-                                <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <p>التقييم: <span id="averageRating_${doc.id}">جارِ التحميل...</span></p>
-                                <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
-                            `;
-                            workerList.appendChild(li);
-
-                            // تحميل التقييمات وحساب التقييم المتوسط
-                            const ratings = userData.ratings || [];
-                            if (ratings.length > 0) {
-                                let totalRating = 0;
-                                ratings.forEach(ratingObj => {
-                                    totalRating += ratingObj.rating;
-                                });
-                                const averageRating = totalRating / ratings.length;
-                                document.getElementById(`averageRating_${doc.id}`).textContent = averageRating.toFixed(1);
-                            } else {
-                                document.getElementById(`averageRating_${doc.id}`).textContent = "لا توجد تقييمات";
-                            }
-                        });
-                    }
-                })
-                .catch((error) => {
-                    workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
-                    console.error("Error fetching carpenters: ", error);
+        // جلب بيانات النجارين
+        db.collection("users").where("profession", "==", "نجار").get()
+            .then((querySnapshot) => {
+                const carpentersList = document.getElementById('carpentersList');
+                querySnapshot.forEach((doc) => {
+                    const carpenterData = doc.data();
+                    const carpenterDiv = document.createElement('div');
+                    carpenterDiv.innerHTML = `
+                        <h2>${carpenterData.username}</h2>
+                        <p>المدينة: ${carpenterData.city}</p>
+                        <p>التقييم: ${calculateAverageRating(carpenterData.ratings)}</p>
+                    `;
+                    carpentersList.appendChild(carpenterDiv);
                 });
-        }
-
-        function checkLoginAndRedirect(workerId) {
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    window.location.href = `worker-details.html?id=${workerId}`;
-                } else {
-                    alert("يجب تسجيل حساب أو تسجيل الدخول أولاً.");
-                }
+            })
+            .catch((error) => {
+                console.error("Error getting carpenters:", error);
             });
-        }
 
-        const menuButton = document.getElementById('menuButton');
-        const categoriesMenu = document.getElementById('categoriesMenu');
-
-        menuButton.addEventListener('click', () => {
-            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
+        // العودة إلى الصفحة الرئيسية
+        document.getElementById('homeButton').addEventListener('click', () => {
+            window.location.href = 'index.html';
         });
-
-        window.onload = searchWorkers;
     </script>
 </body>
 </html>
