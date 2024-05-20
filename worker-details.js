@@ -47,7 +47,7 @@ db.collection("users").doc(workerId).get()
             // تحميل صور الخدمات
             const serviceImagesContainer = document.getElementById('workerServiceImages');
             serviceImagesContainer.innerHTML = ''; // مسح المحتوى الحالي
-                        const serviceImagesRef = firebase.storage().ref().child(`users/${workerId}/serviceImages`);
+            const serviceImagesRef = firebase.storage().ref().child(`users/${workerId}/serviceImages`);
             serviceImagesRef.listAll().then((serviceImagesSnapshot) => {
                 serviceImagesSnapshot.items.forEach((itemRef) => {
                     itemRef.getDownloadURL().then((imageUrl) => {
@@ -78,9 +78,11 @@ db.collection("users").doc(workerId).get()
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
-    const ratingButton = document.getElementById('ratingButton');
-    const user = firebase.auth().currentUser;
-
+    const ratingButton = document.createElement('button');
+    ratingButton.id = 'ratingButton';
+    ratingButton.textContent = 'تقييم';
+    ratingSection.appendChild(ratingButton);
+    
     // حساب متوسط التقييمات
     db.collection("ratings").where("workerId", "==", workerId).get()
         .then((querySnapshot) => {
@@ -99,41 +101,47 @@ function loadRatingsAndComments(workerId) {
             console.error("Error getting ratings: ", error);
         });
 
-    if (user) {
-        const userId = user.uid;
-        const userRatingRef = db.collection("Whoraited").doc(`${userId}_${workerId}`);
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            const userId = user.uid;
+            const userRatingRef = db.collection("Whoraited").doc(`${userId}_${workerId}`);
 
-        // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
-        userRatingRef.get().then((doc) => {
-            if (doc.exists) {
-                const userRating = doc.data().rating;
-                starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
-                alert('لقد قمت بالتقييم مسبقًا.');
-            }
-        });
-
-        // إضافة حدث للتقييم
-        ratingButton.addEventListener('click', () => {
-            starRating.style.display = 'block';
-        });
-
-        starRating.addEventListener('change', (event) => {
-            const rating = event.target.value;
-            userRatingRef.set({ userId, workerId, rating }).then(() => {
-                db.collection("ratings").add({ workerId, rating }).then(() => {
-                    alert('تم إرسال التقييم بنجاح!');
+            // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
+            userRatingRef.get().then((doc) => {
+                if (doc.exists) {
                     starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
-                    starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
-                }).catch((error) => {
-                    console.error("Error submitting rating: ", error);
-                });
-            }).catch((error) => {
-                console.error("Error saving rating: ", error);
+                }
             });
-        });
-    } else {
-        ratingSection.style.display = 'none';
-    }
+
+            // إضافة حدث للتقييم
+            ratingButton.addEventListener('click', () => {
+                starRating.style.display = 'block';
+            });
+
+            starRating.addEventListener('change', (event) => {
+                const rating = event.target.value;
+                userRatingRef.get().then((doc) => {
+                    if (doc.exists) {
+                        alert('لقد قمت بالتقييم مسبقًا.');
+                    } else {
+                        userRatingRef.set({ userId, workerId }).then(() => {
+                            db.collection("ratings").add({ workerId, rating }).then(() => {
+                                alert('تم إرسال التقييم بنجاح!');
+                                starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+                                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
+                            }).catch((error) => {
+                                console.error("Error submitting rating: ", error);
+                            });
+                        }).catch((error) => {
+                            console.error("Error saving rating: ", error);
+                        });
+                    }
+                });
+            });
+        } else {
+            ratingSection.style.display = 'none';
+        }
+    });
 
     // تحميل التعليقات
     const commentsContainer = document.getElementById('commentsContainer');
@@ -156,6 +164,8 @@ function loadRatingsAndComments(workerId) {
 
     submitCommentButton.addEventListener('click', () => {
         const comment = commentInput.value.trim();
+        const user = firebase.auth().currentUser;
+
         if (comment && user) {
             const commentData = {
                 workerId,
