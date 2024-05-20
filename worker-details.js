@@ -73,12 +73,11 @@ db.collection("users").doc(workerId).get()
     });
 
 function loadRatingsAndComments(workerId) {
-    // تحميل التقييمات
+    // حساب وعرض متوسط التقييمات
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
-    const user = firebase.auth().currentUser;
+    const averageRatingElement = document.getElementById('averageRating');
 
-    // حساب وعرض متوسط التقييمات
     db.collection("ratings").where("workerId", "==", workerId).get()
         .then((querySnapshot) => {
             let totalRatings = 0;
@@ -90,38 +89,40 @@ function loadRatingsAndComments(workerId) {
             });
 
             const averageRating = numberOfRatings ? totalRatings / numberOfRatings : 0;
-            document.getElementById('averageRating').textContent = `متوسط التقييم: ${averageRating.toFixed(2)}`;
+            averageRatingElement.textContent = `متوسط التقييم: ${averageRating.toFixed(2)}`;
         })
         .catch((error) => {
             console.error("Error getting ratings: ", error);
         });
 
-    if (user) {
-        const userId = user.uid;
-        const userRatingRef = db.collection("ratings").doc(`${userId}_${workerId}`);
+    // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            const userId = user.uid;
+            const userRatingRef = db.collection("ratings").doc(`${userId}_${workerId}`);
 
-        // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
-        userRatingRef.get().then((doc) => {
-            if (doc.exists) {
-                const userRating = doc.data().rating;
-                document.querySelector(`input[name="rating"][value="${userRating}"]`).checked = true;
-                starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
-            }
-        });
-
-        // إضافة حدث للتقييم
-        starRating.addEventListener('change', (event) => {
-            const rating = event.target.value;
-            userRatingRef.set({ rating, workerId }).then(() => {
-                alert('تم إرسال التقييم بنجاح!');
-                starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
-            }).catch((error) => {
-                console.error("Error submitting rating: ", error);
+            userRatingRef.get().then((doc) => {
+                if (doc.exists) {
+                    const userRating = doc.data().rating;
+                    document.querySelector(`input[name="rating"][value="${userRating}"]`).checked = true;
+                    starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+                }
             });
-        });
-    } else {
-        ratingSection.style.display = 'none';
-    }
+
+            // إضافة حدث للتقييم
+            starRating.addEventListener('change', (event) => {
+                const rating = event.target.value;
+                userRatingRef.set({ rating, workerId }).then(() => {
+                    alert('تم إرسال التقييم بنجاح!');
+                    starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+                }).catch((error) => {
+                    console.error("Error submitting rating: ", error);
+                });
+            });
+        } else {
+            ratingSection.style.display = 'none';
+        }
+    });
 
     // تحميل التعليقات
     const commentsContainer = document.getElementById('commentsContainer');
@@ -145,6 +146,7 @@ function loadRatingsAndComments(workerId) {
 
     submitCommentButton.addEventListener('click', () => {
         const comment = commentInput.value.trim();
+        const user = firebase.auth().currentUser;
         if (comment && user) {
             const commentData = {
                 workerId,
@@ -171,7 +173,6 @@ auth.onAuthStateChanged((user) => {
     const authButton = document.getElementById('authButton');
     if (user) {
         authButton.style.display = 'none'; // إخفاء زر تسجيل الدخول إذا كان المستخدم مسجلاً الدخول
-        loadRatingsAndComments(workerId); // تحميل التقييمات والتعليقات بعد التأكد من حالة تسجيل الدخول
     } else {
         authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
         authButton.addEventListener('click', () => {
@@ -189,3 +190,6 @@ document.getElementById('homeButton').addEventListener('click', () => {
 document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
+
+// تحميل التقييمات والتعليقات بمجرد تحميل الصفحة
+loadRatingsAndComments(workerId);
