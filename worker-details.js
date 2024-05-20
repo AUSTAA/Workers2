@@ -47,7 +47,7 @@ db.collection("users").doc(workerId).get()
             // تحميل صور الخدمات
             const serviceImagesContainer = document.getElementById('workerServiceImages');
             serviceImagesContainer.innerHTML = ''; // مسح المحتوى الحالي
-            const serviceImagesRef = firebase.storage().ref().child(`users/${workerId}/serviceImages`);
+                        const serviceImagesRef = firebase.storage().ref().child(`users/${workerId}/serviceImages`);
             serviceImagesRef.listAll().then((serviceImagesSnapshot) => {
                 serviceImagesSnapshot.items.forEach((itemRef) => {
                     itemRef.getDownloadURL().then((imageUrl) => {
@@ -64,6 +64,9 @@ db.collection("users").doc(workerId).get()
             }).catch((error) => {
                 console.error("Error getting service images:", error);
             });
+
+            // تحميل التقييمات وحساب المتوسط
+            loadRatingsAndComments(workerId);
         } else {
             console.log("No such document!");
         }
@@ -73,62 +76,69 @@ db.collection("users").doc(workerId).get()
     });
 
 function loadRatingsAndComments(workerId) {
-    // حساب وعرض متوسط التقييمات
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
-    const averageRatingElement = document.getElementById('averageRating');
+    const ratingButton = document.getElementById('ratingButton');
+    const user = firebase.auth().currentUser;
 
+    // حساب متوسط التقييمات
     db.collection("ratings").where("workerId", "==", workerId).get()
         .then((querySnapshot) => {
             let totalRatings = 0;
-            let numberOfRatings = 0;
+            let ratingCount = 0;
 
             querySnapshot.forEach((doc) => {
                 totalRatings += doc.data().rating;
-                numberOfRatings++;
+                ratingCount++;
             });
 
-            const averageRating = numberOfRatings ? totalRatings / numberOfRatings : 0;
-            averageRatingElement.textContent = `متوسط التقييم: ${averageRating.toFixed(2)}`;
+            const averageRating = ratingCount ? (totalRatings / ratingCount).toFixed(1) : 0;
+            starRating.textContent = `متوسط التقييم: ${averageRating}`;
         })
         .catch((error) => {
             console.error("Error getting ratings: ", error);
         });
 
-    // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            const userId = user.uid;
-            const userRatingRef = db.collection("ratings").doc(`${userId}_${workerId}`);
+    if (user) {
+        const userId = user.uid;
+        const userRatingRef = db.collection("Whoraited").doc(`${userId}_${workerId}`);
 
-            userRatingRef.get().then((doc) => {
-                if (doc.exists) {
-                    const userRating = doc.data().rating;
-                    document.querySelector(`input[name="rating"][value="${userRating}"]`).checked = true;
-                    starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
-                }
-            });
+        // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
+        userRatingRef.get().then((doc) => {
+            if (doc.exists) {
+                const userRating = doc.data().rating;
+                starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+                alert('لقد قمت بالتقييم مسبقًا.');
+            }
+        });
 
-            // إضافة حدث للتقييم
-            starRating.addEventListener('change', (event) => {
-                const rating = event.target.value;
-                userRatingRef.set({ rating, workerId }).then(() => {
+        // إضافة حدث للتقييم
+        ratingButton.addEventListener('click', () => {
+            starRating.style.display = 'block';
+        });
+
+        starRating.addEventListener('change', (event) => {
+            const rating = event.target.value;
+            userRatingRef.set({ userId, workerId, rating }).then(() => {
+                db.collection("ratings").add({ workerId, rating }).then(() => {
                     alert('تم إرسال التقييم بنجاح!');
                     starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+                    starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
                 }).catch((error) => {
                     console.error("Error submitting rating: ", error);
                 });
+            }).catch((error) => {
+                console.error("Error saving rating: ", error);
             });
-        } else {
-            ratingSection.style.display = 'none';
-        }
-    });
+        });
+    } else {
+        ratingSection.style.display = 'none';
+    }
 
     // تحميل التعليقات
     const commentsContainer = document.getElementById('commentsContainer');
     db.collection("comments").where("workerId", "==", workerId).get()
         .then((querySnapshot) => {
-            commentsContainer.innerHTML = ''; // مسح المحتوى الحالي
             querySnapshot.forEach((doc) => {
                 const commentData = doc.data();
                 const commentElement = document.createElement('p');
@@ -146,7 +156,6 @@ function loadRatingsAndComments(workerId) {
 
     submitCommentButton.addEventListener('click', () => {
         const comment = commentInput.value.trim();
-        const user = firebase.auth().currentUser;
         if (comment && user) {
             const commentData = {
                 workerId,
@@ -173,6 +182,7 @@ auth.onAuthStateChanged((user) => {
     const authButton = document.getElementById('authButton');
     if (user) {
         authButton.style.display = 'none'; // إخفاء زر تسجيل الدخول إذا كان المستخدم مسجلاً الدخول
+        loadRatingsAndComments(workerId); // تحميل التقييمات والتعليقات بعد التأكد من حالة تسجيل الدخول
     } else {
         authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
         authButton.addEventListener('click', () => {
@@ -190,6 +200,3 @@ document.getElementById('homeButton').addEventListener('click', () => {
 document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
-
-// تحميل التقييمات والتعليقات بمجرد تحميل الصفحة
-loadRatingsAndComments(workerId);
