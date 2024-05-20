@@ -72,15 +72,33 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
-function loadRatingsAndComments(userId) {
+function loadRatingsAndComments(workerId) {
     // تحميل التقييمات
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
     const user = firebase.auth().currentUser;
 
+    // حساب وعرض متوسط التقييمات
+    db.collection("ratings").where("workerId", "==", workerId).get()
+        .then((querySnapshot) => {
+            let totalRatings = 0;
+            let numberOfRatings = 0;
+
+            querySnapshot.forEach((doc) => {
+                totalRatings += doc.data().rating;
+                numberOfRatings++;
+            });
+
+            const averageRating = numberOfRatings ? totalRatings / numberOfRatings : 0;
+            document.getElementById('averageRating').textContent = `متوسط التقييم: ${averageRating.toFixed(2)}`;
+        })
+        .catch((error) => {
+            console.error("Error getting ratings: ", error);
+        });
+
     if (user) {
         const userId = user.uid;
-        const userRatingRef = db.collection("ratings").doc(`${userId}_${userId}`);
+        const userRatingRef = db.collection("ratings").doc(`${userId}_${workerId}`);
 
         // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
         userRatingRef.get().then((doc) => {
@@ -94,7 +112,7 @@ function loadRatingsAndComments(userId) {
         // إضافة حدث للتقييم
         starRating.addEventListener('change', (event) => {
             const rating = event.target.value;
-            userRatingRef.set({ rating }).then(() => {
+            userRatingRef.set({ rating, workerId }).then(() => {
                 alert('تم إرسال التقييم بنجاح!');
                 starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
             }).catch((error) => {
@@ -109,6 +127,7 @@ function loadRatingsAndComments(userId) {
     const commentsContainer = document.getElementById('commentsContainer');
     db.collection("comments").where("workerId", "==", workerId).get()
         .then((querySnapshot) => {
+            commentsContainer.innerHTML = ''; // مسح المحتوى الحالي
             querySnapshot.forEach((doc) => {
                 const commentData = doc.data();
                 const commentElement = document.createElement('p');
