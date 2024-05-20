@@ -50,7 +50,7 @@
             projectId: "omran-16f44",
             storageBucket: "omran-16f44.appspot.com",
             messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+            appId: "1:598982209417:web:dc9cbddd485aa1ea52bbb58",
             measurementId: "G-PGZJ0T555G"
         };
 
@@ -110,8 +110,18 @@
                             `;
                             workerList.appendChild(li);
 
-                            // جلب التقييمات من صفحة تفاصيل العامل
-                            fetchWorkerRatings(doc.id);
+                            // تحميل التقييمات وحساب التقييم المتوسط
+                            const ratings = userData.ratings || [];
+                            if (ratings.length > 0) {
+                                let totalRating = 0;
+                                ratings.forEach(ratingObj => {
+                                    totalRating += ratingObj.rating;
+                                });
+                                const averageRating = totalRating / ratings.length;
+                                document.getElementById(`averageRating_${doc.id}`).textContent = averageRating.toFixed(1);
+                            } else {
+                                document.getElementById(`averageRating_${doc.id}`).textContent = "لا توجد تقييمات";
+                            }
                         });
                     }
                 })
@@ -119,30 +129,6 @@
                     workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات النجارين. الرجاء المحاولة لاحقًا.</p>";
                     console.error("Error fetching carpenters: ", error);
                 });
-        }
-
-        function fetchWorkerRatings(workerId) {
-            db.collection("users").doc(workerId).get().then((doc) => {
-                if (doc.exists) {
-                    const userData = doc.data();
-                    const ratings = userData.ratings || [];
-                    if (ratings.length > 0) {
-                        let totalRating = 0;
-                        ratings.forEach(ratingObj => {
-                            totalRating += ratingObj.rating;
-                        });
-                        const averageRating = totalRating / ratings.length;
-                        document.getElementById(`averageRating_${workerId}`).textContent = averageRating.toFixed(1);
-                    } else {
-                        document.getElementById(`averageRating_${workerId}`).textContent = "لا توجد تقييمات";
-                    }
-                } else {
-                    document.getElementById(`averageRating_${workerId}`).textContent = "لا توجد تقييمات";
-                }
-            }).catch((error) => {
-                console.error("Error getting worker ratings: ", error);
-                document.getElementById(`averageRating_${workerId}`).textContent = "خطأ في جلب التقييمات";
-            });
         }
 
         function checkLoginAndRedirect(workerId) {
