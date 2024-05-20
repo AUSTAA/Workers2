@@ -4,14 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>النجارين - خدمات البناء</title>
-    <link rel="stylesheet" href="carpen.css"> <!-- رابط ملف CSS الخارجي -->
+    <link rel="stylesheet" href="carpen.css">
 </head>
 <body dir="rtl">
     <header>
         <img src="IMG_0607.webp" alt="نجارين" class="logo">
         <h1>خدمات البناء</h1>
         <h2>النجارين</h2>
-        
         <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
         <button id="loginButton" class="login-button" style="display: none;">تسجيل الدخول</button>
         <button id="menuButton" class="menu-button">&#9776;</button>
@@ -29,8 +28,8 @@
         </nav>
     </header>
     <main>
-        <input type="text" id="searchInput" placeholder="ابحث عن النجارين بالمدينة..."> <!-- حقل البحث -->
-        <button onclick="searchWorkers()">بحث</button> <!-- زر البحث -->
+        <input type="text" id="searchInput" placeholder="ابحث عن النجارين بالمدينة...">
+        <button onclick="searchWorkers()">بحث</button>
         <ul class="worker-list" id="worker-list">
             <!-- سيتم ملء هذه القائمة ديناميكيًا -->
         </ul>
@@ -45,35 +44,31 @@
     <script>
         // إعداد Firebase
         const firebaseConfig = {
-  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-  authDomain: "omran-16f44.firebaseapp.com",
-  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-  projectId: "omran-16f44",
-  storageBucket: "omran-16f44.appspot.com",
-  messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-  measurementId: "G-PGZJ0T555G"
-};
+            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+            authDomain: "omran-16f44.firebaseapp.com",
+            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+            projectId: "omran-16f44",
+            storageBucket: "omran-16f44.appspot.com",
+            messagingSenderId: "598982209417",
+            appId: "1:598982209417:web:dc9cbddd485aa1ea52bbb58",
+            measurementId: "G-PGZJ0T555G"
+        };
 
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
-        const storage = firebase.storage(); // إضافة الدعم لتخزين Firebase
+        const storage = firebase.storage();
 
-        // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
         auth.onAuthStateChanged(user => {
             const loginButton = document.getElementById('loginButton');
             if (user) {
-                // إذا كان المستخدم مسجل الدخول
                 loginButton.style.display = 'none';
             } else {
-                // إذا لم يكن المستخدم مسجل الدخول
                 loginButton.style.display = 'inline-block';
                 loginButton.onclick = () => window.location.href = 'registration.html';
             }
         });
 
-        // جلب بيانات النجارين من Firestore
         function searchWorkers() {
             const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
             const workerList = document.getElementById('worker-list');
@@ -87,7 +82,7 @@
 
             query.get()
                 .then((querySnapshot) => {
-                    workerList.innerHTML = ""; // تفريغ القائمة قبل بدء البحث
+                    workerList.innerHTML = "";
                     if (querySnapshot.empty) {
                         workerList.innerHTML = "<p>لا يوجد نجارين متاحين.</p>";
                     } else {
@@ -96,7 +91,6 @@
                             const li = document.createElement('li');
                             li.classList.add('worker-box');
 
-                            // تحميل صور النجارين
                             const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
                             profilePictureRef.getDownloadURL().then((url) => {
                                 const image = document.createElement('img');
@@ -107,24 +101,27 @@
                                 console.error("Error getting profile picture:", error);
                             });
 
-                           
-                            
-                            // حساب التقييم المتوسط وعرضه
-                            const ratings = userData.ratings || [];
-                            let totalRating = 0;
-                            ratings.forEach(rating => {
-                                totalRating += rating.rating;
-                            });
-                            const avgRating = ratings.length > 0 ? (totalRating / ratings.length).toFixed(1) : "لا توجد تقييمات";
-
                             li.innerHTML += `
                                 <h3>${userData.username}</h3>
                                 <p>المدينة: ${userData.city}</p>
                                 <p>سنين الخبرة: ${userData.experienceYears}</p>
-                                <p>التقييم: ${avgRating}</p>
+                                <p>التقييم: <span id="averageRating_${doc.id}">جارِ التحميل...</span></p>
                                 <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
                             `;
                             workerList.appendChild(li);
+
+                            // تحميل التقييمات وحساب التقييم المتوسط
+                            const ratings = userData.ratings || [];
+                            if (ratings.length > 0) {
+                                let totalRating = 0;
+                                ratings.forEach(ratingObj => {
+                                    totalRating += ratingObj.rating;
+                                });
+                                const averageRating = totalRating / ratings.length;
+                                document.getElementById(`averageRating_${doc.id}`).textContent = averageRating.toFixed(1);
+                            } else {
+                                document.getElementById(`averageRating_${doc.id}`).textContent = "لا توجد تقييمات";
+                            }
                         });
                     }
                 })
@@ -134,7 +131,6 @@
                 });
         }
 
-        // التحقق من تسجيل الدخول قبل إعادة التوجيه إلى صفحة عرض التفاصيل
         function checkLoginAndRedirect(workerId) {
             auth.onAuthStateChanged(user => {
                 if (user) {
@@ -145,7 +141,6 @@
             });
         }
 
-        // عرض أو إخفاء التصنيفات عند النقر على الزر
         const menuButton = document.getElementById('menuButton');
         const categoriesMenu = document.getElementById('categoriesMenu');
 
@@ -153,7 +148,6 @@
             categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
         });
 
-        // عرض جميع النجارين عند تحميل الصفحة
         window.onload = searchWorkers;
     </script>
 </body>
