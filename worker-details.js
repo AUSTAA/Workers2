@@ -10,7 +10,6 @@ const firebaseConfig = {
     measurementId: "G-PGZJ0T555G"
 };
 
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -78,10 +77,10 @@ db.collection("users").doc(workerId).get()
     });
 
 // دالة لإنشاء نجمة معينة
-function createStar() {
+function createStar(filled) {
     const star = document.createElement('span');
     star.textContent = '★';
-    star.style.color = 'gold';
+    star.style.color = filled ? 'gold' : 'gray';
     return star;
 }
 
@@ -90,8 +89,8 @@ function displayRatingStars(averageRating) {
     const starRatingDisplay = document.getElementById('averageRating');
     starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
 
-    for (let i = 0; i < averageRating; i++) {
-        starRatingDisplay.appendChild(createStar());
+    for (let i = 1; i <= 5; i++) {
+        starRatingDisplay.appendChild(createStar(i <= averageRating));
     }
 }
 
@@ -119,7 +118,7 @@ function loadRatingsAndComments(workerId) {
                     });
 
                     starRating.addEventListener('change', (event) => {
-                        const rating = event.target.value;
+                        const rating = parseInt(event.target.value);
                         userRatingRef.set({ userId, workerId }).then(() => {
                             db.collection("ratings").add({ workerId, rating }).then(() => {
                                 alert('تم إرسال التقييم بنجاح!');
@@ -148,7 +147,7 @@ function loadRatingsAndComments(workerId) {
                     });
 
                     const averageStars = ratingCount ? (totalStars / ratingCount) : 0;
-                                        displayRatingStars(averageStars);
+                    displayRatingStars(Math.round(averageStars)); // عرض التقييم المتوسط كعدد من النجوم
                 })
                 .catch((error) => {
                     console.error("Error getting ratings: ", error);
@@ -223,4 +222,3 @@ document.getElementById('homeButton').addEventListener('click', () => {
 document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
-                   
