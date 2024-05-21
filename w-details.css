@@ -100,3 +100,8 @@ button {
     height: 100px;
     margin-top: 10px;
 }
+
+#averageRating span {
+    font-size: 24px;
+    color: gold;
+}
