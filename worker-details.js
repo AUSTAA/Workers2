@@ -106,6 +106,42 @@ function displayRatingStars(averageRating) {
     }
 }
 
+// حساب متوسط عدد النجوم بالوزن المناسب
+function calculateWeightedAverage(ratings) {
+    let totalWeightedSum = 0;
+    let totalWeight = 0;
+
+    // تحديد الوزن لكل تقييم وضربه بعدد النجوم المقابل
+    for (const rating of ratings) {
+        let weight = 0;
+        switch (rating) {
+            case 1:
+                weight = 1;
+                break;
+            case 2:
+                weight = 2;
+                break;
+            case 3:
+                weight = 3;
+                break;
+            case 4:
+                weight = 4;
+                break;
+            case 5:
+                weight = 5;
+                break;
+            default:
+                break;
+        }
+        totalWeightedSum += weight * rating;
+        totalWeight += weight;
+    }
+
+    // حساب المتوسط
+    const weightedAverage = totalWeightedSum / totalWeight;
+    return weightedAverage;
+}
+
 // حساب متوسط عدد النجوم
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
@@ -113,103 +149,21 @@ function loadRatingsAndComments(workerId) {
     const rateButton = document.getElementById('rateButton');
     const averageRatingDisplay = document.getElementById('averageRating');
 
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            const userId = user.uid;
-            const userRatingRef = db.collection("Whoraited").doc(`${userId}_${workerId}`);
-
-            // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
-            userRatingRef.get().then((doc) => {
-                if (doc.exists) {
-                    starRating.style.display = 'none'; // إخفاء النجوم
-                    rateButton.style.display = 'none'; // إخفاء زر التقييم
-                    averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
-                } else {
-                    rateButton.addEventListener('click', () => {
-                        starRating.style.display = 'block';
-                    });
-
-                    starRating.addEventListener('change', (event) => {
-                        const rating = parseInt(event.target.value);
-                        userRatingRef.set({ userId, workerId }).then(() => {
-                            db.collection("ratings").add({ workerId, rating }).then(() => {
-                                alert('تم إرسال التقييم بنجاح!');
-                                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
-                                rateButton.style.display = 'none'; // إخفاء زر التقييم
-                                averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
-                            }).catch((error) => {
-                                console.error("Error submitting rating: ", error);
-                            });
-                        }).catch((error) => {
-                            console.error("Error saving rating: ", error);
-                        });
-                    });
-                }
-            });
-
-            // حساب متوسط عدد النجوم
-            db.collection("ratings").where("workerId", "==", workerId).get()
-                .then((querySnapshot) => {
-                    let totalStars = 0;
-                    let ratingCount = 0;
-
-                    querySnapshot.forEach((doc) => {
-                        totalStars += doc.data().rating;
-                        ratingCount++;
-                    });
-
-                    const averageStars = ratingCount ? (totalStars / ratingCount) : 0;
-                    displayRatingStars(averageStars); // عرض التقييم المتوسط كعدد من النجوم
-                })
-                .catch((error) => {
-                    console.error("Error getting ratings: ", error);
-                });
-
-        } else {
-            ratingSection.style.display = 'none';
-        }
-    });
-
-    // تحميل التعليقات
-    const commentsContainer = document.getElementById('commentsContainer');
-    db.collection("comments").where("workerId", "==", workerId).get()
+    // جلب التقييمات
+    db.collection("ratings").where("workerId", "==", workerId).get()
         .then((querySnapshot) => {
+            const ratings = [];
             querySnapshot.forEach((doc) => {
-                const commentData = doc.data();
-                const commentElement = document.createElement('p');
-                commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
-                commentsContainer.appendChild(commentElement);
+                ratings.push(doc.data().rating);
             });
+
+            // حساب المتوسط بالوزن المناسب
+            const weightedAverage = calculateWeightedAverage(ratings);
+            displayRatingStars(weightedAverage); // عرض التقييم المتوسط كعدد من النجوم
         })
         .catch((error) => {
-            console.error("Error getting comments: ", error);
+            console.error("Error getting ratings: ", error);
         });
-
-    // إرسال تعليق جديد
-    const commentInput = document.getElementById('commentInput');
-    const submitCommentButton = document.getElementById('submitComment');
-
-    submitCommentButton.addEventListener('click', () => {
-        const comment = commentInput.value.trim();
-        if (comment && auth.currentUser) {
-            const commentData = {
-                workerId,
-                username: auth.currentUser.displayName || auth.currentUser.email,
-                comment,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            db.collection("comments").add(commentData).then(() => {
-                const commentElement = document.createElement('p');
-                commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
-                commentsContainer.appendChild(commentElement);
-                commentInput.value = ''; // مسح التعليق
-            }).catch((error) => {
-                console.error("Error submitting comment: ", error);
-            });
-        } else if (!auth.currentUser) {
-            alert('يجب تسجيل الدخول لإرسال تعليق.');
-        }
-    });
 }
 
 // التحقق من حالة تسجيل الدخول
