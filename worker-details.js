@@ -10,6 +10,7 @@ const firebaseConfig = {
     measurementId: "G-PGZJ0T555G"
 };
 
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -76,6 +77,25 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
+// دالة لإنشاء نجمة معينة
+function createStar() {
+    const star = document.createElement('span');
+    star.textContent = '★';
+    star.style.color = 'gold';
+    return star;
+}
+
+// دالة لعرض التقييم بالنجوم
+function displayRatingStars(averageRating) {
+    const starRatingDisplay = document.getElementById('averageRating');
+    starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
+
+    for (let i = 0; i < averageRating; i++) {
+        starRatingDisplay.appendChild(createStar());
+    }
+}
+
+// حساب متوسط عدد النجوم
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
@@ -116,19 +136,19 @@ function loadRatingsAndComments(workerId) {
                 }
             });
 
-            // حساب متوسط التقييمات
+            // حساب متوسط عدد النجوم
             db.collection("ratings").where("workerId", "==", workerId).get()
                 .then((querySnapshot) => {
-                    let totalRatings = 0;
+                    let totalStars = 0;
                     let ratingCount = 0;
 
                     querySnapshot.forEach((doc) => {
-                        totalRatings += doc.data().rating;
+                        totalStars += doc.data().rating;
                         ratingCount++;
                     });
 
-                    const averageRating = ratingCount ? (totalRatings / ratingCount).toFixed(1) : 0;
-                    averageRatingDisplay.textContent = `متوسط التقييم: ${averageRating} نجوم`;
+                    const averageStars = ratingCount ? (totalStars / ratingCount) : 0;
+                                        displayRatingStars(averageStars);
                 })
                 .catch((error) => {
                     console.error("Error getting ratings: ", error);
@@ -203,3 +223,4 @@ document.getElementById('homeButton').addEventListener('click', () => {
 document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
+                   
