@@ -9,6 +9,7 @@ const firebaseConfig = {
     appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
     measurementId: "G-PGZJ0T555G"
 };
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -127,7 +128,7 @@ function loadRatingsAndComments(workerId) {
                     });
 
                     const averageRating = ratingCount ? (totalRatings / ratingCount).toFixed(1) : 0;
-                    averageRatingDisplay.textContent = `متوسط التقييم: ${averageRating}`;
+                    averageRatingDisplay.textContent = `متوسط التقييم: ${averageRating} نجوم`;
                 })
                 .catch((error) => {
                     console.error("Error getting ratings: ", error);
