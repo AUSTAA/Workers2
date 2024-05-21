@@ -246,4 +246,3 @@ document.getElementById('homeButton').addEventListener('click', () => {
 document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
-```
