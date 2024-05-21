@@ -64,6 +64,9 @@ db.collection("users").doc(workerId).get()
             }).catch((error) => {
                 console.error("Error getting service images:", error);
             });
+
+            // تحميل التقييمات وحساب المتوسط
+            loadRatingsAndComments(workerId);
         } else {
             console.log("No such document!");
         }
@@ -72,103 +75,68 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
-// عند تقييم العامل
-function rateWorker(userId, workerId, userRating) {
-    // تخزين التقييم في مجموعة "ratings"
-    db.collection("ratings").add({
-        workerId: workerId,
-        rating: parseInt(userRating)
-    }).then(() => {
-        console.log("تم تقييم العامل بنجاح");
-        // تحديث متوسط التقييم بعد التقييم
-        updateAverageRating(workerId);
-    }).catch((error) => {
-        console.error("Error submitting rating: ", error);
-    });
-
-    // تخزين معرف المستخدم الذي قام بالتقييم في مجموعة "Whoraited"
-    db.collection("Whoraited").doc(`${workerId}_${userId}`).set({
-        userId: userId,
-        workerId: workerId
-    }).then(() => {
-        console.log("تم تخزين معرف المستخدم الذي قام بالتقييم بنجاح");
-    }).catch((error) => {
-        console.error("Error storing who rated: ", error);
-    });
-}
-
-function checkIfUserRated(userId, workerId) {
-    const userRatedRef = db.collection("Whoraited").doc(`${workerId}_${userId}`);
-    userRatedRef.get().then((doc) => {
-        if (doc.exists) {
-            // المستخدم قام بالتقييم مسبقًا
-            alert("لقد قمت بالتقييم سابقاً.");
-        } else {
-            // المستخدم لم يقم بالتقييم من قبل
-            document.getElementById('userRatingContainer').style.display = 'block';
-        }
-    }).catch((error) => {
-        console.error("Error checking if user rated: ", error);
-    });
-}
-
-// إعداد حدث التقييم
-function setupRatingEvent(userId, workerId) {
-    document.getElementById('submitUserRating').addEventListener('click', () => {
-        const userRating = document.getElementById('userRating').value;
-        rateWorker(userId, workerId, userRating);
-        alert('تم إرسال التقييم بنجاح!');
-        document.getElementById('userRatingContainer').style.display = 'none';
-    });
-}
-
-// حساب وعرض متوسط التقييم
-function updateAverageRating(workerId) {
-    db.collection("ratings").where("workerId", "==", workerId).get()
-        .then((querySnapshot) => {
-            let totalRating = 0;
-            let ratingCount = 0;
-            querySnapshot.forEach((doc) => {
-                totalRating += doc.data().rating;
-                ratingCount++;
-            });
-            const averageRating = totalRating / ratingCount;
-            displayStars(Math.round(averageRating), 'averageRatingStars');
-        })
-        .catch((error) => {
-            console.error("Error calculating average rating: ", error);
-        });
-}
-
-// عرض النجوم
-function displayStars(rating, elementId) {
-    const element = document.getElementById(elementId);
-    element.innerHTML = '';
-    for (let i = 0; i < 5; i++) {
-        const star = document.createElement('span');
-        star.textContent = i < rating ? '★' : '☆';
-        element.appendChild(star);
-    }
-}
-
-// تحميل التقييمات والتعليقات
 function loadRatingsAndComments(workerId) {
-    // تحميل التقييمات
-    const ratingsContainer = document.getElementById('ratingsContainer');
-    db.collection("ratings").where("workerId", "==", workerId).get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                const ratingData = doc.data();
-                const ratingElement = document.createElement('p');
-                ratingElement.textContent = `التقييم: ${ratingData.rating}`;
-                ratingsContainer.appendChild(ratingElement);
+    const ratingSection = document.getElementById('ratingSection');
+    const starRating = document.getElementById('starRating');
+    const rateButton = document.getElementById('rateButton');
+    const averageRatingDisplay = document.getElementById('averageRating');
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            const userId = user.uid;
+            const userRatingRef = db.collection("Whoraited").doc(`${userId}_${workerId}`);
+
+            // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
+            userRatingRef.get().then((doc) => {
+                if (doc.exists) {
+                    starRating.style.display = 'none'; // إخفاء النجوم
+                    rateButton.style.display = 'none'; // إخفاء زر التقييم
+                    averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
+                } else {
+                    rateButton.addEventListener('click', () => {
+                        starRating.style.display = 'block';
+                    });
+
+                    starRating.addEventListener('change', (event) => {
+                        const rating = event.target.value;
+                        userRatingRef.set({ userId, workerId }).then(() => {
+                            db.collection("ratings").add({ workerId, rating }).then(() => {
+                                alert('تم إرسال التقييم بنجاح!');
+                                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
+                                rateButton.style.display = 'none'; // إخفاء زر التقييم
+                                averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
+                            }).catch((error) => {
+                                console.error("Error submitting rating: ", error);
+                            });
+                        }).catch((error) => {
+                            console.error("Error saving rating: ", error);
+                        });
+                    });
+                }
             });
-            // تحديث متوسط التقييم بعد تحميل التقييمات
-            updateAverageRating(workerId);
-        })
-        .catch((error) => {
-            console.error("Error getting ratings: ", error);
-        });
+
+            // حساب متوسط التقييمات
+            db.collection("ratings").where("workerId", "==", workerId).get()
+                .then((querySnapshot) => {
+                    let totalRatings = 0;
+                    let ratingCount = 0;
+
+                    querySnapshot.forEach((doc) => {
+                        totalRatings += doc.data().rating;
+                        ratingCount++;
+                    });
+
+                    const averageRating = ratingCount ? (totalRatings / ratingCount).toFixed(1) : 0;
+                    averageRatingDisplay.textContent = `متوسط التقييم: ${averageRating}`;
+                })
+                .catch((error) => {
+                    console.error("Error getting ratings: ", error);
+                });
+
+        } else {
+            ratingSection.style.display = 'none';
+        }
+    });
 
     // تحميل التعليقات
     const commentsContainer = document.getElementById('commentsContainer');
@@ -186,16 +154,15 @@ function loadRatingsAndComments(workerId) {
         });
 
     // إرسال تعليق جديد
-        // إرسال تعليق جديد
     const commentInput = document.getElementById('commentInput');
     const submitCommentButton = document.getElementById('submitComment');
+
     submitCommentButton.addEventListener('click', () => {
         const comment = commentInput.value.trim();
-        const user = auth.currentUser;
-        if (comment && user) {
+        if (comment && auth.currentUser) {
             const commentData = {
                 workerId,
-                username: user.displayName || user.email,
+                username: auth.currentUser.displayName || auth.currentUser.email,
                 comment,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
@@ -207,7 +174,7 @@ function loadRatingsAndComments(workerId) {
             }).catch((error) => {
                 console.error("Error submitting comment: ", error);
             });
-        } else if (!user) {
+        } else if (!auth.currentUser) {
             alert('يجب تسجيل الدخول لإرسال تعليق.');
         }
     });
@@ -218,30 +185,11 @@ auth.onAuthStateChanged((user) => {
     const authButton = document.getElementById('authButton');
     if (user) {
         authButton.style.display = 'none'; // إخفاء زر تسجيل الدخول إذا كان المستخدم مسجلاً الدخول
-        const userId = user.uid;
-        // التحقق مما إذا كان المستخدم قد قام بالتقييم من قبل
-        checkIfUserRated(userId, workerId);
-        // إعداد حدث التقييم
-        setupRatingEvent(userId, workerId);
-        // تحميل التقييمات والتعليقات بعد التأكد من حالة تسجيل الدخول
-        loadRatingsAndComments(workerId);
     } else {
         authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
         authButton.addEventListener('click', () => {
             window.location.href = 'login.html';
         });
-        // تحميل التقييمات والتعليقات بشكل افتراضي للمستخدمين غير المسجلين
-        loadRatingsAndComments(workerId);
-    }
-});
-
-// عند الضغط على زر التقييم
-document.getElementById('rateButton').addEventListener('click', () => {
-    const user = auth.currentUser;
-    if (user) {
-        checkIfUserRated(user.uid, workerId);
-    } else {
-        alert('يجب تسجيل الدخول لتقييم.');
     }
 });
 
