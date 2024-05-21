@@ -76,11 +76,13 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
-// دالة لإنشاء نجمة معينة
-function createStar(filled) {
+// دالة لإنشاء نجمة أو نصف نجمة
+function createStar(filled, half = false) {
     const star = document.createElement('span');
-    star.textContent = '★';
+    star.textContent = half ? '☆' : '★';  // '☆' للنصف نجمة
     star.style.color = filled ? 'gold' : 'gray';
+    star.style.fontSize = '24px'; // حجم النجمة
+    star.style.margin = '2px';    // تباعد بين النجوم
     return star;
 }
 
@@ -90,7 +92,17 @@ function displayRatingStars(averageRating) {
     starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
 
     for (let i = 1; i <= 5; i++) {
-        starRatingDisplay.appendChild(createStar(i <= averageRating));
+        if (i <= Math.floor(averageRating)) {
+            starRatingDisplay.appendChild(createStar(true));
+        } else if (i === Math.ceil(averageRating)) {
+            if (averageRating % 1 !== 0) {
+                starRatingDisplay.appendChild(createStar(true, true)); // نصف نجمة
+            } else {
+                starRatingDisplay.appendChild(createStar(false));
+            }
+        } else {
+            starRatingDisplay.appendChild(createStar(false));
+        }
     }
 }
 
@@ -147,7 +159,7 @@ function loadRatingsAndComments(workerId) {
                     });
 
                     const averageStars = ratingCount ? (totalStars / ratingCount) : 0;
-                    displayRatingStars(Math.round(averageStars)); // عرض التقييم المتوسط كعدد من النجوم
+                    displayRatingStars(averageStars); // عرض التقييم المتوسط كعدد من النجوم
                 })
                 .catch((error) => {
                     console.error("Error getting ratings: ", error);
