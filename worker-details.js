@@ -97,14 +97,15 @@ function rateWorker(userId, workerId, userRating) {
     });
 }
 
-// التحقق مما إذا كان المستخدم قد قام بالتقييم من قبل
 function checkIfUserRated(userId, workerId) {
-    const userRatingRef = db.collection("Whoraited").where("userId", "==", userId).where("workerId", "==", workerId);
-    userRatingRef.get().then((querySnapshot) => {
-        if (!querySnapshot.empty) {
+    const userRatedRef = db.collection("Whoraited").doc(userId);
+    userRatedRef.get().then((doc) => {
+        if (doc.exists) {
             // المستخدم قام بالتقييم مسبقًا
+            // يمكنك تحديث واجهة المستخدم هنا لعرض رسالة أو إجراء مناسب
         } else {
             // المستخدم لم يقم بالتقييم من قبل
+            // يمكنك تحديث واجهة المستخدم هنا لعرض رسالة أو إجراء مناسب
         }
     }).catch((error) => {
         console.error("Error checking if user rated: ", error);
