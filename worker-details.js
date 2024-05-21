@@ -81,6 +81,8 @@ function rateWorker(userId, workerId, userRating) {
         rating: userRating
     }).then(() => {
         console.log("تم تقييم العامل بنجاح");
+        // تحديث متوسط التقييم بعد التقييم
+        updateAverageRating(workerId);
     }).catch((error) => {
         console.error("Error submitting rating: ", error);
     });
@@ -125,6 +127,24 @@ function setupRatingEvent(userId, workerId) {
     });
 }
 
+// حساب وعرض متوسط التقييم
+function updateAverageRating(workerId) {
+    db.collection("ratings").where("workerId", "==", workerId).get()
+        .then((querySnapshot) => {
+            let totalRating = 0;
+            let ratingCount = 0;
+            querySnapshot.forEach((doc) => {
+                totalRating += doc.data().rating;
+                ratingCount++;
+            });
+            const averageRating = totalRating / ratingCount;
+            document.getElementById('averageRating').textContent = `متوسط التقييم: ${averageRating.toFixed(2)}`;
+        })
+        .catch((error) => {
+            console.error("Error calculating average rating: ", error);
+        });
+}
+
 // تحميل التقييمات والتعليقات
 function loadRatingsAndComments(workerId) {
     // تحميل التقييمات
@@ -137,6 +157,8 @@ function loadRatingsAndComments(workerId) {
                 ratingElement.textContent = `التقييم: ${ratingData.rating}`;
                 ratingsContainer.appendChild(ratingElement);
             });
+            // تحديث متوسط التقييم بعد تحميل التقييمات
+            updateAverageRating(workerId);
         })
         .catch((error) => {
             console.error("Error getting ratings: ", error);
@@ -193,6 +215,7 @@ auth.onAuthStateChanged((user) => {
         // التحقق مما إذا كان المستخدم قد قام بالتقييم من قبل
         checkIfUserRated(userId, workerId);
         // تحميل التقييمات والتعليقات بعد التأكد من حالة تسجيل الدخول
+        
         loadRatingsAndComments(workerId);
     } else {
         authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
@@ -213,3 +236,6 @@ document.getElementById('homeButton').addEventListener('click', () => {
 document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
+
+// حساب وعرض متوسط التقييم عند تحميل الصفحة
+updateAverageRating(workerId);
