@@ -75,23 +75,23 @@ db.collection("users").doc(workerId).get()
 // عند تقييم العامل
 function rateWorker(userId, workerId, userRating) {
     // تخزين التقييم في مجموعة "ratings"
-    const ratingRef = db.collection("ratings").doc();
+    const ratingRef = db.collection("ratings").doc(`${workerId}_${userRating}`);
     ratingRef.set({
-        userId: userId,
         workerId: workerId,
         rating: userRating
     }).then(() => {
-        // تم تقييم العامل بنجاح
+        console.log("تم تقييم العامل بنجاح");
     }).catch((error) => {
         console.error("Error submitting rating: ", error);
     });
 
-    // تخزين معرف المستخدم الذي قام بالتقييم في مجموعة "WhoRated"
-    const whoRatedRef = db.collection("WhoRated").doc(userId);
+    // تخزين معرف المستخدم الذي قام بالتقييم في مجموعة "Whoraited"
+    const whoRatedRef = db.collection("Whoraited").doc(userId);
     whoRatedRef.set({
-        userId: userId
+        userId: userId,
+        workerId: workerId
     }).then(() => {
-        // تم تخزين معرف المستخدم الذي قام بالتقييم بنجاح
+        console.log("تم تخزين معرف المستخدم الذي قام بالتقييم بنجاح");
     }).catch((error) => {
         console.error("Error storing who rated: ", error);
     });
@@ -102,35 +102,89 @@ function checkIfUserRated(userId, workerId) {
     userRatedRef.get().then((doc) => {
         if (doc.exists) {
             // المستخدم قام بالتقييم مسبقًا
-            // يمكنك تحديث واجهة المستخدم هنا لعرض رسالة أو إجراء مناسب
+            console.log("المستخدم قام بالتقييم مسبقًا");
+            document.querySelector('#starRating').style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
         } else {
             // المستخدم لم يقم بالتقييم من قبل
-            // يمكنك تحديث واجهة المستخدم هنا لعرض رسالة أو إجراء مناسب
+            console.log("المستخدم لم يقم بالتقييم من قبل");
+            setupRatingEvent(userId, workerId);
         }
     }).catch((error) => {
         console.error("Error checking if user rated: ", error);
     });
 }
 
+// إعداد حدث التقييم
+function setupRatingEvent(userId, workerId) {
+    const starRating = document.getElementById('starRating');
+    starRating.addEventListener('change', (event) => {
+        const rating = event.target.value;
+        rateWorker(userId, workerId, rating);
+        alert('تم إرسال التقييم بنجاح!');
+        starRating.style.pointerEvents = 'none'; // منع المستخدم من التقييم مرة أخرى
+    });
+}
+
 // تحميل التقييمات والتعليقات
 function loadRatingsAndComments(workerId) {
-    // تحميل التقييمات والتعليقات
+    // تحميل التقييمات
+    const ratingsContainer = document.getElementById('ratingsContainer');
+    db.collection("ratings").where("workerId", "==", workerId).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const ratingData = doc.data();
+                const ratingElement = document.createElement('p');
+                ratingElement.textContent = `التقييم: ${ratingData.rating}`;
+                ratingsContainer.appendChild(ratingElement);
+            });
+        })
+        .catch((error) => {
+            console.error("Error getting ratings: ", error);
+        });
+
+    // تحميل التعليقات
+    const commentsContainer = document.getElementById('commentsContainer');
+    db.collection("comments").where("workerId", "==", workerId).get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                const commentData = doc.data();
+                const commentElement = document.createElement('p');
+                commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
+                commentsContainer.appendChild(commentElement);
+            });
+        })
+        .catch((error) => {
+            console.error("Error getting comments: ", error);
+        });
+
+    // إرسال تعليق جديد
+    const commentInput = document.getElementById('commentInput');
+    const submitCommentButton = document.getElementById('submitComment');
+    submitCommentButton.addEventListener('click', () => {
+        const comment = commentInput.value.trim();
+        const user = auth.currentUser;
+        if (comment && user) {
+            const commentData = {
+                workerId,
+                username: user.displayName || user.email,
+                comment,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            db.collection("comments").add(commentData).then(() => {
+                const commentElement = document.createElement('p');
+                commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
+                commentsContainer.appendChild(commentElement);
+                commentInput.value = ''; // مسح التعليق
+            }).catch((error) => {
+                console.error("Error submitting comment: ", error);
+            });
+        } else if (!user) {
+            alert('يجب تسجيل الدخول لإرسال تعليق.');
+        }
+    });
 }
 
 // التحقق من حالة تسجيل الدخول
-auth.onAuthStateChanged((user) => {
-    const authButton = document.getElementById('authButton');
-    if (user) {
-        authButton.style.display = 'none'; // إخفاء زر تسجيل الدخول إذا كان المستخدم مسجلاً الدخول
-        const userId = user.uid;
-        // التحقق مما إذا كان المستخدم قد قام بالتقييم من قبل
-        checkIfUserRated(userId, workerId);
-        // تحميل التقييمات والتعليقات بعد التأكد من حالة تسجيل الدخول
-        loadRatingsAndComments(workerId);
-    } else {
-        authButton.style.display = 'inline-block'; // :
-
-```javascript
 auth.onAuthStateChanged((user) => {
     const authButton = document.getElementById('authButton');
     if (user) {
@@ -149,4 +203,13 @@ auth.onAuthStateChanged((user) => {
         loadRatingsAndComments(workerId);
     }
 });
-```
+
+// العودة إلى الصفحة الرئيسية
+document.getElementById('homeButton').addEventListener('click', () => {
+    window.location.href = 'index.html';
+});
+
+// العودة إلى القائمة السابقة
+document.getElementById('backButton').addEventListener('click', () => {
+    window.history.back();
+});
