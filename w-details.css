@@ -60,6 +60,7 @@ main {
 .star-rating {
     direction: ltr;
     display: inline-block;
+    font-size: 0; /* تجنب التباعد بين النجوم */
 }
 
 .star-rating input {
@@ -71,6 +72,7 @@ main {
     font-size: 24px;
     padding: 0;
     cursor: pointer;
+    display: inline-block;
 }
 
 .star-rating input:checked ~ label,
