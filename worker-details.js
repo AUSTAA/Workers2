@@ -10,94 +10,77 @@ const firebaseConfig = {
     measurementId: "G-PGZJ0T555G"
 };
 
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
-const storage = firebase.storage();
+
+// تحديد الـ ID من عنوان URL
+const workerId = getWorkerIdFromUrl(window.location.href);
 
 // دالة للحصول على الـ ID من عنوان URL
-function getWorkerIdFromUrl() {
-    const params = new URLSearchParams(window.location.search);
+function getWorkerIdFromUrl(url) {
+    const queryString = url.split('?')[1];
+    const params = new URLSearchParams(queryString);
     return params.get('id');
 }
 
 // جلب بيانات العامل باستخدام الـ ID
-const workerId = getWorkerIdFromUrl();
-if (workerId) {
-    db.collection("users").doc(workerId).get()
-        .then((doc) => {
-            if (doc.exists) {
-                const workerData = doc.data();
-                document.getElementById('workerName').textContent = `الاسم: ${workerData.username}`;
-                document.getElementById('workerPhone').textContent = `رقم الهاتف: ${workerData.phone}`;
-                document.getElementById('workerNationality').textContent = `الجنسية: ${workerData.nationality}`;
-                document.getElementById('workerCity').textContent = `المدينة: ${workerData.city}`;
-                document.getElementById('workerExperienceYears').textContent = `عدد سنين الخبرة: ${workerData.experienceYears}`;
-                document.getElementById('workerAge').textContent = `العمر: ${workerData.age}`;
-                document.getElementById('workerProfession').textContent = `المهنة: ${workerData.profession}`;
+db.collection("users").doc(workerId).get()
+    .then((doc) => {
+        if (doc.exists) {
+            const workerData = doc.data();
+            document.getElementById('workerName').textContent = `الاسم: ${workerData.username}`;
+            document.getElementById('workerPhone').textContent = `رقم الهاتف: ${workerData.phone}`;
+            document.getElementById('workerNationality').textContent = `الجنسية: ${workerData.nationality}`;
+            document.getElementById('workerCity').textContent = `المدينة: ${workerData.city}`;
+            document.getElementById('workerExperienceYears').textContent = `عدد سنين الخبرة: ${workerData.experienceYears}`;
+            document.getElementById('workerAge').textContent = `العمر: ${workerData.age}`;
+            document.getElementById('workerProfession').textContent = `المهنة: ${workerData.profession}`;
 
-                // تحميل الصورة الشخصية
-                const profilePictureRef = storage.ref().child(`users/${workerId}/profilePicture.jpg`);
-                profilePictureRef.getDownloadURL()
-                    .then((url) => {
-                        document.getElementById('workerProfilePicture').src = url;
-                    })
-                    .catch((error) => {
-                        console.error("Error getting profile picture:", error);
+            // تحميل الصورة الشخصية
+            const profilePictureRef = firebase.storage().ref().child(`users/${workerId}/profilePicture.jpg`);
+            profilePictureRef.getDownloadURL().then((url) => {
+                document.getElementById('workerProfilePicture').src = url;
+            }).catch((error) => {
+                console.error("Error getting profile picture:", error);
+            });
+
+            // تحميل صور الخدمات
+            const serviceImagesContainer = document.getElementById('workerServiceImages');
+            serviceImagesContainer.innerHTML = ''; // مسح المحتوى الحالي
+            const serviceImagesRef = firebase.storage().ref().child(`users/${workerId}/serviceImages`);
+            serviceImagesRef.listAll().then((serviceImagesSnapshot) => {
+                serviceImagesSnapshot.items.forEach((itemRef) => {
+                    itemRef.getDownloadURL().then((imageUrl) => {
+                        const img = document.createElement('img');
+                        img.src = imageUrl;
+                        img.alt = 'صورة خدمة';
+                        img.style.maxWidth = '100%';
+                        img.style.marginBottom = '10px';
+                        serviceImagesContainer.appendChild(img);
+                    }).catch((error) => {
+                        console.error("Error getting service image:", error);
                     });
+                });
+            }).catch((error) => {
+                console.error("Error getting service images:", error);
+            });
 
-                // تحميل صور الخدمات
-                const serviceImagesContainer = document.getElementById('workerServiceImages');
-                const serviceImagesRef = storage.ref().child(`users/${workerId}/serviceImages`);
-                serviceImagesRef.listAll()
-                    .then((serviceImagesSnapshot) => {
-                        serviceImagesContainer.innerHTML = ''; // مسح المحتوى الحالي
-                        serviceImagesSnapshot.items.forEach((itemRef) => {
-                            itemRef.getDownloadURL()
-                                .then((imageUrl) => {
-                                    const img = document.createElement('img');
-                                    img.src = imageUrl;
-                                    img.alt = 'صورة خدمة';
-                                    img.style.maxWidth = '100%';
-                                    img.style.marginBottom = '10px';
-                                    serviceImagesContainer.appendChild(img);
-                                })
-                                .catch((error) => {
-                                    console.error("Error getting service image:", error);
-                                });
-                        });
-                    })
-                    .catch((error) => {
-                        console.error("Error getting service images:", error);
-                    });
+            // تحميل التقييمات وحساب المتوسط
+            loadRatingsAndComments(workerId);
+        } else {
+            console.log("No such document!");
+        }
+    })
+    .catch((error) => {
+        console.error("Error getting document:", error);
+    });
 
-                // تحميل التقييمات وحساب المتوسط
-                loadRatingsAndComments(workerId);
-            } else {
-                console.log("No such document!");
-            }
-        })
-        .catch((error) => {
-            console.error("Error getting document:", error);
-        });
-} else {
-    console.error("Worker ID is missing from URL");
-}
-
-// دالة لإنشاء نجمة أو نصف نجمة
-function createStar(filled, half = false) {
+// دالة لإنشاء نجمة معينة
+function createStar(filled) {
     const star = document.createElement('span');
-    if (half) {
-        star.innerHTML = '<span style="color: gold; position: absolute;">&#9733;</span>' +
-                         '<span style="color: gray; padding-left: 12px;">&#9733;</span>';
-    } else {
-        star.innerHTML = '&#9733;';  // نجمة ممتلئة
-    }
+    star.textContent = '★';
     star.style.color = filled ? 'gold' : 'gray';
-    star.style.fontSize = '24px'; // حجم النجمة
-    star.style.margin = '2px';    // تباعد بين النجوم
-    star.style.position = half ? 'relative' : 'static';
     return star;
 }
 
@@ -107,31 +90,17 @@ function displayRatingStars(averageRating) {
     starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
 
     for (let i = 1; i <= 5; i++) {
-        if (i <= Math.floor(averageRating)) {
-            starRatingDisplay.appendChild(createStar(true));
-        } else if (i === Math.ceil(averageRating) && averageRating % 1 !== 0) {
-            starRatingDisplay.appendChild(createStar(true, true)); // نصف نجمة
-        } else {
-            starRatingDisplay.appendChild(createStar(false));
-        }
+        starRatingDisplay.appendChild(createStar(i <= averageRating));
     }
 }
 
-// حساب متوسط عدد النجوم بالوزن المناسب
-function calculateWeightedAverage(ratings) {
-    let totalStars = 0;
-    let ratingCount = 0;
-
-    ratings.forEach(rating => {
-        totalStars += rating;
-        ratingCount++;
-    });
-
-    return ratingCount ? totalStars / ratingCount : 0;
-}
-
-// تحميل التقييمات وحساب المتوسط
+// حساب متوسط عدد النجوم
 function loadRatingsAndComments(workerId) {
+    const ratingSection = document.getElementById('ratingSection');
+    const starRating = document.getElementById('starRating');
+    const rateButton = document.getElementById('rateButton');
+    const averageRatingDisplay = document.getElementById('averageRating');
+
     auth.onAuthStateChanged((user) => {
         if (user) {
             const userId = user.uid;
@@ -140,11 +109,10 @@ function loadRatingsAndComments(workerId) {
             // التحقق مما إذا كان المستخدم قد قام بالتقييم مسبقًا
             userRatingRef.get().then((doc) => {
                 if (doc.exists) {
-                    document.getElementById('rateButton').style.display = 'none'; // إخفاء زر التقييم
-                    document.getElementById('averageRating').textContent = 'لقد قمت بالتقييم مسبقًا.';
+                    starRating.style.display = 'none'; // إخفاء النجوم
+                    rateButton.style.display = 'none'; // إخفاء زر التقييم
+                    averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                 } else {
-                    const rateButton = document.getElementById('rateButton');
-                    const starRating = document.getElementById('starRating');
                     rateButton.addEventListener('click', () => {
                         starRating.style.display = 'block';
                     });
@@ -156,7 +124,7 @@ function loadRatingsAndComments(workerId) {
                                 alert('تم إرسال التقييم بنجاح!');
                                 starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
                                 rateButton.style.display = 'none'; // إخفاء زر التقييم
-                                document.getElementById('averageRating').textContent = 'لقد قمت بالتقييم مسبقًا.';
+                                averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                             }).catch((error) => {
                                 console.error("Error submitting rating: ", error);
                             });
@@ -170,20 +138,23 @@ function loadRatingsAndComments(workerId) {
             // حساب متوسط عدد النجوم
             db.collection("ratings").where("workerId", "==", workerId).get()
                 .then((querySnapshot) => {
-                    const ratings = [];
+                    let totalStars = 0;
+                    let ratingCount = 0;
+
                     querySnapshot.forEach((doc) => {
-                        ratings.push(doc.data().rating);
+                        totalStars += doc.data().rating;
+                        ratingCount++;
                     });
 
-                    const averageRating = calculateWeightedAverage(ratings);
-                    displayRatingStars(averageRating); // عرض التقييم المتوسط كعدد من النجوم
+                    const averageStars = ratingCount ? (totalStars / ratingCount) : 0;
+                    displayRatingStars(Math.round(averageStars)); // عرض التقييم المتوسط كعدد من النجوم
                 })
                 .catch((error) => {
                     console.error("Error getting ratings: ", error);
                 });
 
         } else {
-            document.getElementById('ratingSection').style.display = 'none';
+            ratingSection.style.display = 'none';
         }
     });
 
