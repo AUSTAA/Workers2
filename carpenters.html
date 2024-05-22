@@ -69,89 +69,61 @@
             }
         });
 
-        loadRatings(workerId);
-        } else {
-            console.log("No such document!");
+        // دالة لإنشاء نجمة أو نصف نجمة
+        function createStar(filled, half = false) {
+            const star = document.createElement('span');
+            if (half) {
+                star.innerHTML = '<span style="color: gold; position: absolute;">&#9733;</span>' +
+                                 '<span style="color: gray; padding-left: 12px;">&#9733;</span>';
+            } else {
+                star.innerHTML = '&#9733;';  // نجمة ممتلئة
+            }
+            star.style.color = filled ? 'gold' : 'gray';
+            star.style.fontSize = '24px'; // حجم النجمة
+            star.style.margin = '2px';    // تباعد بين النجوم
+            star.style.position = half ? 'relative' : 'static';
+            return star;
         }
-    })
-    .catch((error) => {
-        console.error("Error getting document:", error);
-    });
 
-// دالة لإنشاء نجمة أو نصف نجمة
-function createStar(filled, half = false) {
-    const star = document.createElement('span');
-    if (half) {
-        star.innerHTML = '<span style="color: gold; position: absolute;">&#9733;</span>' +
-                         '<span style="color: gray; padding-left: 12px;">&#9733;</span>';
-    } else {
-        star.innerHTML = '&#9733;';  // نجمة ممتلئة
-    }
-    star.style.color = filled ? 'gold' : 'gray';
-    star.style.fontSize = '24px'; // حجم النجمة
-    star.style.margin = '2px';    // تباعد بين النجوم
-    star.style.position = half ? 'relative' : 'static';
-    return star;
-}
+        // دالة لعرض التقييم بالنجوم
+        function displayRatingStars(averageRating, elementId) {
+            const starRatingDisplay = document.getElementById(elementId);
+            starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
 
-// دالة لعرض التقييم بالنجوم
-function displayRatingStars(averageRating) {
-    const starRatingDisplay = document.getElementById('averageRating');
-    starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
-
-    for (let i = 1; i <= 5; i++) {
-        if (i <= Math.floor(averageRating)) {
-            starRatingDisplay.appendChild(createStar(true));
-        } else if (i === Math.ceil(averageRating) && averageRating % 1 !== 0) {
-            starRatingDisplay.appendChild(createStar(true, true)); // نصف نجمة
-        } else {
-            starRatingDisplay.appendChild(createStar(false));
+            for (let i = 1; i <= 5; i++) {
+                if (i <= Math.floor(averageRating)) {
+                    starRatingDisplay.appendChild(createStar(true));
+                } else if (i === Math.ceil(averageRating) && averageRating % 1 !== 0) {
+                    starRatingDisplay.appendChild(createStar(true, true)); // نصف نجمة
+                } else {
+                    starRatingDisplay.appendChild(createStar(false));
+                }
+            }
         }
-    }
-}
 
-// حساب متوسط عدد النجوم بالوزن المناسب
-function calculateWeightedAverage(ratings) {
-    let totalStars = 0;
-    let ratingCount = 0;
+        // حساب متوسط عدد النجوم بالوزن المناسب
+        function calculateWeightedAverage(ratings) {
+            let totalStars = 0;
+            let ratingCount = 0;
 
-    ratings.forEach(rating => {
-        totalStars += rating;
-        ratingCount++;
-    });
+            ratings.forEach(rating => {
+                totalStars += rating;
+                ratingCount++;
+            });
 
-    return ratingCount ? totalStars / ratingCount : 0;
-}
-
-// حساب متوسط عدد النجوم
-function loadRatings(workerId) {
-    const ratingSection = document.getElementById('ratingSection');
-    const starRating = document.getElementById('starRating');
-    const averageRatingDisplay = document.getElementById('averageRating');
-
-       });
-                
-        
-            // حساب متوسط عدد النجوم
-            db.collection("ratings").where("workerId", "==", workerId).get()
-                .then((querySnapshot) => {
-                    const ratings = [];
-                    querySnapshot.forEach((doc) => {
-                        ratings.push(doc.data().rating);
-                    });
-
-                    const averageRating = calculateWeightedAverage(ratings);
-                    displayRatingStars(averageRating); // عرض التقييم المتوسط كعدد من النجوم
-                })
-                .catch((error) => {
-                    console.error("Error getting ratings: ", error);
-                });
-
-        } else {
-            ratingSection.style.display = 'none';
+            return ratingCount ? totalStars / ratingCount : 0;
         }
-    });
 
+        // دالة لجلب التقييمات لمستخدم معين
+        async function fetchRatingsForUser(workerId) {
+            const ratingsSnapshot = await db.collection("ratings").where("workerId", "==", workerId).get();
+            const ratings = [];
+            ratingsSnapshot.forEach(doc => {
+                ratings.push(doc.data().rating);
+            });
+            const averageRating = calculateWeightedAverage(ratings);
+            return averageRating.toFixed(1); // عرض التقييم برقم عشري واحد
+        }
 
         async function searchWorkers() {
             const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -196,7 +168,7 @@ function loadRatings(workerId) {
                         workerList.appendChild(li);
 
                         const averageRating = await fetchRatingsForUser(doc.id);
-                        document.getElementById(`averageRating_${doc.id}`).textContent = averageRating;
+                        displayRatingStars(averageRating, `averageRating_${doc.id}`);
                     }
                 }
             } catch (error) {
