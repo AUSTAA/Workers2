@@ -121,7 +121,7 @@ function calculateWeightedAverage(ratings) {
     return ratingCount ? totalStars / ratingCount : 0;
 }
 
-// حساب متوسط عدد النجوم
+// حساب متوسط عدد النجوم وتحميل التقييمات
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
@@ -181,6 +181,7 @@ function loadRatingsAndComments(workerId) {
             ratingSection.style.display = 'none';
         }
     });
+}
 
     // تحميل التعليقات
     const commentsContainer = document.getElementById('commentsContainer');
