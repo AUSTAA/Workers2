@@ -99,11 +99,13 @@ footer {
 
 #categories ul {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 10px;
     justify-content: center;
 }
 
 #categories ul li {
     text-align: center;
+    display: grid; /* تغيير عرض العناصر إلى grid */
+    place-content: center;
 }
