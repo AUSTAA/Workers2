@@ -5,90 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خدمات البناء</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* تنسيق الرابط للتسجيل */
-        #registration-link {
-            color: inherit;
-            margin: 10px 0 10px 10px;
-            text-decoration: none;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-
-        /* تنسيق الأيقونة */
-        .menu-icon {
-            display: none;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        /* تنسيق القائمة المنبثقة */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 40px;
-            right: 10px;
-            background-color: white;
-            border: 1px solid #ccc;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            z-index: 1000;
-        }
-
-        .dropdown-menu a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: black;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .dropdown-menu a:last-child {
-            border-bottom: none;
-        }
-
-        .dropdown-menu a:hover {
-            background-color: #f0f0f0;
-        }
-
-        /* إظهار الأيقونة في الشاشات الصغيرة */
-        @media (max-width: 768px) {
-            .menu-icon {
-                display: block;
-            }
-        }
-        
-        /* تنسيق المربعات */
-        #categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            padding: 20px;
-        }
-
-        #categories li {
-            list-style-type: none;
-        }
-
-        #categories a {
-            display: block;
-            padding: 20px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            text-align: center;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        #categories a:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 <body dir="rtl">
     <header>
@@ -123,24 +39,24 @@
         <section id="categories">
             <h2>التصنيفات</h2>
             <ul>
-                <li><a href="#">النجارين</a></li>
-                <li><a href="#">الكهربائيين</a></li>
-                <li><a href="#">السباكين</a></li>
-                <li><a href="#">الدهانين</a></li>
-                <li><a href="#">المهندسين</a></li>
-                <li><a href="#">المقاولين</a></li>
-                <li><a href="#">التكييف</a></li>
-                <li><a href="#">الملعقة</a></li>
-                <li><a href="#">التصميمات والديكور</a></li>
-                <li><a href="#">التشطيبات</a></li>
-                <li><a href="#">البنائين</a></li>
-                <li><a href="#">الكراجات</a></li>
-                <li><a href="#">شركات البناء</a></li>
-                <li><a href="#">سيارات نقل</a></li>
-                <li><a href="#">محلات مواد البناء</a></li>
-                <li><a href="#">محلات الدهانات</a></li>
-                <li><a href="#">محلات حديد التسليح</a></li>
-                <li><a href="#">البكيرات</a></li>
+                <li><a href="engineers.html">المهندسين</a></li>
+                <li><a href="contractors.html">المقاولين</a></li>
+                <li><a href="construction-companies.html">شركات البناء</a></li>
+                <li><a href="carpenters.html">النجارين</a></li>
+                <li><a href="electricians.html">الكهربائيين</a></li>
+                <li><a href="plumbers.html">السباكين</a></li>
+                <li><a href="painters.html">الدهانين</a></li>
+                <li><a href="hvac.html">التكييف</a></li>
+                <li><a href="spooning.html">الملعقة</a></li>
+                <li><a href="design.html">التصميمات والديكور</a></li>
+                <li><a href="finishing.html">التشطيبات</a></li>
+                <li><a href="builders.html">البنائين</a></li>
+                <li><a href="garages.html">الكراجات</a></li>
+                <li><a href="transport-vehicles.html">سيارات نقل</a></li>
+                <li><a href="building-materials.html">محلات مواد البناء</a></li>
+                <li><a href="paint-shops.html">محلات الدهانات</a></li>
+                <li><a href="rebar-shops.html">محلات حديد التسليح</a></li>
+                <li><a href="hardware.html">البكيرات</a></li>
             </ul>
         </section>
     </main>
@@ -152,15 +68,15 @@
     <script>
         // إعداد Firebase
         const firebaseConfig = {
-  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-  authDomain: "omran-16f44.firebaseapp.com",
-  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-  projectId: "omran-16f44",
-  storageBucket: "omran-16f44.appspot.com",
-  messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-  measurementId: "G-PGZJ0T555G"
-};
+            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+            authDomain: "omran-16f44.firebaseapp.com",
+            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+            projectId: "omran-16f44",
+            storageBucket: "omran-16f44.appspot.com",
+            messagingSenderId: "598982209417",
+            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+            measurementId: "G-PGZJ0T555G"
+        };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
