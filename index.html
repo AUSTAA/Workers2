@@ -8,7 +8,9 @@
 </head>
 <body dir="rtl">
     <header>
+        <span class="menu-icon" onclick="toggleDropdown()">☰</span> <!-- زر القائمة -->
         <h1>خدمات البناء</h1>
+        <a id="registration-link" href="registration.html">تسجيل</a> <!-- زر التسجيل -->
         <nav>
             <ul>
                 <li><a href="index.html">الرئيسية</a></li>
@@ -21,8 +23,6 @@
                 <li><a href="painters.html">الدهانين</a></li>
             </ul>
         </nav>
-        <a id="registration-link" href="registration.html">تسجيل</a>
-        <span class="menu-icon" onclick="toggleDropdown()">☰</span>
         <div class="dropdown-menu" id="profile-menu">
             <a href="profile.html">الملف الشخصي</a>
             <a href="#" id="logout-link">تسجيل الخروج</a>
@@ -90,12 +90,17 @@
             }
         }
 
-        // التحقق من صفحة الإحالة
+        // التحقق من تسجيل الدخول
         document.addEventListener('DOMContentLoaded', () => {
-            const referrer = document.referrer;
-            if (referrer.includes('profile.html')) {
-                document.querySelector('.menu-icon').style.display = 'block';
-            }
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    document.getElementById('registration-link').style.display = 'none';
+                    document.querySelector('.menu-icon').style.display = 'block';
+                } else {
+                    document.getElementById('registration-link').style.display = 'block';
+                    document.querySelector('.menu-icon').style.display = 'none';
+                }
+            });
         });
 
         // وظيفة تسجيل الخروج
