@@ -1,123 +1,109 @@
 body {
     font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    direction: rtl;
 }
 
 header, footer {
-    background-color: #f8f8f8;
+    background-color: #e0f7fa; /* لون خلفية خفيف للأزرار */
     padding: 10px 20px;
     text-align: center;
 }
 
 header img {
-    width: 100%;
-    height: auto;
+    height: 50px; /* تقصير ارتفاع صورة الغلاف إلى النصف */
+    width: auto;
+}
+
+header h1, header h2 {
+    margin: 5px 0;
+    color: #00796b; /* لون مناسب للنص */
+}
+
+header .home-button, header .login-button, header .menu-button {
+    background-color: #00796b; /* لون الأزرار */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+header .home-button:hover, header .login-button:hover, header .menu-button:hover {
+    background-color: #004d40; /* لون أغمق عند التمرير */
+}
+
+.nav-menu ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    text-align: center;
+}
+
+.nav-menu ul li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.nav-menu ul li a {
+    text-decoration: none;
+    color: #00796b; /* لون الروابط */
+}
+
+.nav-menu ul li a:hover {
+    text-decoration: underline;
 }
 
 main {
     padding: 20px;
+    text-align: center;
+}
+
+main input[type="text"] {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+main button {
+    background-color: #00796b; /* لون الأزرار */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+main button:hover {
+    background-color: #004d40; /* لون أغمق عند التمرير */
 }
 
 .worker-list {
-    display: flex;
-    flex-wrap: wrap;
     list-style-type: none;
     padding: 0;
-    justify-content: center;
 }
 
 .worker-box {
-    border: 1px solid #ddd;
-    padding: 10px;
+    border: 1px solid #ccc;
     margin: 10px;
+    padding: 10px;
     border-radius: 5px;
-    width: 300px;
-    box-sizing: border-box;
-    text-align: center;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    text-align: left;
 }
 
 .worker-box img {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
+    max-height: 100px; /* التحكم في حجم صور العاملين */
+    width: auto;
+    display: block;
     margin-bottom: 10px;
 }
 
-.worker-box h3 {
-    margin: 10px 0;
-    font-size: 1.2em;
-}
-
-.worker-box p {
-    margin: 5px 0;
-    font-size: 1em;
-}
-
-.worker-box a {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.home-button, .services-button, .login-button {
-    margin: 10px;
+footer {
+    background-color: #e0f7fa; /* لون خلفية خفيف للأزرار */
     padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    display: inline-block;
-}
-
-.nav-menu {
-    display: none;
-    flex-direction: column;
-    margin-top: 10px;
-}
-
-.categories {
-    flex-direction: column;
-    align-items: center;
-}
-
-.menu-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    margin-top: 10px;
-}
-
-.rating-section {
-    margin-top: 20px;
-}
-
-.star-rating {
-    direction: rtl;
-    unicode-bidi: bidi-override;
-    display: inline-block;
-    font-size: 30px;
-}
-
-.star-rating input[type="radio"] {
-    display: none;
-}
-
-.star-rating label {
-    color: #ddd;
-    float: right;
-}
-
-.star-rating label:hover,
-.star-rating label:hover ~ label,
-.star-rating input[type="radio"]:checked ~ label {
-    color: #f8d320;
+    text-align: center;
+    color: #00796b; /* لون النص في الفوتر */
 }
