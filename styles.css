@@ -5,61 +5,25 @@ body {
 }
 
 header {
-    background-color: #fff; /* لون خلفية خفيف مناسب مع الأزرار */
-    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
     text-align: center;
-    position: relative;
-}
-
-header h1 {
-    margin: 0;
-    padding: 0;
-}
-
-header #toggle-menu {
-    position: absolute;
-    right: 20px; /* تم تغيير القيمة لتكون على اليمين */
-    top: 10px; /* تم ترك القيمة كما هي لتبقى في الأعلى */
-    font-size: 24px;
-    cursor: pointer;
 }
 
 nav ul {
     list-style-type: none;
     padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
 }
 
 nav ul li {
-    margin: 5px 10px;
+    display: inline;
+    margin-right: 20px;
 }
 
 nav ul li a {
-    color: #333;
+    color: #fff;
     text-decoration: none;
-    padding: 10px;
-    display: block;
-    background-color: #4CAF50;
-    color: white;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-nav ul li a:hover {
-    background-color: #45a049;
-}
-
-#nav-menu {
-    display: none;
-    flex-direction: column;
-    margin-top: 10px;
-}
-
-.show {
-    display: flex;
 }
 
 main {
@@ -105,71 +69,14 @@ footer {
     width: 100%;
 }
 
-/* CSS for the categories section */
-#categories {
+/* Added CSS for grid layout */
+#categories ul {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 10px;
-    padding: 20px;
-    list-style-type: none;
+    justify-content: center;
+}
+
+#categories ul li {
     text-align: center;
-}
-
-#categories li {
-    list-style-type: none;
-}
-
-#categories a {
-    display: block;
-    padding: 20px;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-#categories a:hover {
-    background-color: #45a049;
-}
-
-.nav-menu {
-    display: none;
-    flex-direction: column;
-    margin-top: 10px;
-}
-
-.menu-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    margin-top: 10px;
-}
-
-.rating-section {
-    margin-top: 20px;
-}
-
-.star-rating {
-    direction: rtl;
-    unicode-bidi: bidi-override;
-    display: inline-block;
-    font-size: 30px;
-}
-
-.star-rating input[type="radio"] {
-    display: none;
-}
-
-.star-rating label {
-    color: #ddd;
-    float: right;
-}
-
-.star-rating label:hover,
-.star-rating label:hover ~ label,
-.star-rating input[type="radio"]:checked ~ label {
-    color: #f8d320;
 }
