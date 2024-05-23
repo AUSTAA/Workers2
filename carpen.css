@@ -8,7 +8,7 @@ header, footer {
 }
 header img {
     width: 100%;
-    height: auto;
+    height: 35%;
 }
 main {
     padding: 20px;
@@ -84,7 +84,7 @@ main {
     direction: rtl;
     unicode-bidi: bidi-override;
     display: inline-block;
-    font-size: 25px;
+    font-size: 15px;
 }
 .star-rating input[type="radio"] {
     display: none;
