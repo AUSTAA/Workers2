@@ -3,14 +3,15 @@ body {
 }
 
 header, footer {
-    background-color: #f8f8f8;
+    background-color: #e0f7fa; /* لون خلفية خفيف للأزرار */
     padding: 10px 20px;
     text-align: center;
 }
 
 header img {
     width: 100%;
-    height: 30px;
+    height: 25vh; /* تقصير ارتفاع صورة الغلاف إلى أقل من ربع الشاشة */
+    object-fit: cover; /* لضبط الصورة ضمن الإطار المحدد */
 }
 
 main {
