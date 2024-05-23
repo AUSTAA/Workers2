@@ -61,6 +61,33 @@
                 display: block;
             }
         }
+        
+        /* تنسيق المربعات */
+        #categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 20px;
+        }
+
+        #categories li {
+            list-style-type: none;
+        }
+
+        #categories a {
+            display: block;
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #categories a:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body dir="rtl">
@@ -100,7 +127,20 @@
                 <li><a href="#">الكهربائيين</a></li>
                 <li><a href="#">السباكين</a></li>
                 <li><a href="#">الدهانين</a></li>
-                <!-- يمكنك إضافة المزيد من التصنيفات حسب الحاجة -->
+                <li><a href="#">المهندسين</a></li>
+                <li><a href="#">المقاولين</a></li>
+                <li><a href="#">التكييف</a></li>
+                <li><a href="#">الملعقة</a></li>
+                <li><a href="#">التصميمات والديكور</a></li>
+                <li><a href="#">التشطيبات</a></li>
+                <li><a href="#">البنائين</a></li>
+                <li><a href="#">الكراجات</a></li>
+                <li><a href="#">شركات البناء</a></li>
+                <li><a href="#">سيارات نقل</a></li>
+                <li><a href="#">محلات مواد البناء</a></li>
+                <li><a href="#">محلات الدهانات</a></li>
+                <li><a href="#">محلات حديد التسليح</a></li>
+                <li><a href="#">البكيرات</a></li>
             </ul>
         </section>
     </main>
@@ -112,15 +152,15 @@
     <script>
         // إعداد Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
-            authDomain: "omran-16f44.firebaseapp.com",
-            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
-            projectId: "omran-16f44",
-            storageBucket: "omran-16f44.appspot.com",
-            messagingSenderId: "598982209417",
-            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
-            measurementId: "G-PGZJ0T555G"
-        };
+  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+  authDomain: "omran-16f44.firebaseapp.com",
+  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+  projectId: "omran-16f44",
+  storageBucket: "omran-16f44.appspot.com",
+  messagingSenderId: "598982209417",
+  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+  measurementId: "G-PGZJ0T555G"
+};
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
