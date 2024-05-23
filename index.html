@@ -101,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const referrer = document.referrer;
     if (referrer.includes('profile.html')) {
         document.getElementById('registration-link').style.display = 'none';
+    } else {
+        document.getElementById('logout-link').style.display = 'none';
     }
 });
 
