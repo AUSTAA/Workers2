@@ -114,6 +114,10 @@ footer {
     display: inline-block;
 }
 
+.menu-icon {
+    display: none;
+}
+
 .nav-menu {
     display: none;
     flex-direction: column;
