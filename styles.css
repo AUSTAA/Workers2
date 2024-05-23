@@ -15,14 +15,19 @@ header {
     color: white;
     padding: 20px;
     text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 header h1 {
-    margin-bottom: 10px;
+    margin: 0;
 }
 
 nav ul {
     list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 nav ul li {
@@ -73,17 +78,16 @@ nav ul li a:hover {
 
 main {
     padding: 20px;
-    display: flex;
-    justify-content: space-between;
 }
 
 #search {
-    flex: 1;
-    margin-right: 20px;
+    margin-bottom: 20px;
 }
 
 #search form {
     display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #search input[type="text"] {
@@ -104,9 +108,8 @@ main {
 }
 
 #categories {
-    flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 10px;
 }
 
@@ -139,4 +142,39 @@ footer {
     color: white;
     text-align: center;
     padding: 20px 0;
+}
+
+/* Responsive CSS */
+@media screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+    }
+
+    .menu-icon {
+        display: block;
+    }
+
+    nav {
+        display: none;
+        width: 100%;
+        text-align: right;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .dropdown-menu {
+        position: static;
+        display: block;
+    }
+
+    main {
+        padding: 20px 10px;
+    }
+
+    #search input[type="text"] {
+        width: 100%;
+    }
 }
