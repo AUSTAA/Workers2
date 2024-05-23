@@ -19,6 +19,7 @@ header img {
 nav ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 nav ul li {
@@ -27,8 +28,42 @@ nav ul li {
 }
 
 nav ul li a {
-    color: #fff;
+    color: #333;
     text-decoration: none;
+}
+
+.main-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-icon {
+    display: block;
+    cursor: pointer;
+    font-size: 24px;
+    margin-left: 20px;
+}
+
+#profile-menu {
+    display: none;
+    position: absolute;
+    background-color: #f0f8ff;
+    border: 1px solid #ccc;
+    top: 50px;
+    right: 20px;
+    text-align: center;
+}
+
+#profile-menu a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+}
+
+#profile-menu a:hover {
+    background-color: #e0e0e0;
 }
 
 main {
@@ -77,7 +112,7 @@ footer {
 /* CSS for the categories section */
 #categories {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 10px;
     padding: 20px;
     list-style-type: none;
@@ -114,24 +149,6 @@ footer {
     display: inline-block;
 }
 
-.menu-icon {
-    display: none;
-}
-
-.nav-menu {
-    display: none;
-    flex-direction: column;
-    margin-top: 10px;
-}
-
-.menu-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
-    margin-top: 10px;
-}
-
 .rating-section {
     margin-top: 20px;
 }
@@ -156,4 +173,29 @@ footer {
 .star-rating label:hover ~ label,
 .star-rating input[type="radio"]:checked ~ label {
     color: #f8d320;
+}
+
+@media (max-width: 768px) {
+    nav ul {
+        display: none;
+    }
+
+    nav ul.show {
+        display: block;
+        background-color: #f0f8ff;
+        position: absolute;
+        top: 50px;
+        right: 20px;
+        width: 200px;
+        text-align: right;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .menu-icon {
+        display: block;
+    }
 }
