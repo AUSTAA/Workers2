@@ -91,23 +91,33 @@
         }
 
         // التحقق من صفحة الإحالة
-        document.addEventListener('DOMContentLoaded', () => {
-            const referrer = document.referrer;
-            if (referrer.includes('profile.html')) {
-                document.querySelector('.menu-icon').style.display = 'block';
-            }
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    const referrer = document.referrer;
+    if (referrer.includes('profile.html')) {
+        document.getElementById('registration-link').style.display = 'none';
+    }
+});
 
-        // وظيفة تسجيل الخروج
-        document.getElementById('logout-link').addEventListener('click', function(event) {
-            event.preventDefault();
-            auth.signOut().then(() => {
-                alert("تم تسجيل الخروج بنجاح.");
-                window.location.href = "index.html";
-            }).catch((error) => {
-                console.error("Error signing out: ", error);
-            });
-        });
+// دالة تبديل عرض القائمة المنبثقة
+function toggleDropdown() {
+    const menu = document.getElementById('profile-menu');
+    if (menu.style.display === 'block') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'block';
+    }
+}
+
+// وظيفة تسجيل الخروج
+document.getElementById('logout-link').addEventListener('click', function(event) {
+    event.preventDefault();
+    auth.signOut().then(() => {
+        alert("تم تسجيل الخروج بنجاح.");
+        window.location.href = "index.html";
+    }).catch((error) => {
+        console.error("Error signing out: ", error);
+    });
+});
     </script>
 </body>
 </html>
