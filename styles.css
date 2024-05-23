@@ -69,7 +69,7 @@ footer {
     width: 100%;
 }
 
-/* Added CSS for grid layout */
+/* تعديلات جديدة لعرض التصنيفات كشبكة */
 #categories ul {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
