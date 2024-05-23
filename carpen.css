@@ -12,7 +12,7 @@ header, footer {
 }
 
 header img {
-    height: 50px; /* تقصير ارتفاع صورة الغلاف إلى النصف */
+    height: 20px; /* تقصير ارتفاع صورة الغلاف إلى النصف */
     width: auto;
 }
 
