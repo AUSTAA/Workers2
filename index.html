@@ -90,23 +90,23 @@
             }
         }
 
-        // التحقق من صفحة الإحالة
+       // دالة تبديل عرض القائمة المنبثقة
+function toggleDropdown() {
+    const menu = document.getElementById('profile-menu');
+    if (menu.style.display === 'block' || menu.style.display === '') {
+        menu.style.display = 'none';
+    } else {
+        menu.style.display = 'block';
+    }
+}
+
+// التحقق من صفحة الإحالة
 document.addEventListener('DOMContentLoaded', () => {
     const referrer = document.referrer;
     if (referrer.includes('profile.html')) {
         document.getElementById('registration-link').style.display = 'none';
     }
 });
-
-// دالة تبديل عرض القائمة المنبثقة
-function toggleDropdown() {
-    const menu = document.getElementById('profile-menu');
-    if (menu.style.display === 'block') {
-        menu.style.display = 'none';
-    } else {
-        menu.style.display = 'block';
-    }
-}
 
 // وظيفة تسجيل الخروج
 document.getElementById('logout-link').addEventListener('click', function(event) {
