@@ -98,14 +98,16 @@ footer {
 }
 
 #categories ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
     justify-content: center;
 }
 
 #categories ul li {
     text-align: center;
-    display: grid; /* تغيير عرض العناصر إلى grid */
-    place-content: center;
+    margin: 5px; /* إضافة هامش للفصل بين العناصر */
+    padding: 10px; /* إضافة حشو للعناصر */
+    background-color: #f0f0f0; /* إضافة خلفية للعناصر */
 }
