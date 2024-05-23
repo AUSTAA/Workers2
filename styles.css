@@ -11,6 +11,23 @@ header {
     color: #fff;
     padding: 20px;
     text-align: center;
+    position: relative; /* لتمكين التمركز المطلق للزر داخل الهيدر */
+}
+
+/* Styles for the button to be at the top right */
+.menu-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.menu-button:hover {
+    background-color: #555;
 }
 
 nav ul {
@@ -59,20 +76,6 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-}
-
-/* Button Styles */
-button {
-    padding: 10px 20px;
-    background-color: #333;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    margin-left: 20px; /* تحديد المسافة بين الأزرار والعناصر الأخرى في الهيدر */
-}
-
-button:hover {
-    background-color: #555;
 }
 
 /* Categories Section Styles */
