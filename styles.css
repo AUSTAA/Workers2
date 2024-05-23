@@ -100,14 +100,14 @@ footer {
 #categories ul {
     list-style-type: none;
     padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    text-align: center; /* لمحاذاة العناصر في الوسط */
 }
 
 #categories ul li {
-    text-align: center;
-    margin: 5px; /* إضافة هامش للفصل بين العناصر */
-    padding: 10px; /* إضافة حشو للعناصر */
+    display: inline-block; /* تغيير عرض العناصر إلى inline-block لتظهر كمربعات */
+    margin: 10px; /* إضافة هامش للفصل بين العناصر */
+    padding: 20px; /* إضافة حشو للعناصر */
     background-color: #f0f0f0; /* إضافة خلفية للعناصر */
+    border-radius: 5px; /* تطبيق حواف منحنية للعناصر */
+    text-align: center; /* لمحاذاة نص العناصر في الوسط */
 }
