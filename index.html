@@ -80,17 +80,13 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        // دالة تبديل عرض القائمة المنبثقة
-        function toggleDropdown() {
-            const menu = document.getElementById('profile-menu');
-            if (menu.style.display === 'block') {
-                menu.style.display = 'none';
-            } else {
-                menu.style.display = 'block';
-            }
-        }
+        // تأخير عرض القائمة حتى النقر على زر التلات خطوط
+document.addEventListener('DOMContentLoaded', () => {
+    const menu = document.getElementById('profile-menu');
+    menu.style.display = 'none';
+});
 
-       // دالة تبديل عرض القائمة المنبثقة
+// دالة تبديل عرض القائمة المنبثقة
 function toggleDropdown() {
     const menu = document.getElementById('profile-menu');
     if (menu.style.display === 'block' || menu.style.display === '') {
