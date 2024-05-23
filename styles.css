@@ -37,7 +37,13 @@ nav ul li a {
     font-size: 18px;
     color: #fff;
     text-decoration: none;
-    margin-left: 20px;
+    background-color: #333; /* لون الخلفية */
+    padding: 10px 20px; /* حجم الزر */
+    border-radius: 5px; /* تدوير الحواف */
+}
+
+#registration-link:hover {
+    background-color: #555; /* تغيير لون الخلفية عند التحويم */
 }
 
 .menu-icon {
@@ -135,4 +141,14 @@ button:hover {
 
 #categories a:hover {
     background-color: #45a049;
+}
+
+/* Additional Styles */
+.right-section {
+    float: right;
+}
+
+.left-section {
+    float: left;
+    margin-left: 20px; /* لتوفير بعض المسافة بين زر التسجيل وزر القائمة */
 }
