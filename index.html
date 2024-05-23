@@ -8,9 +8,7 @@
 </head>
 <body dir="rtl">
     <header>
-        <span class="menu-icon" onclick="toggleDropdown()">☰</span> <!-- زر القائمة -->
         <h1>خدمات البناء</h1>
-        <a id="registration-link" href="registration.html">تسجيل</a> <!-- زر التسجيل -->
         <nav>
             <ul>
                 <li><a href="index.html">الرئيسية</a></li>
@@ -23,44 +21,19 @@
                 <li><a href="painters.html">الدهانين</a></li>
             </ul>
         </nav>
+        <a id="registration-link" href="registration.html">تسجيل</a>
+        <span class="menu-icon" onclick="toggleDropdown()">☰</span>
         <div class="dropdown-menu" id="profile-menu">
             <a href="profile.html">الملف الشخصي</a>
             <a href="#" id="logout-link">تسجيل الخروج</a>
         </div>
     </header>
     <main>
-        <section id="search">
-            <h2>البحث عن العمال والمقاولين</h2>
-            <form action="#">
-                <input type="text" placeholder="البحث عن الخدمات...">
-                <button type="submit">بحث</button>
-            </form>
-        </section>
-        <section id="categories">
-            <h2>التصنيفات</h2>
-            <ul>
-                <li><a href="engineers.html">المهندسين</a></li>
-                <li><a href="contractors.html">المقاولين</a></li>
-                <li><a href="construction-companies.html">شركات البناء</a></li>
-                <li><a href="carpenters.html">النجارين</a></li>
-                <li><a href="electricians.html">الكهربائيين</a></li>
-                <li><a href="plumbers.html">السباكين</a></li>
-                <li><a href="painters.html">الدهانين</a></li>
-                <li><a href="hvac.html">التكييف</a></li>
-                <li><a href="spooning.html">الملعقة</a></li>
-                <li><a href="design.html">التصميمات والديكور</a></li>
-                <li><a href="finishing.html">التشطيبات</a></li>
-                <li><a href="builders.html">البنائين</a></li>
-                <li><a href="garages.html">الكراجات</a></li>
-                <li><a href="transport-vehicles.html">سيارات نقل</a></li>
-                <li><a href="building-materials.html">محلات مواد البناء</a></li>
-                <li><a href="paint-shops.html">محلات الدهانات</a></li>
-                <li><a href="rebar-shops.html">محلات حديد التسليح</a></li>
-                <li><a href="hardware.html">البكيرات</a></li>
-            </ul>
-        </section>
+        <!-- باقي المحتوى هنا -->
     </main>
     <footer>
+        <p>&copy; ٢٠٢٤ خدمات البناء</p>
+    </footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
