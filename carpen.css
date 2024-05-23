@@ -7,12 +7,12 @@ body {
 
 header, footer {
     background-color: #e0f7fa; /* لون خلفية خفيف للأزرار */
-    padding: 10px 50px;
+    padding: 10px 20px;
     text-align: center;
 }
 
 header img {
-    height: 35px; /* تقصير ارتفاع صورة الغلاف إلى النصف */
+    height: 50px; /* تقصير ارتفاع صورة الغلاف إلى النصف */
     width: auto;
 }
 
