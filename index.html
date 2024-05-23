@@ -7,18 +7,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body dir="rtl">
-    <div class="container">
-        <header>
-            <div class="left-section">
-                <!-- زر التسجيل -->
-                <a id="registration-link" href="registration.html">تسجيل</a>
-            </div>
-            <h1>خدمات البناء</h1>
-            <div class="right-section">
-                <!-- زر القائمة -->
-                <span class="menu-icon" onclick="toggleDropdown()">☰</span>
-            </div>
-        </header>
+    <header>
+        <h1>خدمات البناء</h1>
         <nav>
             <ul>
                 <li><a href="index.html">الرئيسية</a></li>
@@ -31,11 +21,13 @@
                 <li><a href="painters.html">الدهانين</a></li>
             </ul>
         </nav>
+        <a id="registration-link" href="registration.html">تسجيل</a>
+        <span class="menu-icon" onclick="toggleDropdown()">☰</span>
         <div class="dropdown-menu" id="profile-menu">
             <a href="profile.html">الملف الشخصي</a>
             <a href="#" id="logout-link">تسجيل الخروج</a>
         </div>
-    </div>
+    </header>
     <main>
         <section id="search">
             <h2>البحث عن العمال والمقاولين</h2>
@@ -71,7 +63,6 @@
     <footer>
         <p>&copy; ٢٠٢٤ خدمات البناء</p>
     </footer>
-
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script>
@@ -99,17 +90,12 @@
             }
         }
 
-        // التحقق من تسجيل الدخول
+        // التحقق من صفحة الإحالة
         document.addEventListener('DOMContentLoaded', () => {
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    document.getElementById('registration-link').style.display = 'none';
-                    document.querySelector('.menu-icon').style.display = 'block';
-                } else {
-                    document.getElementById('registration-link').style.display = 'block';
-                    document.querySelector('.menu-icon').style.display = 'none';
-                }
-            });
+            const referrer = document.referrer;
+            if (referrer.includes('profile.html')) {
+                document.querySelector('.menu-icon').style.display = 'block';
+            }
         });
 
         // وظيفة تسجيل الخروج
