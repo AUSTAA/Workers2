@@ -12,12 +12,24 @@ header {
     position: relative;
 }
 
+#registration-button {
+    position: absolute;
+    top: 20px;
+    left: 20px; /* تحديد موقع الزر في الجزء العلوي الأيسر من الرأس */
+    background-color: #4CAF50; /* تحديد لون خلفية الزر */
+    color: white; /* تحديد لون النص */
+    padding: 10px 20px; /* تحديد الهامش الداخلي للزر */
+    border: none; /* إزالة حدود الزر */
+    border-radius: 5px; /* تطبيق حواف منحنية للزر */
+    cursor: pointer; /* تحويل المؤشر إلى يد عند التحويل */
+}
+
 nav ul {
     list-style-type: none;
     padding: 0;
     position: absolute;
     top: 20px;
-    left: 20px;
+    right: 20px; /* تحديد موقع القائمة في الجزء العلوي الأيمن من الرأس */
 }
 
 nav ul li {
