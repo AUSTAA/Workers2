@@ -5,7 +5,7 @@ body {
 }
 
 header {
-    background-color: #f0f8ff; /* لون خلفية خفيف مناسب مع الأزرار */
+    background-color: #fff; /* لون خلفية خفيف مناسب مع الأزرار */
     padding: 10px 20px;
     text-align: center;
     position: relative;
@@ -16,10 +16,10 @@ header h1 {
     padding: 0;
 }
 
-header .menu-icon {
+header #toggle-menu {
     position: absolute;
-    left: 20px;
-    top: 10px;
+    right: 20px; /* تم تغيير القيمة لتكون على اليمين */
+    top: 10px; /* تم ترك القيمة كما هي لتبقى في الأعلى */
     font-size: 24px;
     cursor: pointer;
 }
