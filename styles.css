@@ -75,16 +75,23 @@ main {
 }
 
 /* Categories Section Styles */
+#categories {
+    margin-top: 2rem;
+}
+
 #categories h2 {
     margin-bottom: 1rem;
 }
 
 #categories ul {
     list-style: none;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 #categories ul li {
     margin-bottom: 0.5rem;
+    margin-right: 1rem;
 }
 
 #categories ul li a {
