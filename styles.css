@@ -38,6 +38,7 @@ nav ul {
     display: flex;
     margin: 0;
     padding: 0;
+    flex-wrap: nowrap; /* Ensure items don't wrap even if they exceed the screen width */
 }
 
 nav ul li {
@@ -161,26 +162,21 @@ footer {
 
 /* Responsive CSS */
 @media screen and (max-width: 768px) {
+    header {
+        justify-content: center;
+    }
+
     .menu-icon {
         display: block;
     }
 
     nav ul {
-        flex-direction: column;
-        align-items: flex-start;
-        display: none; /* Hide the navigation items initially */
-    }
-
-    nav ul.open {
-        display: flex; /* Show the navigation items when menu icon is clicked */
+        flex-direction: row; /* Ensure horizontal direction always */
+        flex-wrap: nowrap; /* Ensure items don't wrap even if they exceed the screen width */
+        display: flex; /* Keep the display as flex to ensure horizontal alignment */
     }
 
     nav ul li {
-        margin-left: 0;
-        margin-top: 10px;
-    }
-
-    #registration-link {
-        margin-bottom: 10px; /* Add margin to separate from menu icon in mobile view */
+        margin-left: 10px; /* Reduce margin for smaller screens */
     }
 }
