@@ -18,6 +18,7 @@ header {
     justify-content: space-between;
     align-items: center;
     position: relative; /* Needed for the absolute positioning of the menu icon */
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
 header h1 {
@@ -168,9 +169,7 @@ footer {
 /* Responsive CSS */
 @media screen and (max-width: 768px) {
     header {
-        flex-direction: column;
         justify-content: center;
-        padding: 20px 20px; /* Increase padding to make header larger */
     }
 
     .menu-icon {
@@ -178,8 +177,6 @@ footer {
     }
 
     nav ul {
-        flex-direction: row; /* Ensure horizontal direction always */
-        flex-wrap: nowrap; /* Ensure items don't wrap even if they exceed the screen width */
         display: none; /* Hide menu items in mobile view */
     }
 
@@ -199,9 +196,9 @@ footer {
     }
 }
 
-/* Disable landscape orientation */
+/* Allow landscape orientation */
 @media screen and (orientation: landscape) {
     body {
-        display: none; /* Hide the entire page in landscape orientation */
+        display: block; /* Ensure page is visible in landscape orientation */
     }
 }
