@@ -13,18 +13,23 @@ body {
 header {
     background-color: #222;
     color: white;
-    padding: 20px;
+    padding: 30px 20px; /* Increase padding to make header larger */
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative; /* Needed for the absolute positioning of the menu icon */
-    flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
 header h1 {
     margin: 0;
     flex-grow: 1;
     text-align: center;
+}
+
+.header-left {
+    position: absolute;
+    top: 20px; /* Adjusted to fit within the increased padding */
+    left: 20px;
 }
 
 .header-right {
@@ -38,7 +43,6 @@ nav ul {
     display: flex;
     margin: 0;
     padding: 0;
-    flex-wrap: nowrap; /* Ensure items don't wrap even if they exceed the screen width */
 }
 
 nav ul li {
@@ -60,7 +64,6 @@ nav ul li a:hover {
     padding: 10px 20px;
     border-radius: 5px;
     text-decoration: none;
-    margin-right: 10px; /* Add margin to separate from menu icon */
 }
 
 .menu-icon {
@@ -68,8 +71,8 @@ nav ul li a:hover {
     cursor: pointer;
     font-size: 30px; /* Increase the size of the menu icon */
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 20px; /* Adjusted to fit within the increased padding */
+    right: 20px;
 }
 
 .dropdown-menu {
@@ -79,6 +82,8 @@ nav ul li a:hover {
     min-width: 160px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
+    top: 70px; /* Position the dropdown below the menu icon */
+    right: 20px; /* Align the dropdown with the right side */
 }
 
 .dropdown-menu a {
@@ -163,7 +168,9 @@ footer {
 /* Responsive CSS */
 @media screen and (max-width: 768px) {
     header {
+        flex-direction: column;
         justify-content: center;
+        padding: 20px 20px; /* Increase padding to make header larger */
     }
 
     .menu-icon {
@@ -173,10 +180,28 @@ footer {
     nav ul {
         flex-direction: row; /* Ensure horizontal direction always */
         flex-wrap: nowrap; /* Ensure items don't wrap even if they exceed the screen width */
-        display: flex; /* Keep the display as flex to ensure horizontal alignment */
+        display: none; /* Hide menu items in mobile view */
+    }
+
+    nav ul.open {
+        display: flex; /* Show menu items when the menu is open */
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Adjust based on header height */
+        right: 20px;
+        background-color: #222;
+        padding: 10px;
+        border-radius: 5px;
     }
 
     nav ul li {
-        margin-left: 10px; /* Reduce margin for smaller screens */
+        margin: 10px 0;
+    }
+}
+
+/* Disable landscape orientation */
+@media screen and (orientation: landscape) {
+    body {
+        display: none; /* Hide the entire page in landscape orientation */
     }
 }
