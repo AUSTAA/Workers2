@@ -14,16 +14,17 @@ header {
     background-color: #222;
     color: white;
     padding: 20px;
-    text-align: center;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: relative; /* Needed for the absolute positioning of the menu icon */
+    flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
 header h1 {
     margin: 0;
-    flex: 1;
+    flex-grow: 1;
+    text-align: center;
 }
 
 .header-right {
@@ -34,12 +35,12 @@ header h1 {
 
 nav ul {
     list-style: none;
+    display: flex;
     margin: 0;
     padding: 0;
 }
 
 nav ul li {
-    display: inline;
     margin-left: 20px;
 }
 
@@ -160,42 +161,23 @@ footer {
 
 /* Responsive CSS */
 @media screen and (max-width: 768px) {
-    header {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .header-right {
-        flex-direction: column;
-    }
-
     .menu-icon {
         display: block;
     }
 
     nav ul {
-        display: flex; /* Ensure nav is always visible */
         flex-direction: column;
         align-items: flex-start;
-        width: 100%;
+        display: none; /* Hide the navigation items initially */
+    }
+
+    nav ul.open {
+        display: flex; /* Show the navigation items when menu icon is clicked */
     }
 
     nav ul li {
-        display: block;
-        margin: 10px 0;
-    }
-
-    .dropdown-menu {
-        position: static;
-        display: block;
-    }
-
-    main {
-        padding: 20px 10px;
-    }
-
-    #search input[type="text"] {
-        width: 100%;
+        margin-left: 0;
+        margin-top: 10px;
     }
 
     #registration-link {
