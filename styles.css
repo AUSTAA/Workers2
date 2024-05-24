@@ -14,25 +14,22 @@ header {
     background-color: #222;
     color: white;
     padding: 20px;
-    text-align: center;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
 
-.header-left,
+header h1 {
+    flex: 1 1 100%;
+    text-align: center;
+    margin: 0;
+}
+
 .header-right {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-header h1 {
-    flex: 2;
-    margin: 0;
-    text-align: center;
 }
 
 nav ul {
@@ -61,10 +58,12 @@ nav ul li a:hover {
     padding: 10px 20px;
     border-radius: 5px;
     text-decoration: none;
+    margin-right: 10px; /* Add margin to separate from menu icon */
 }
 
 .menu-icon {
     display: none;
+    cursor: pointer;
 }
 
 .dropdown-menu {
@@ -159,6 +158,11 @@ footer {
 @media screen and (max-width: 768px) {
     header {
         flex-direction: column;
+        text-align: center;
+    }
+
+    .header-right {
+        flex-direction: column;
     }
 
     .menu-icon {
@@ -187,5 +191,9 @@ footer {
 
     #search input[type="text"] {
         width: 100%;
+    }
+
+    #registration-link {
+        margin-bottom: 10px; /* Add margin to separate from menu icon in mobile view */
     }
 }
