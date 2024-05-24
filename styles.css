@@ -13,15 +13,23 @@ body {
 header {
     background-color: #222;
     color: white;
-    padding: 20px; /* Increase padding to make header larger */
+    padding: 20px;
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    flex-wrap: wrap;
+    text-align: left; /* إضافة خاصية text-align: left; */
 }
 
 .header-left {
-    position: absolute;
-    top: 20px;
-    left: 20px; /* Adjusted to fit within the increased padding */
+    order: -1; /* تغيير ترتيب عرض عناصر الهيدر لجعل الزر التسجيل أول عنصر */
+}
+
+.header-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #registration-link {
