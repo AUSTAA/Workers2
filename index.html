@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خدمات البناء</title>
+    <title>تطبيق اسـطـى لخدمات البناء </title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body dir="rtl">
     <header>
+        <div class="header-left">
+            <a id="registration-link" href="registration.html">تسجيل</a>
+        </div>
         <h1>خدمات البناء</h1>
+        <div class="header-right">
+            <span class="menu-icon" onclick="toggleDropdown()">☰</span>
+        </div>
         <nav>
             <ul>
                 <li><a href="index.html">الرئيسية</a></li>
@@ -21,8 +27,6 @@
                 <li><a href="painters.html">الدهانين</a></li>
             </ul>
         </nav>
-        <a id="registration-link" href="registration.html">تسجيل</a>
-        <span class="menu-icon" onclick="toggleDropdown()">☰</span>
         <div class="dropdown-menu" id="profile-menu">
             <a href="profile.html">الملف الشخصي</a>
             <a href="#" id="logout-link">تسجيل الخروج</a>
@@ -31,8 +35,8 @@
     <main>
         <section id="search">
             <h2>البحث عن العمال والمقاولين</h2>
-            <form action="#">
-                <input type="text" placeholder="البحث عن الخدمات...">
+            <form id="search-form">
+                <input type="text" id="search-input" placeholder="البحث عن الخدمات...">
                 <button type="submit">بحث</button>
             </form>
         </section>
@@ -61,7 +65,7 @@
         </section>
     </main>
     <footer>
-        <p>&copy; ٢٠٢٤ خدمات البناء</p>
+        <p>&copy; ٢٠٢٤ تطبيق اسـطـى لخدمات البناء</p>
     </footer>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
