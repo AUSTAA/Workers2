@@ -13,25 +13,27 @@ body {
 header {
     background-color: #222;
     color: white;
-    padding: 30px 20px; /* Increase padding to make header larger */
+    padding: 20px; /* Increase padding to make header larger */
     display: flex;
     flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
 .header-left {
-    position: relative; /* تغيير من absolute إلى relative */
+    position: absolute;
+    top: 20px;
+    left: 20px; /* Adjusted to fit within the increased padding */
 }
 
 #registration-link {
-    color: #fff; /* تغيير لون النص إلى أبيض */
+    color: #fff;
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 5px;
-    background-color: #222; /* تغيير لون الخلفية */
+    background-color: #444;
 }
 
 #registration-link:hover {
-    background-color: #444; /* تغيير لون الخلفية عند التحويم */
+    background-color: #666;
 }
 
 header h1 {
@@ -39,14 +41,15 @@ header h1 {
 }
 
 nav {
-    flex-grow: 2; /* تعديل الحجم ليأخذ المساحة الأكبر */
+    flex-grow: 2; /* Allow the nav to take remaining space */
+    text-align: center; /* Center align the nav links */
 }
 
 nav ul {
     list-style: none;
     display: flex;
     justify-content: center;
-    align-items: center; /* توسيط الروابط عمودياً */
+    align-items: center;
 }
 
 nav ul li {
@@ -54,7 +57,7 @@ nav ul li {
 }
 
 nav ul li:first-child {
-    margin-left: 0; /* إزالة الهامش من العنصر الأول */
+    margin-left: 0; /* Remove margin from the first element */
 }
 
 nav ul li a {
@@ -71,7 +74,7 @@ nav ul li a:hover {
     cursor: pointer;
     font-size: 30px; /* Increase the size of the menu icon */
     position: absolute;
-    top: 20px; /* Adjusted to fit within the increased padding */
+    top: 20px;
     right: 20px;
 }
 
@@ -171,16 +174,23 @@ footer {
         justify-content: center;
     }
 
-    .menu-icon {
+    .header-left {
+        position: static;
+        margin-bottom: 20px;
+    }
+
+    #registration-link {
         display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
 
-    nav ul {
-        display: none; /* Hide menu items in mobile view */
+    nav {
+        display: none; /* Hide nav items by default */
     }
 
-    nav ul.open {
-        display: flex; /* Show menu items when the menu is open */
+    nav.open {
+        display: flex; /* Show nav items when menu is open */
         flex-direction: column;
         position: absolute;
         top: 60px; /* Adjust based on header height */
@@ -190,8 +200,12 @@ footer {
         border-radius: 5px;
     }
 
-    nav ul li {
+    nav.open ul li {
         margin: 10px 0;
+    }
+
+    .menu-icon {
+        display: block;
     }
 }
 
@@ -201,7 +215,7 @@ footer {
         display: block; /* Ensure page is visible in both orientations */
     }
 
-    nav ul {
+    nav {
         display: flex; /* Always display nav links */
     }
 }
