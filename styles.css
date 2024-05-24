@@ -1,53 +1,28 @@
-/* Reset CSS */
-body, h1, h2, h3, p, ul, ol, li, form, button {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-}
-
 header {
     background-color: #222;
     color: white;
     padding: 30px 20px; /* Increase padding to make header larger */
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative; /* Needed for the absolute positioning of the menu icon */
     flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
 header h1 {
-    margin: 0;
-    flex-grow: 1;
-    text-align: center;
+    margin: 0 auto; /* Center the title */
 }
 
-.header-left {
-    position: absolute;
-    top: 20px; /* Adjusted to fit within the increased padding */
-    left: 20px;
-}
-
-.header-right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+nav {
+    flex-grow: 1; /* Allow the nav to take remaining space */
 }
 
 nav ul {
     list-style: none;
     display: flex;
-    margin: 0;
-    padding: 0;
+    justify-content: center; /* Center align the nav links */
+    margin-top: 10px; /* Add margin to separate links from title */
 }
 
 nav ul li {
-    margin-left: 20px;
+    margin: 0 10px; /* Adjust spacing between links */
 }
 
 nav ul li a {
