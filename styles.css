@@ -196,9 +196,13 @@ footer {
     }
 }
 
-/* Allow landscape orientation */
-@media screen and (orientation: landscape) {
+/* Ensure visibility in both orientations */
+@media screen and (orientation: landscape), screen and (orientation: portrait) {
     body {
-        display: block; /* Ensure page is visible in landscape orientation */
+        display: block; /* Ensure page is visible in both orientations */
+    }
+
+    nav ul {
+        display: flex; /* Always display nav links */
     }
 }
