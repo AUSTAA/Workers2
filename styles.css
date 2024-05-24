@@ -1,3 +1,15 @@
+/* Reset CSS */
+body, h1, h2, h3, p, ul, ol, li, form, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
 header {
     background-color: #222;
     color: white;
@@ -6,23 +18,43 @@ header {
     flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
+.header-left {
+    position: relative; /* تغيير من absolute إلى relative */
+}
+
+#registration-link {
+    color: #fff; /* تغيير لون النص إلى أبيض */
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #222; /* تغيير لون الخلفية */
+}
+
+#registration-link:hover {
+    background-color: #444; /* تغيير لون الخلفية عند التحويم */
+}
+
 header h1 {
     margin: 0 auto; /* Center the title */
 }
 
 nav {
-    flex-grow: 1; /* Allow the nav to take remaining space */
+    flex-grow: 2; /* تعديل الحجم ليأخذ المساحة الأكبر */
 }
 
 nav ul {
     list-style: none;
     display: flex;
-    justify-content: center; /* Center align the nav links */
-    margin-top: 10px; /* Add margin to separate links from title */
+    justify-content: center;
+    align-items: center; /* توسيط الروابط عمودياً */
 }
 
 nav ul li {
-    margin: 0 10px; /* Adjust spacing between links */
+    margin: 0 10px;
+}
+
+nav ul li:first-child {
+    margin-left: 0; /* إزالة الهامش من العنصر الأول */
 }
 
 nav ul li a {
@@ -32,14 +64,6 @@ nav ul li a {
 
 nav ul li a:hover {
     color: #ccc;
-}
-
-#registration-link {
-    color: #222;
-    background-color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    text-decoration: none;
 }
 
 .menu-icon {
