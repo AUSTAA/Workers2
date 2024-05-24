@@ -174,14 +174,16 @@ footer {
     }
 
     nav {
-        display: none;
         width: 100%;
         text-align: right;
     }
 
-    nav ul li {
+    nav ul {
+        display: none;
+    }
+
+    nav ul.open {
         display: block;
-        margin: 10px 0;
     }
 
     .dropdown-menu {
