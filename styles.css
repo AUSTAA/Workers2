@@ -14,32 +14,35 @@ header {
     background-color: #222;
     color: white;
     padding: 20px;
+    text-align: center;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.header-left,
+.header-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
 header h1 {
+    flex: 2;
     margin: 0;
-    flex: 1;
     text-align: center;
-}
-
-.header-left a, .header-right .menu-icon {
-    color: white;
-    text-decoration: none;
-    font-size: 18px;
-    margin: 0 10px;
 }
 
 nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: flex;
 }
 
 nav ul li {
+    display: inline;
     margin-left: 20px;
 }
 
@@ -71,7 +74,6 @@ nav ul li a:hover {
     min-width: 160px;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     z-index: 1;
-    right: 10px;
 }
 
 .dropdown-menu a {
@@ -128,7 +130,6 @@ main {
 
 #categories ul {
     list-style: none;
-    padding: 0;
 }
 
 #categories ul li {
@@ -168,11 +169,6 @@ footer {
         display: none;
         width: 100%;
         text-align: right;
-    }
-
-    nav ul {
-        flex-direction: column;
-        align-items: flex-start;
     }
 
     nav ul li {
