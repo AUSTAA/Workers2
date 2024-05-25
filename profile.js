@@ -25,7 +25,7 @@ auth.onAuthStateChanged((user) => {
             if (doc.exists) {
                 const userData = doc.data();
                 document.getElementById('username').textContent = `الاسم: ${userData.username}`;
-                document.getElementById('phoneNumber').textContent = `رقم الهاتف: ${userData.phone}`;
+                document.getElementById('phoneNumber').textContent = `رقم الهاتف: ${userData.phoneNumber}`;
                 document.getElementById('newPhone').textContent = userData.newPhone ? `رقم هاتف إضافي: ${userData.newPhone}` : '';
                 document.getElementById('nationality').textContent = `الجنسية: ${userData.nationality}`;
                 document.getElementById('city').textContent = `المدينة: ${userData.city}`;
