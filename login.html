@@ -1,26 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-    <title>صفحة تسجيل الدخول</title>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
-    <script src="https://unpkg.com/libphonenumber-js@1.9.42/bundle/libphonenumber-js.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1.9.18/bundle/libphonenumber-js.min.js"></script>
 </head>
-<body>
-    <h1>تسجيل الدخول باستخدام رقم الهاتف</h1>
+<body dir="rtl">
+    <h1>تسجيل الدخول</h1>
     <form id="loginForm">
-        <label for="phone">رقم الهاتف:</label>
-        <input type="tel" id="phone" required><br>
-        <div id="recaptcha-container"></div>
-        <button type="button" id="sendCode">إرسال رمز التحقق</button><br>
-        
-        <label for="code">رمز التحقق:</label>
-        <input type="text" id="code"><br>
+        <div>
+            <label for="phone">رقم الهاتف:</label>
+            <input type="text" id="phone" required>
+        </div>
+        <div>
+            <label for="password">الرمز السري:</label>
+            <input type="password" id="password" required>
+        </div>
         <button type="submit">تسجيل الدخول</button>
+        <button type="button" id="forgotPassword">نسيت الرمز السري</button>
+        <button type="button" id="googleSignIn">تسجيل الدخول باستخدام Google</button>
+        <div id="recaptcha-container"></div>
     </form>
 
-    <script src="login.js"></script>
+    <script>
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+            authDomain: "omran-16f44.firebaseapp.com",
+            projectId: "omran-16f44",
+            storageBucket: "omran-16f44.appspot.com",
+            messagingSenderId: "598982209417",
+            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // تنسيق والتحقق من رقم الهاتف باستخدام libphonenumber-js
+        function formatPhoneNumber(phoneNumber) {
+            const parsedNumber = libphonenumber.parsePhoneNumberFromString(phoneNumber);
+            if (parsedNumber && parsedNumber.isValid()) {
+                return parsedNumber.format('E.164');
+            } else {
+                throw new Error('رقم الهاتف غير صالح');
+            }
+        }
+
+        // تسجيل الدخول باستخدام Google
+        document.getElementById('googleSignIn').addEventListener('click', async () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                const result = await auth.signInWithPopup(provider);
+                alert('تم تسجيل الدخول بنجاح باستخدام Google');
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error signing in with Google:', error);
+                alert('فشل تسجيل الدخول باستخدام Google');
+            }
+        });
+
+        // إرسال رمز التحقق في حال نسيان الرمز السري
+        document.getElementById('forgotPassword').addEventListener('click', async () => {
+            const phoneNumber = document.getElementById('phone').value;
+            try {
+                const formattedNumber = formatPhoneNumber(phoneNumber);
+                const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
+                const confirmationResult = await auth.signInWithPhoneNumber(formattedNumber, appVerifier);
+                window.confirmationResult = confirmationResult;
+                alert('تم إرسال رمز التحقق');
+            } catch (error) {
+                console.error('Error sending verification code:', error);
+                alert('فشل في إرسال رمز التحقق. تأكد من صحة رقم الهاتف.');
+            }
+        });
+
+        // تسجيل الدخول باستخدام رقم الهاتف والرمز السري
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const phoneNumber = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            try {
+                const formattedNumber = formatPhoneNumber(phoneNumber);
+                const userDoc = await db.collection('users').where('phone', '==', formattedNumber).where('password', '==', password).get();
+                if (!userDoc.empty) {
+                    alert('تم تسجيل الدخول بنجاح');
+                    window.location.href = 'index.html';
+                } else {
+                    alert('رقم الهاتف أو الرمز السري غير صحيح');
+                }
+            } catch (error) {
+                console.error('Error logging in:', error);
+                alert('حدث خطأ أثناء تسجيل الدخول');
+            }
+        });
+    </script>
 </body>
 </html>
