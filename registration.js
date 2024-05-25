@@ -16,7 +16,7 @@ const db = firebase.firestore();
 
 // تنسيق والتحقق من رقم الهاتف باستخدام libphonenumber-js
 function formatPhoneNumber(phoneNumber) {
-    const parsedNumber = libphonenumber.parsePhoneNumberFromString(phoneNumber);
+    const parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber, 'US'); // تغيير 'US' إلى الكود المناسب لبلدك
     if (parsedNumber && parsedNumber.isValid()) {
         return parsedNumber.format('E.164');
     } else {
