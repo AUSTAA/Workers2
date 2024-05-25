@@ -17,7 +17,6 @@
         </div>
         <nav id="nav-container">
             <ul id="nav-links">
-
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="about.html">من نحن</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
@@ -84,6 +83,17 @@
         document.addEventListener('DOMContentLoaded', () => {
             const menu = document.getElementById('profile-menu');
             menu.style.display = 'none';
+
+            // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    document.getElementById('registration-link').style.display = 'none';
+                    document.getElementById('menu-icon').style.display = 'block';
+                } else {
+                    document.getElementById('registration-link').style.display = 'block';
+                    document.getElementById('menu-icon').style.display = 'none';
+                }
+            });
         });
 
         // دالة تبديل عرض القائمة المنبثقة
@@ -95,36 +105,6 @@
                 menu.style.display = 'block';
             }
         }
-
-      
- // التحقق من حالة تسجيل الدخول
-‏        auth.onAuthStateChanged((user) => {
-‏            if (user) {
-‏                document.getElementById('menu-icon').style.display = 'block';
-‏            } else {
-‏                document.getElementById('menu-icon').style.display = 'none';
-            }
-        });
-
-        // التحقق من صفحة الإحالة
-‏        document.addEventListener('DOMContentLoaded', () => {
-‏            const referrer = document.referrer;
-‏            if (referrer.includes('profile.html')) {
-‏                document.getElementById('registration-link').style.display = 'none';
-‏            } else {
-‏                document.getElementById('logout-link').style.display = 'none';
-            }
-        }
-
-        // التحقق من صفحة الإحالة
-        document.addEventListener('DOMContentLoaded', () => {
-            const referrer = document.referrer;
-            if (referrer.includes('profile.html')) {
-                document.getElementById('registration-link').style.display = 'none';
-            } else {
-                document.getElementById('logout-link').style.display = 'none';
-            }
-        });
 
         // وظيفة تسجيل الخروج
         document.getElementById('logout-link').addEventListener('click', function(event) {
