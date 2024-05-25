@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>التسجيل</title>
-    <link rel="stylesheet" href="regist.css">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
@@ -16,7 +16,6 @@
         <h1>التسجيل</h1>
     </header>
     <main>
-        <!-- نموذج التسجيل -->
         <form id="registrationForm">
             <label for="phone">رقم الهاتف:</label>
             <input type="tel" id="phone" name="phone" required>
@@ -30,8 +29,9 @@
             <button type="button" id="verifyCode">تحقق من الرمز</button>
         </form>
 
-        <!-- زر تسجيل الدخول باستخدام Google -->
-        <button id="googleSignIn">تسجيل الدخول باستخدام Google</button>
+        <button id="googleSignIn">
+            <img src="google-icon.png" alt="Google Icon"> تسجيل الدخول باستخدام Google
+        </button>
         
         <a href="login.html">تسجيل الدخول</a>
     </main>
