@@ -7,6 +7,7 @@ const firebaseConfig = {
     appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
 };
 
+
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -24,10 +25,32 @@ function formatPhoneNumber(phoneNumber) {
     }
 }
 
+// التحقق من اسم المستخدم عند الانتهاء من كتابته
+document.getElementById('username').addEventListener('input', async (e) => {
+    const username = e.target.value;
+    const usernameFeedback = document.getElementById('username-feedback');
+
+    try {
+        // التحقق من عدم وجود اسم مستخدم مكرر
+        const userSnapshot = await db.collection('users').where('username', '==', username).get();
+        if (!userSnapshot.empty) {
+            usernameFeedback.innerHTML = 'هذا الاسم موجود بالفعل. جرب اسم مستخدم آخر.';
+        } else {
+            usernameFeedback.innerHTML = ''; // إزالة رسالة الخطأ إذا كانت موجودة
+        }
+    } catch (error) {
+        console.error('Error checking username:', error);
+        alert('حدث خطأ أثناء التحقق من اسم المستخدم.');
+    }
+});
+
 // إرسال رمز التحقق
 document.getElementById('sendCode').addEventListener('click', async () => {
     const phoneNumber = document.getElementById('phone').value;
+    const username = document.getElementById('username').value;
+
     try {
+        // التحقق من صحة رقم الهاتف وإرسال رمز التحقق
         const formattedNumber = formatPhoneNumber(phoneNumber);
         const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         const confirmationResult = await auth.signInWithPhoneNumber(formattedNumber, appVerifier);
@@ -62,7 +85,8 @@ document.getElementById('verifyCode').addEventListener('click', async (e) => {
             // إضافة بيانات المستخدم إلى قاعدة البيانات
             db.collection('users').doc(user.uid).set({
                 phoneNumber: user.phoneNumber, // رقم الهاتف
-                username: username // اسم المستخدم
+                username: username, // اسم المستخدم
+                password: password // الرقم السري
                 // يمكنك إضافة المزيد من البيانات إذا كانت مطلوبة
             }).then(() => {
                 alert('تم التسجيل بنجاح');
@@ -78,7 +102,7 @@ document.getElementById('verifyCode').addEventListener('click', async (e) => {
         });
     } catch (error) {
         console.error('Error verifying code:', error);
-        alert('رمز التحقق غير صحيح');
+        alert('رمز التحقق غير صحي
     }
 });
 
