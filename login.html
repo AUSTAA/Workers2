@@ -46,7 +46,7 @@
 
         // تنسيق والتحقق من رقم الهاتف باستخدام libphonenumber-js
         function formatPhoneNumber(phoneNumber) {
-            const parsedNumber = libphonenumber.parsePhoneNumberFromString(phoneNumber);
+            const parsedNumber = libphonenumber.parsePhoneNumberFromString(newPhone);
             if (parsedNumber && parsedNumber.isValid()) {
                 return parsedNumber.format('E.164');
             } else {
@@ -69,7 +69,7 @@
 
         // إرسال رمز التحقق في حال نسيان الرمز السري
         document.getElementById('forgotPassword').addEventListener('click', async () => {
-            const phoneNumber = document.getElementById('phone').value;
+            const phoneNumber = document.getElementById('newPhone').value;
             try {
                 const formattedNumber = formatPhoneNumber(phoneNumber);
                 const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
