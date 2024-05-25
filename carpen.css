@@ -3,7 +3,7 @@ body {
 }
 
 header, footer {
-    background-color: #e0f7fa; /* لون خلفية خفيف للأزرار */
+    background-color: #222; /* لون خلفية خفيف للأزرار */
     padding: 10px 20px;
     text-align: center;
 }
