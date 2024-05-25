@@ -7,7 +7,6 @@ const firebaseConfig = {
     appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
 };
 
-
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -86,7 +85,7 @@ document.getElementById('verifyCode').addEventListener('click', async (e) => {
             db.collection('users').doc(user.uid).set({
                 phoneNumber: user.phoneNumber, // رقم الهاتف
                 username: username, // اسم المستخدم
-                password: password // الرقم السري
+                password: password // الرمز السري
                 // يمكنك إضافة المزيد من البيانات إذا كانت مطلوبة
             }).then(() => {
                 alert('تم التسجيل بنجاح');
@@ -102,7 +101,7 @@ document.getElementById('verifyCode').addEventListener('click', async (e) => {
         });
     } catch (error) {
         console.error('Error verifying code:', error);
-        alert('رمز التحقق غير صحي
+        alert('رمز التحقق غير صحيح');
     }
 });
 
