@@ -97,17 +97,24 @@
         }
 
       
-    // التحقق من حالة تسجيل الدخول
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            document.getElementById('registration-link').style.display = 'none';
-            document.getElementById('logout-link').style.display = 'block';
-        } else {
-            document.getElementById('registration-link').style.display = 'block';
-            document.getElementById('logout-link').style.display = 'none';
+ // التحقق من حالة تسجيل الدخول
+‏        auth.onAuthStateChanged((user) => {
+‏            if (user) {
+‏                document.getElementById('menu-icon').style.display = 'block';
+‏            } else {
+‏                document.getElementById('menu-icon').style.display = 'none';
+            }
+        });
+
+        // التحقق من صفحة الإحالة
+‏        document.addEventListener('DOMContentLoaded', () => {
+‏            const referrer = document.referrer;
+‏            if (referrer.includes('profile.html')) {
+‏                document.getElementById('registration-link').style.display = 'none';
+‏            } else {
+‏                document.getElementById('logout-link').style.display = 'none';
+            }
         }
-    });
-});
 
         // التحقق من صفحة الإحالة
         document.addEventListener('DOMContentLoaded', () => {
