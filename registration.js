@@ -16,46 +16,13 @@ const db = firebase.firestore();
 
 // تنسيق والتحقق من رقم الهاتف باستخدام libphonenumber-js
 function formatPhoneNumber(phoneNumber) {
-    const parsedNumber = libphonenumber.parsePhoneNumber(phoneNumber, 'US'); // تغيير 'US' إلى الكود المناسب لبلدك
+    const parsedNumber = libphonenumber.parsePhoneNumberFromString(phoneNumber);
     if (parsedNumber && parsedNumber.isValid()) {
         return parsedNumber.format('E.164');
     } else {
         throw new Error('رقم الهاتف غير صالح');
     }
 }
-
-// التحقق من وجود اسم المستخدم
-async function checkUsername(username) {
-    const userRef = db.collection('users').doc(username);
-    const doc = await userRef.get();
-    return doc.exists;
-}
-
-// إضافة اسم المستخدم وحفظ رقم الهاتف وكلمة المرور
-document.getElementById('register').addEventListener('click', async (e) => {
-    e.preventDefault();
-    const username = document.getElementById('username').value;
-    const phoneNumber = document.getElementById('phone').value;
-    const password = document.getElementById('password').value;
-    
-    try {
-        const usernameExists = await checkUsername(username);
-        if (usernameExists) {
-            alert('اسم المستخدم موجود بالفعل، جرب اسماً آخر.');
-        } else {
-            const formattedNumber = formatPhoneNumber(phoneNumber);
-            await db.collection('users').doc(username).set({
-                phoneNumber: formattedNumber,
-                password: password
-            });
-            alert('تم حفظ البيانات بنجاح');
-            // ربما تحويل المستخدم إلى صفحة تسجيل الدخول هنا
-        }
-    } catch (error) {
-        console.error('Error registering user:', error);
-        alert('حدث خطأ أثناء التسجيل، يرجى المحاولة مرة أخرى.');
-    }
-});
 
 // إرسال رمز التحقق
 document.getElementById('sendCode').addEventListener('click', async () => {
