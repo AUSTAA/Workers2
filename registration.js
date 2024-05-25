@@ -24,32 +24,43 @@ function formatPhoneNumber(phoneNumber) {
     }
 }
 
-// التحقق من اسم المستخدم عند الانتهاء من كتابته
-document.getElementById('username').addEventListener('input', async (e) => {
-    const username = e.target.value;
-    const usernameFeedback = document.getElementById('username-feedback');
+// التحقق من وجود اسم المستخدم
+async function checkUsername(username) {
+    const userRef = db.collection('users').doc(username);
+    const doc = await userRef.get();
+    return doc.exists;
+}
 
+// إضافة اسم المستخدم وحفظ رقم الهاتف وكلمة المرور
+document.getElementById('register').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const phoneNumber = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    
     try {
-        // التحقق من عدم وجود اسم مستخدم مكرر
-        const userSnapshot = await db.collection('users').where('username', '==', username).get();
-        if (!userSnapshot.empty) {
-            usernameFeedback.innerHTML = 'هذا الاسم موجود بالفعل. جرب اسم مستخدم آخر.';
+        const usernameExists = await checkUsername(username);
+        if (usernameExists) {
+            alert('اسم المستخدم موجود بالفعل، جرب اسماً آخر.');
         } else {
-            usernameFeedback.innerHTML = ''; // إزالة رسالة الخطأ إذا كانت موجودة
+            const formattedNumber = formatPhoneNumber(phoneNumber);
+            await db.collection('users').doc(username).set({
+                phoneNumber: formattedNumber,
+                password: password
+            });
+            alert('تم حفظ البيانات بنجاح');
+            // ربما تحويل المستخدم إلى صفحة تسجيل الدخول هنا
         }
     } catch (error) {
-        console.error('Error checking username:', error);
-        alert('حدث خطأ أثناء التحقق من اسم المستخدم.');
+        console.error('Error registering user:', error);
+        alert('حدث خطأ أثناء التسجيل، يرجى المحاولة مرة أخرى.');
     }
 });
 
 // إرسال رمز التحقق
 document.getElementById('sendCode').addEventListener('click', async () => {
     const phoneNumber = document.getElementById('phone').value;
-    const username = document.getElementById('username').value;
-
     try {
-        // التحقق من صحة رقم الهاتف وإرسال رمز التحقق
         const formattedNumber = formatPhoneNumber(phoneNumber);
         const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         const confirmationResult = await auth.signInWithPhoneNumber(formattedNumber, appVerifier);
@@ -66,35 +77,14 @@ document.getElementById('verifyCode').addEventListener('click', async (e) => {
     e.preventDefault();
     const code = document.getElementById('code').value;
     const password = document.getElementById('password').value;
-    const username = document.getElementById('username').value; // إضافة استرداد اسم المستخدم من النموذج
-
     try {
         const result = await window.confirmationResult.confirm(code);
         const user = result.user;
 
-        // تحقق من عدم وجود اسم مستخدم مكرر
-        const userSnapshot = await db.collection('users').where('username', '==', username).get();
-        if (!userSnapshot.empty) {
-            alert('اسم المستخدم موجود، جرب اسم مستخدم آخر.');
-            return;
-        }
-
-        // تعيين كلمة المرور واسم المستخدم
+        // تعيين كلمة المرور
         user.updatePassword(password).then(() => {
-            // إضافة بيانات المستخدم إلى قاعدة البيانات
-            db.collection('users').doc(user.uid).set({
-                phoneNumber: user.phoneNumber, // رقم الهاتف
-                username: username, // اسم المستخدم
-                password: password // الرمز السري
-                // يمكنك إضافة المزيد من البيانات إذا كانت مطلوبة
-            }).then(() => {
-                alert('تم التسجيل بنجاح');
-                // توجيه المستخدم إلى صفحة الملف الشخصي
-                window.location.href = 'profile.html';
-            }).catch((error) => {
-                console.error('Error adding user data:', error);
-                alert('حدث خطأ أثناء تسجيل البيانات.');
-            });
+            alert('تم التسجيل بنجاح');
+            window.location.href = 'profile.html';
         }).catch((error) => {
             console.error('Error setting password:', error);
             alert('خطأ في تعيين كلمة المرور.');
