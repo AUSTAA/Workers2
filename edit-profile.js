@@ -25,7 +25,7 @@ auth.onAuthStateChanged((user) => {
             if (doc.exists) {
                 const userData = doc.data();
                 document.getElementById('username').value = userData.username || '';
-                document.getElementById('phone').value = userData.phone || '';
+                document.getElementById('phone').value = userData.phoneNumber || '';
                 document.getElementById('nationality').value = userData.nationality || '';
                 document.getElementById('city').value = userData.city || '';
                 document.getElementById('experienceYears').value = userData.experienceYears || '';
@@ -48,6 +48,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const username = document.getElementById('username').value;
+    const Phone = document.getElementById('phoneNumber').value;
     const newPhone = document.getElementById('newPhone').value;
     const nationality = document.getElementById('nationality').value;
     const city = document.getElementById('city').value;
@@ -62,6 +63,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
 
         const updatedData = {
             username,
+            phoneNumber,
             nationality,
             city,
             experienceYears,
