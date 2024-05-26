@@ -33,6 +33,14 @@ auth.onAuthStateChanged((user) => {
                 document.getElementById('age').textContent = `العمر: ${userData.age}`;
                 document.getElementById('profession').textContent = `المهنة: ${userData.profession}`;
 
+              // عرض رابط الفيسبوك
+                const facebookLink = userData.facebookLink;
+                if (facebookLink) {
+                    const facebookLinkElement = document.getElementById('facebookLink');
+                    facebookLinkElement.href = facebookLink;
+                    facebookLinkElement.style.display = 'block'; // إظهار الرابط
+                }
+                
                 // تحميل الصورة الشخصية
                 const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
                 const profilePictureUrl = await profilePictureRef.getDownloadURL();
