@@ -14,6 +14,17 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+// إضافة مستمعين للأحداث للأزرار
+document.getElementById('homeButton').addEventListener('click', () => {
+    window.location.href = 'index.html'; // قم بتغيير 'index.html' إلى رابط الصفحة الرئيسية الفعلي
+});
+
+document.getElementById('backButton').addEventListener('click', () => {
+    window.history.back();
+});
+
+
+
 // تحديد الـ ID من عنوان URL
 const workerId = getWorkerIdFromUrl(window.location.href);
 
