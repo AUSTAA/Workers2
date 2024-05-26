@@ -38,6 +38,14 @@ db.collection("users").doc(workerId).get()
             document.getElementById('workerAge').textContent = `العمر: ${workerData.age}`;
             document.getElementById('workerProfession').textContent = `المهنة: ${workerData.profession}`;
 
+          // عرض رابط الفيسبوك
+                const facebookLink = userData.facebookLink;
+                if (facebookLink) {
+                    const facebookLinkElement = document.getElementById('facebookLink');
+                    facebookLinkElement.href = facebookLink;
+                    facebookLinkElement.style.display = 'block'; // إظهار الرابط
+                }
+            
             // تحميل الصورة الشخصية
             const profilePictureRef = firebase.storage().ref().child(`users/${workerId}/profilePicture.jpg`);
             profilePictureRef.getDownloadURL().then((url) => {
