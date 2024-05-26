@@ -25,7 +25,7 @@ auth.onAuthStateChanged((user) => {
             if (doc.exists) {
                 const userData = doc.data();
                 document.getElementById('username').value = userData.username || '';
-                document.getElementById('phone').value = userData.phoneNumber || '';
+                document.getElementById('phoneNumber').value = userData.phoneNumber || '';
                 document.getElementById('nationality').value = userData.nationality || '';
                 document.getElementById('city').value = userData.city || '';
                 document.getElementById('experienceYears').value = userData.experienceYears || '';
