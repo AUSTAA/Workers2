@@ -63,7 +63,6 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
 
         const updatedData = {
             username,
-            phone,
             nationality,
             city,
             experienceYears,
