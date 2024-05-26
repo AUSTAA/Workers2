@@ -31,19 +31,19 @@ db.collection("users").doc(workerId).get()
             const workerData = doc.data();
             document.getElementById('workerName').textContent = `الاسم: ${workerData.username}`;
             document.getElementById('workerPhone').innerHTML = `رقم الهاتف: <a href="tel:${workerData.phone}">${workerData.phone}</a>`;
-            document.getElementById('workerPhone').innerHTML += workerData.newPhone ? `<br>رقم هاتف إضافي: <a href="tel:${workerData.newPhone}">${workerData.newPhone}</a>` : '';
+            document.getElementById('workerNewphone').innerHTML += workerData.newPhone ? `<br>رقم هاتف إضافي: <a href="tel:${workerData.newPhone}">${workerData.newPhone}</a>` : '';
             document.getElementById('workerNationality').textContent = `الجنسية: ${workerData.nationality}`;
             document.getElementById('workerCity').textContent = `المدينة: ${workerData.city}`;
             document.getElementById('workerExperienceYears').textContent = `عدد سنين الخبرة: ${workerData.experienceYears}`;
             document.getElementById('workerAge').textContent = `العمر: ${workerData.age}`;
             document.getElementById('workerProfession').textContent = `المهنة: ${workerData.profession}`;
-            document.getElementById('workerFacebookLink').textContent = `فيسبوك: ${workerData.facebookLink}`;
-            // عرض رابط الفيسبوك
-          // const facebookLink = workerData.facebookLink;
-          //  if (facebookLink) {
-             //   const facebookLinkElement = document.getElementById('workerFacebookLink');
-              //  facebookLinkElement.href = facebookLink;
-              //  facebookLinkElement.style.display = 'block'; // إظهار الرابط
+
+             عرض رابط الفيسبوك
+           const facebookLink = workerData.facebookLink;
+            if (facebookLink) {
+                const facebookLinkElement = document.getElementById('workerFacebookLink');
+                facebookLinkElement.href = facebookLink;
+                facebookLinkElement.style.display = 'block'; // إظهار الرابط
            // }
             
             // تحميل الصورة الشخصية
