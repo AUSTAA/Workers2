@@ -85,6 +85,12 @@ main h2 {
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
+.social-links img {
+    width: 50px; /* تعديل حجم الصورة */
+    height: auto; /* تلقائياً يقوم البرنامج بتغيير الارتفاع بناءً على العرض */
+    display: block; /* إظهار الصورة كمركزية داخل العنصر */
+    margin: 0 auto; /* محاذاة الصورة في الوسط */
+}
 
 footer {
     text-align: center;
