@@ -31,6 +31,7 @@ auth.onAuthStateChanged((user) => {
                 document.getElementById('experienceYears').value = userData.experienceYears || '';
                 document.getElementById('age').value = userData.age || '';
                 document.getElementById('profession').value = userData.profession || '';
+                document.getElementById('facebook-link').value = userData.facebookLink || '';
             } else {
                 console.log("No such document!");
             }
@@ -55,6 +56,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     const experienceYears = document.getElementById('experienceYears').value;
     const age = document.getElementById('age').value;
     const profession = document.getElementById('profession').value;
+    const facebookLink = document.getElementById('facebook-link').value;
 
     const user = auth.currentUser;
     if (user) {
@@ -68,7 +70,8 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
             city,
             experienceYears,
             age,
-            profession
+            profession,
+            facebookLink
         };
 
         if (newPhone) {
