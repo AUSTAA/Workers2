@@ -31,7 +31,7 @@ db.collection("users").doc(workerId).get()
             const workerData = doc.data();
             document.getElementById('workerName').textContent = `الاسم: ${workerData.username}`;
             document.getElementById('workerPhone').innerHTML = `رقم الهاتف: <a href="tel:${workerData.phone}">${workerData.phone}</a>`;
-            document.getElementById('workerNewphone').innerHTML += workerData.newPhone ? `<br>رقم هاتف إضافي: <a href="tel:${workerData.newPhone}">${workerData.newPhone}</a>` : '';
+                document.getElementById('newPhone').textContent = userData.newPhone ? `رقم هاتف إضافي: ${userData.newPhone}` : '';
             document.getElementById('workerNationality').textContent = `الجنسية: ${workerData.nationality}`;
             document.getElementById('workerCity').textContent = `المدينة: ${workerData.city}`;
             document.getElementById('workerExperienceYears').textContent = `عدد سنين الخبرة: ${workerData.experienceYears}`;
