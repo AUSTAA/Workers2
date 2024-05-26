@@ -48,6 +48,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const username = document.getElementById('username').value;
+    const newPhone = document.getElementById('phone').value;
     const newPhone = document.getElementById('newPhone').value;
     const nationality = document.getElementById('nationality').value;
     const city = document.getElementById('city').value;
@@ -62,6 +63,7 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
 
         const updatedData = {
             username,
+            phone,
             nationality,
             city,
             experienceYears,
