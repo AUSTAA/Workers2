@@ -43,6 +43,10 @@ main {
     border-radius: 50%;
     object-fit: cover;
 }
+.facebook-logo {
+    width: 30px; /* تعديل العرض */
+    height: auto; /* الارتفاع يتعديل تلقائياً بناءً على النسبة */
+}
 
 #workerServiceImagesContainer {
     margin-top: 20px;
