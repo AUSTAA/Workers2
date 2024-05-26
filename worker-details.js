@@ -30,7 +30,8 @@ db.collection("users").doc(workerId).get()
         if (doc.exists) {
             const workerData = doc.data();
             document.getElementById('workerName').textContent = `الاسم: ${workerData.username}`;
-            document.getElementById('workerPhone').textContent = `رقم الهاتف: ${workerData.phone}`;
+            document.getElementById('workerPhone').innerHTML = `رقم الهاتف: <a href="tel:${workerData.phone}">${workerData.phone}</a>`;
+            document.getElementById('workerPhone').innerHTML += workerData.newPhone ? `<br>رقم هاتف إضافي: <a href="tel:${workerData.newPhone}">${workerData.newPhone}</a>` : '';
             document.getElementById('workerNationality').textContent = `الجنسية: ${workerData.nationality}`;
             document.getElementById('workerCity').textContent = `المدينة: ${workerData.city}`;
             document.getElementById('workerExperienceYears').textContent = `عدد سنين الخبرة: ${workerData.experienceYears}`;
@@ -135,90 +136,4 @@ function loadRatingsAndComments(workerId) {
                 }
             });
 
-            // حساب متوسط عدد النجوم
-            db.collection("ratings").where("workerId", "==", workerId).get()
-                .then((querySnapshot) => {
-                    let totalStars = 0;
-                    let ratingCount = 0;
-
-                    querySnapshot.forEach((doc) => {
-                        totalStars += doc.data().rating;
-                        ratingCount++;
-                    });
-
-                    const averageStars = ratingCount ? (totalStars / ratingCount) : 0;
-                    displayRatingStars(Math.round(averageStars)); // عرض التقييم المتوسط كعدد من النجوم
-                })
-                .catch((error) => {
-                    console.error("Error getting ratings: ", error);
-                });
-
-        } else {
-            ratingSection.style.display = 'none';
-        }
-    });
-
-    // تحميل التعليقات
-    const commentsContainer = document.getElementById('commentsContainer');
-    db.collection("comments").where("workerId", "==", workerId).get()
-        .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                const commentData = doc.data();
-                const commentElement = document.createElement('p');
-                commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
-                commentsContainer.appendChild(commentElement);
-            });
-        })
-        .catch((error) => {
-            console.error("Error getting comments: ", error);
-        });
-
-    // إرسال تعليق جديد
-    const commentInput = document.getElementById('commentInput');
-    const submitCommentButton = document.getElementById('submitComment');
-
-    submitCommentButton.addEventListener('click', () => {
-        const comment = commentInput.value.trim();
-        if (comment && auth.currentUser) {
-            const commentData = {
-                workerId,
-                username: auth.currentUser.displayName || auth.currentUser.email,
-                comment,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            db.collection("comments").add(commentData).then(() => {
-                const commentElement = document.createElement('p');
-                commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
-                commentsContainer.appendChild(commentElement);
-                commentInput.value = ''; // مسح التعليق
-            }).catch((error) => {
-                console.error("Error submitting comment: ", error);
-            });
-        } else if (!auth.currentUser) {
-            alert('يجب تسجيل الدخول لإرسال تعليق.');
-        }
-    });
-}
-
-// التحقق من حالة تسجيل الدخول
-auth.onAuthStateChanged((user) => {
-    const authButton = document.getElementById('authButton');
-    if (user) {
-        authButton.style.display = 'none'; // إخفاء زر تسجيل الدخول إذا كان المستخدم مسجلاً الدخول
-    } else {
-        authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
-        authButton.addEventListener('click', () => {
-            window.location.href = 'login.html';
-        });
-    }
-});
-
-// العودة إلى الصفحة الرئيسية
-document.getElementById('homeButton').addEventListener('click', () => {
-    window.location.href = 'index.html';
-});
-
-// العودة إلى القائمة السابقة
-document.getElementById('backButton').addEventListener('click', () => {
-    window.history.back();
-});
+           
