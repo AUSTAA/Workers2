@@ -37,14 +37,14 @@ db.collection("users").doc(workerId).get()
             document.getElementById('workerExperienceYears').textContent = `عدد سنين الخبرة: ${workerData.experienceYears}`;
             document.getElementById('workerAge').textContent = `العمر: ${workerData.age}`;
             document.getElementById('workerProfession').textContent = `المهنة: ${workerData.profession}`;
-
+            document.getElementById('workerFacebookLink').textContent = `فيسبوك: ${workerData.facebookLink}`;
             // عرض رابط الفيسبوك
-            const facebookLink = workerData.facebookLink;
-            if (facebookLink) {
-                const facebookLinkElement = document.getElementById('workerFacebookLink');
-                facebookLinkElement.href = facebookLink;
-                facebookLinkElement.style.display = 'block'; // إظهار الرابط
-            }
+          // const facebookLink = workerData.facebookLink;
+          //  if (facebookLink) {
+             //   const facebookLinkElement = document.getElementById('workerFacebookLink');
+              //  facebookLinkElement.href = facebookLink;
+              //  facebookLinkElement.style.display = 'block'; // إظهار الرابط
+           // }
             
             // تحميل الصورة الشخصية
             const profilePictureRef = firebase.storage().ref().child(`users/${workerId}/profilePicture.jpg`);
