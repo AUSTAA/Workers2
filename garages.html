@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الكراجات - خدمات البناء</title>
+    <link rel="stylesheet" href="carpen.css">
+</head>
+<body dir="rtl">
+    <header>
+        <img src="IMG_0767.png" alt="كراجات" class="logo">
+        <h1>خدمات البناء</h1>
+        <h2>الكراجات</h2>
+        <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
+        <button id="loginButton" class="login-button" style="display: none;">تسجيل الدخول</button>
+        <button id="menuButton" class="menu-button">&#9776;</button>
+        <nav class="nav-menu categories" id="categoriesMenu">
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="carpenters.html">النجارين</a></li>
+                <li><a href="electricians.html">الكهربائيين</a></li>
+                <li><a href="plumbers.html">السباكين</a></li>
+                <li><a href="painters.html">الدهانين</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <input type="text" id="searchInput" placeholder="ابحث عن الكراجات بالمدينة...">
+        <button onclick="searchWorkers()">بحث</button>
+        <ul class="worker-list" id="worker-list">
+            <!-- سيتم ملء هذه القائمة ديناميكيًا -->
+        </ul>
+    </main>
+    <footer>
+        <p>&copy; ٢٠٢٤ خدمات البناء. جميع الحقوق محفوظة.</p>
+    </footer>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-storage-compat.js"></script>
+    <script>
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+            authDomain: "omran-16f44.firebaseapp.com",
+            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+            projectId: "omran-16f44",
+            storageBucket: "omran-16f44.appspot.com",
+            messagingSenderId: "598982209417",
+            appId: "1:598982209417:web:dc9cbddd485aa1ea52bbb58",
+            measurementId: "G-PGZJ0T555G"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const storage = firebase.storage();
+
+        auth.onAuthStateChanged(user => {
+            const loginButton = document.getElementById('loginButton');
+            if (user) {
+                loginButton.style.display = 'none';
+            } else {
+                loginButton.style.display = 'inline-block';
+                loginButton.onclick = () => window.location.href = 'registration.html';
+            }
+        });
+
+        // دالة لإنشاء نجمة أو نصف نجمة
+        function createStar(filled, half = false) {
+            const star = document.createElement('span');
+            if (half) {
+                star.innerHTML = '<span style="color: gold; position: absolute;">&#9733;</span>' +
+                                 '<span style="color: gray; padding-left: 12px;">&#9733;</span>';
+            } else {
+                star.innerHTML = '&#9733;';  // نجمة ممتلئة
+            }
+            star.style.color = filled ? 'gold' : 'gray';
+            star.style.fontSize = '24px'; // حجم النجمة
+            star.style.margin = '2px';    // تباعد بين النجوم
+            star.style.position = half ? 'relative' : 'static';
+            return star;
+        }
+
+        // دالة لعرض التقييم بالنجوم
+        function displayRatingStars(averageRating, elementId) {
+            const starRatingDisplay = document.getElementById(elementId);
+            starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
+
+            for (let i = 1; i <= 5; i++) {
+                if (i <= Math.floor(averageRating)) {
+                    starRatingDisplay.appendChild(createStar(true));
+                } else if (i === Math.ceil(averageRating) && averageRating % 1 !== 0) {
+                    starRatingDisplay.appendChild(createStar(true, true)); // نصف نجمة
+                } else {
+                    starRatingDisplay.appendChild(createStar(false));
+                }
+            }
+        }
+
+        // حساب متوسط عدد النجوم بالوزن المناسب
+        function calculateWeightedAverage(ratings) {
+            let totalStars = 0;
+            let ratingCount = 0;
+
+            ratings.forEach(rating => {
+                totalStars += rating;
+                ratingCount++;
+            });
+
+            return ratingCount ? totalStars / ratingCount : 0;
+        }
+
+        // دالة لجلب التقييمات لمستخدم معين
+        async function fetchRatingsForUser(workerId) {
+            const ratingsSnapshot = await db.collection("ratings").where("workerId", "==", workerId).get();
+            const ratings = [];
+            ratingsSnapshot.forEach(doc => {
+                ratings.push(doc.data().rating);
+            });
+            const averageRating = calculateWeightedAverage(ratings);
+            return averageRating.toFixed(1); // عرض التقييم برقم عشري واحد
+        }
+
+        async function searchWorkers() {
+            const searchCity = document.getElementById('searchInput').value.trim().toLowerCase();
+            const workerList = document.getElementById('worker-list');
+
+            let query;
+            if (searchCity) {
+                query = db.collection("users").where("profession", "==", "كراج").where("city", "==", searchCity);
+            } else {
+                query = db.collection("users").where("profession", "==", "كراج");
+            }
+
+            try {
+                const querySnapshot = await query.get();
+                workerList.innerHTML = "";
+                if (querySnapshot.empty) {
+                    workerList.innerHTML = "<p>لا يوجد كراجات متاحة.</p>";
+                } else {
+                    for (const doc of querySnapshot.docs) {
+                        const userData = doc.data();
+                        const li = document.createElement('li');
+                        li.classList.add('worker-box');
+
+                        const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
+                        try {
+                            const url = await profilePictureRef.getDownloadURL();
+                            const image = document.createElement('img');
+                            image.src = url;
+                            image.alt = userData.username;
+                            li.appendChild(image);
+                        } catch (error) {
+                            console.error("Error getting profile picture:", error);
+                        }
+
+                        li.innerHTML += `
+                            <h3>${userData.username}</h3>
+                            <p>المدينة: ${userData.city}</p>
+                            <p>سنين الخبرة: ${userData.experienceYears}</p>
+                            <p>التقييم: <span id="averageRating_${doc.id}">جارِ التحميل...</span></p>
+                            <a href="#" onclick="checkLoginAndRedirect('${doc.id}')">عرض التفاصيل</a>
+                        `;
+                        workerList.appendChild(li);
+
+                        const averageRating = await fetchRatingsForUser(doc.id);
+                        displayRatingStars(averageRating, `averageRating_${doc.id}`);
+                    }
+                }
+            } catch (error) {
+                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات الكراجات. الرجاء المحاولة لاحقًا.</p>";
+                console.error("Error fetching garages: ", error);
+            }
+        }
+
+        function checkLoginAndRedirect(workerId) {
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    window.location.href = `worker-details.html?id=${workerId}`;
+                } else {
+                    alert("يجب تسجيل حساب أو تسجيل الدخول أولاً.");
+                }
+            });
+        }
+
+        const menuButton = document.getElementById('menuButton');
+        const categoriesMenu = document.getElementById('categoriesMenu');
+
+        menuButton.addEventListener('click', () => {
+            categoriesMenu.style.display = categoriesMenu.style.display === 'block' ? 'none' : 'block';
+        });
+
+        window.onload = searchWorkers;
+    </script>
+</body>
+</html>
