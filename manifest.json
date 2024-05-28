@@ -1,7 +1,7 @@
 {
-  "name": " اسـطـى ",
+  "name": "اسـطـى",
   "short_name": "خدمات البناء",
-  "description": "   البناء منصة توفر مساحة لعرض خدمات الأسطاوية والعمال ومحلات.",
+  "description": "البناء منصة توفر مساحة لعرض خدمات الأسطاوية والعمال ومحلات.",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#f4f4f4",
