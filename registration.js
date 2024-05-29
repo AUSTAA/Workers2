@@ -39,6 +39,10 @@ document.getElementById('sendCode').addEventListener('click', async () => {
     }
 });
 
+// بعد التحقق بنجاح، أخفي عنصر الريكابتشا
+const recaptchaContainer = document.getElementById('recaptcha-container');
+recaptchaContainer.style.display = 'none';
+
 // تسجيل الدخول باستخدام رمز التحقق
 document.getElementById('verifyCode').addEventListener('click', async (e) => {
     e.preventDefault();
