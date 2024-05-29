@@ -130,21 +130,21 @@
             });
         });
 
-          // دالة البحث داخل التصنيفات
-        function searchCategories() {
-            const searchInput = document.getElementById('search-input').value.toLowerCase();
-            const categories = document.getElementById('categories-list').getElementsByTagName('a');
-            
-            for (let i = 0; i < categories.length; i++) {
-                const category = categories[i].textContent.toLowerCase();
-                if (category.includes(searchInput)) {
-                    categories[i].style.display = 'block';
-                } else {
-                    categories[i].style.display = 'none';
-                }
-            }
-        }
-    </script>
+         
+    function searchCategories() {
+        const searchInput = document.getElementById('search-input').value.trim().toLowerCase();
+        const categories = document.querySelectorAll('#categories-list li');
 
+        categories.forEach(category => {
+            const categoryName = category.textContent.trim().toLowerCase();
+            if (categoryName.includes(searchInput)) {
+                category.style.display = 'block';
+            } else {
+                category.style.display = 'none';
+            }
+        });
+    }
+ 
+</script>
 </body>
 </html>
