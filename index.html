@@ -12,10 +12,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body dir="rtl">
-    <div id="splash-screen">
-        <img src="/Workers2/icon-144x144.png" alt="شعار التطبيق">
-        <h1>مرحبا بك في تطبيق اسطى</h1>
-    </div
     <header>
         <div class="header-left">
             <a id="registration-link" href="registration.html">تسجيل</a>
@@ -96,14 +92,6 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
 
-        
-// إخفاء شاشة الترحيب بعد 3 ثواني (3000 ميلي ثانية)
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(function() {
-        document.getElementById('splash-screen').style.display = 'none';
-    }, 3000); // يمكنك تعديل الوقت كما تريد
-});
-
         // تأخير عرض القائمة حتى النقر على زر التلات خطوط
         document.addEventListener('DOMContentLoaded', () => {
             const menu = document.getElementById('profile-menu');
@@ -141,6 +129,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Error signing out: ", error);
             });
         });
+
+          // دالة البحث داخل التصنيفات
+        function searchCategories() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const categories = document.getElementById('categories-list').getElementsByTagName('a');
+            
+            for (let i = 0; i < categories.length; i++) {
+                const category = categories[i].textContent.toLowerCase();
+                if (category.includes(searchInput)) {
+                    categories[i].style.display = 'block';
+                } else {
+                    categories[i].style.display = 'none';
+                }
+            }
+        }
     </script>
+
 </body>
 </html>
