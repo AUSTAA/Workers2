@@ -114,10 +114,3 @@ footer {
     text-align: center;
     color: #666;
 }
-
-/* ملف regist.css */
-
-/* قاعدة لإخفاء عنصر reCAPTCHA بعد التحقق بنجاح */
-#recaptcha-container {
-    display: none;
-}
