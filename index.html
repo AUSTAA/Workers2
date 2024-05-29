@@ -12,6 +12,10 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body dir="rtl">
+    <div id="splash-screen">
+        <img src="/Workers2/icon-144x144.png" alt="شعار التطبيق">
+        <h1>مرحبا بك في تطبيق اسطى</h1>
+    </div
     <header>
         <div class="header-left">
             <a id="registration-link" href="registration.html">تسجيل</a>
@@ -91,6 +95,14 @@
         };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+
+        
+// إخفاء شاشة الترحيب بعد 3 ثواني (3000 ميلي ثانية)
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        document.getElementById('splash-screen').style.display = 'none';
+    }, 3000); // يمكنك تعديل الوقت كما تريد
+});
 
         // تأخير عرض القائمة حتى النقر على زر التلات خطوط
         document.addEventListener('DOMContentLoaded', () => {
