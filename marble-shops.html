@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محلات رخام - تطبيق اسـطـى لخدمات البناء</title>
+    <title>مصانع رخام - تطبيق اسـطـى لخدمات البناء</title>
     <link rel="stylesheet" href="carpen.css">
 </head>
 <body dir="rtl">
     <header>
-        <img src="IMG_0752.webp" alt="محلات رخام" class="logo">
+        <img src="IMG_0752.webp" alt="مصانع رخام" class="logo">
         <h1>خدمات البناء</h1>
-        <h2>محلات رخام</h2>
+        <h2>مصانع رخام</h2>
         <button onclick="window.location.href='index.html'" class="home-button">العودة للرئيسية</button>
         <button id="loginButton" class="login-button" style="display: none;">تسجيل الدخول</button>
         <button id="menuButton" class="menu-button">&#9776;</button>
@@ -20,10 +20,7 @@
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="about.html">من نحن</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="carpenters.html">النجارين</a></li>
-                <li><a href="marble-shops.html">محلات رخام</a></li>
-                <li><a href="plumbers.html">السباكين</a></li>
-                <li><a href="painters.html">الدهانين</a></li>
+                
             </ul>
         </nav>
     </header>
@@ -131,16 +128,16 @@
 
             let query;
             if (searchCity) {
-                query = db.collection("users").where("profession", "==", "محل رخام").where("city", "==", searchCity);
+                query = db.collection("users").where("profession", "==", "مصنع رخام").where("city", "==", searchCity);
             } else {
-                query = db.collection("users").where("profession", "==", "محل رخام");
+                query = db.collection("users").where("profession", "==", "مصنع رخام");
             }
 
             try {
                 const querySnapshot = await query.get();
                 workerList.innerHTML = "";
                 if (querySnapshot.empty) {
-                    workerList.innerHTML = "<p>لا يوجد محلات رخام متاحة.</p>";
+                    workerList.innerHTML = "<p>لا يوجد مصانع رخام متاحة.</p>";
                 } else {
                     for (const doc of querySnapshot.docs) {
                         const userData = doc.data();
@@ -172,7 +169,7 @@
                     }
                 }
             } catch (error) {
-                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات محلات الرخام. الرجاء المحاولة لاحقًا.</p>";
+                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات مصانع الرخام. الرجاء المحاولة لاحقًا.</p>";
                 console.error("Error fetching marble shops: ", error);
             }
         }
