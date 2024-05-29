@@ -20,10 +20,7 @@
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="about.html">من نحن</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
-                <li><a href="carpenters.html">النجارين</a></li>
-                <li><a href="electricians.html">الكهربائيين</a></li>
-                <li><a href="plumbers.html">السباكين</a></li>
-                <li><a href="painters.html">الدهانين</a></li>
+                
             </ul>
         </nav>
     </header>
@@ -131,9 +128,9 @@
 
             let query;
             if (searchCity) {
-                query = db.collection("users").where("profession", "==", " بكيرة").where("city", "==", searchCity);
+                query = db.collection("users").where("profession", "==", "بكيرة").where("city", "==", searchCity);
             } else {
-                query = db.collection("users").where("profession", "==", " بكيرة");
+                query = db.collection("users").where("profession", "==", "بكيرة");
             }
 
             try {
