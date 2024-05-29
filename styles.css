@@ -222,7 +222,6 @@ footer {
     nav {
         display: flex; /* Always display nav links */
     }
-}
 /* أنماط شاشة الترحيب */
 #splash-screen {
     position: fixed;
