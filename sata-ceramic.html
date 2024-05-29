@@ -20,14 +20,18 @@
                 <li><a href="services.html">الخدمات</a></li>
                 <li><a href="about.html">من نحن</a></li>
                 <li><a href="contact.html">اتصل بنا</a></li>
+                <li><a href="carpenters.html">النجارين</a></li>
+                <li><a href="ceramic-shops.html">سطى سيراميك</a></li>
+                <li><a href="plumbers.html">السباكين</a></li>
+                <li><a href="painters.html">الدهانين</a></li>
             </ul>
         </nav>
     </header>
     <main>
-        <input type="text" id="searchInput" placeholder="ابحث عن النجارين بالمدينة...">
+        <input type="text" id="searchInput" placeholder="ابحث عن محلات الكهربائية بالمدينة...">
         <button onclick="searchWorkers()">بحث</button>
         <ul class="worker-list" id="worker-list">
-            <!-- سيتم ملء هذه القائمة ديناميكيًا -->
+            <!-- سيتم ملء هذه القائمة ديناميًا -->
         </ul>
     </main>
     <footer>
@@ -136,7 +140,7 @@
                 const querySnapshot = await query.get();
                 workerList.innerHTML = "";
                 if (querySnapshot.empty) {
-                    workerList.innerHTML = "<p>لا يوجد سطى سيراميك متاحين.</p>";
+                    workerList.innerHTML = "<p>لا يوجد محلات سيراميك متاحة.</p>";
                 } else {
                     for (const doc of querySnapshot.docs) {
                         const userData = doc.data();
@@ -146,7 +150,8 @@
                         const profilePictureRef = storage.ref().child(`users/${doc.id}/profilePicture.jpg`);
                         try {
                             const url = await profilePictureRef.getDownloadURL();
-                            const image = document.createElement('img                            image.src = url;
+                            const image = document.createElement('img');
+                            image.src = url;
                             image.alt = userData.username;
                             li.appendChild(image);
                         } catch (error) {
@@ -167,8 +172,8 @@
                     }
                 }
             } catch (error) {
-                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات سطى سيراميك. الرجاء المحاولة لاحقًا.</p>";
-                console.error("Error fetching workers: ", error);
+                workerList.innerHTML = "<p>حدث خطأ أثناء جلب بيانات محلات سيراميك. الرجاء المحاولة لاحقًا.</p>";
+                console.error("Error fetching ceramic shops: ", error);
             }
         }
 
