@@ -1,11 +1,13 @@
 {
-  "name": " اسـطـى لخدمات البناء",
+  "name": "اسـطـى",
   "short_name": "اسـطـى",
-  "description": "البناء منصة توفر مساحة لعرض خدمات الأسطاوية والعمال ومحلات.",
+  "description": " منصة توفر مساحة لعرض خدمات الأسطاوية والعمال ومحلات البناء.",
   "start_url": "https://AUSTAA.github.io/Workers2/index.html",
   "display": "standalone",
   "background_color": "#f4f4f4",
   "theme_color": "#222222",
+  "orientation": "portrait",
+  "id": "austaa.github.io/workers2",
   "icons": [
     {
       "src": "/Workers2/icon-72x72.png",
@@ -27,8 +29,7 @@
       "sizes": "144x144",
       "type": "image/png"
     },
- 
-     {
+    {
       "src": "/Workers2/icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png"
@@ -48,5 +49,8 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "launch_handler": {
+    "client_mode": "auto"
+  }
 }
