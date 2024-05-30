@@ -32,7 +32,15 @@ document.getElementById('sendCode').addEventListener('click', async () => {
         const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container');
         const confirmationResult = await auth.signInWithPhoneNumber(formattedNumber, appVerifier);
         window.confirmationResult = confirmationResult;
-        alert('تم إرسال رمز التحقق');
+
+        // عرض ريكابتشا
+        document.getElementById('recaptcha-container').style.display = 'block';
+
+        // تأخير إخفاء ريكابتشا بعد ظهور الرسالة لفترة قصيرة
+        setTimeout(() => {
+            document.getElementById('recaptcha-container').style.display = 'none';
+            alert('تم إرسال رمز التحقق');
+        }, 1000); // تأخير لمدة ثانية واحدة (1000 مللي ثانية)
     } catch (error) {
         console.error('Error sending verification code:', error);
         alert('فشل في إرسال رمز التحقق. تأكد من صحة رقم الهاتف.');
