@@ -140,7 +140,7 @@
                 const querySnapshot = await query.get();
                 workerList.innerHTML = "";
                 if (querySnapshot.empty) {
-                    workerList.innerHTML = "<p>لا يوجد محلات سيراميك متاحة.</p>";
+                    workerList.innerHTML = "<p>لا يوجد سطى سيراميك متاح.</p>";
                 } else {
                     for (const doc of querySnapshot.docs) {
                         const userData = doc.data();
