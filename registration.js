@@ -85,7 +85,6 @@ googleSignInButton.addEventListener('click', function() {
 });
 
 
-// إضافة كود لجعل مفتاح الدولة +218 تلقائيًا في خانة رقم الهاتف
 document.addEventListener('DOMContentLoaded', function() {
     const phoneInput = document.getElementById('phone');
     phoneInput.value = '+218';
@@ -99,6 +98,14 @@ document.addEventListener('DOMContentLoaded', function() {
     phoneInput.addEventListener('input', function() {
         if (!phoneInput.value.startsWith('+218')) {
             phoneInput.value = '+218';
+            phoneInput.setSelectionRange(phoneInput.value.length, phoneInput.value.length);
+        }
+    });
+
+    phoneInput.addEventListener('keydown', function(event) {
+        if (phoneInput.selectionStart < 4) {
+            event.preventDefault();
+            phoneInput.setSelectionRange(phoneInput.value.length, phoneInput.value.length);
         }
     });
 });
