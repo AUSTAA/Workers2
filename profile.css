@@ -77,19 +77,47 @@ main h2 {
     margin-bottom: 1rem;
 }
 
-#serviceImages img {
+#serviceImages {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+    margin: 0.5rem;
+}
+
+.image-container img {
     width: 100px;
     height: 100px;
     object-fit: cover;
-    margin: 0.5rem;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
+
+.image-container .deleteButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: red;
+    display: none;
+}
+
+.image-container:hover .deleteButton {
+    display: block;
+}
+
 .social-links img {
-    width: 50px; /* تعديل حجم الصورة */
-    height: auto; /* تلقائياً يقوم البرنامج بتغيير الارتفاع بناءً على العرض */
-    display: block; /* إظهار الصورة كمركزية داخل العنصر */
-    margin: 0 auto; /* محاذاة الصورة في الوسط */
+    width: 50px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
 }
 
 footer {
