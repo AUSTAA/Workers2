@@ -33,7 +33,7 @@ auth.onAuthStateChanged((user) => {
                 document.getElementById('age').textContent = `العمر: ${userData.age}`;
                 document.getElementById('profession').textContent = `المهنة: ${userData.profession}`;
 
-              // عرض رابط الفيسبوك
+                // عرض رابط الفيسبوك
                 const facebookLink = userData.facebookLink;
                 if (facebookLink) {
                     const facebookLinkElement = document.getElementById('facebookLink');
@@ -53,10 +53,30 @@ auth.onAuthStateChanged((user) => {
                 const serviceImagesSnapshot = await serviceImagesRef.listAll();
                 for (const itemRef of serviceImagesSnapshot.items) {
                     const imageUrl = await itemRef.getDownloadURL();
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'image-container';
+
                     const img = document.createElement('img');
                     img.src = imageUrl;
                     img.alt = 'صورة خدمة';
-                    serviceImagesContainer.appendChild(img);
+
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'deleteButton';
+                    deleteButton.textContent = '🗑️';
+                    deleteButton.addEventListener('click', () => {
+                        if (confirm('هل أنت متأكد من أنك تريد حذف هذه الصورة؟')) {
+                            itemRef.delete().then(() => {
+                                imgContainer.remove();
+                                console.log('تم حذف الصورة بنجاح:', imageUrl);
+                            }).catch((error) => {
+                                console.error('حدث خطأ أثناء حذف الصورة:', error);
+                            });
+                        }
+                    });
+
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(deleteButton);
+                    serviceImagesContainer.appendChild(imgContainer);
                 }
             } else {
                 console.log("No such document!");
