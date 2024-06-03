@@ -33,6 +33,18 @@ auth.onAuthStateChanged((user) => {
                 document.getElementById('profession').value = userData.profession || '';
                 document.getElementById('facebook-link').value = userData.facebookLink || '';
 
+document.getElementById('newProfilePicture').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profilePictureDisplay').src = e.target.result;
+            document.getElementById('profilePictureDisplay').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+                
                 // تحميل الصورة الشخصية
                 const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
                 try {
