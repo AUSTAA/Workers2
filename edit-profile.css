@@ -100,6 +100,13 @@ footer {
     margin-bottom: 1.5rem; /* Adding space between profile picture and service images */
 }
 
+.profile-picture-container img {
+    width: 150px; /* تحديد عرض الصورة الشخصية */
+    height: 150px; /* تحديد ارتفاع الصورة الشخصية */
+    object-fit: cover; /* لضمان أن الصورة تغطي كامل الإطار بدون تشويه */
+    border-radius: 50%; /* جعل الصورة دائرية */
+}
+
 /* Responsive styles */
 @media screen and (max-width: 600px) {
     main {
