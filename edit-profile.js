@@ -38,6 +38,7 @@ auth.onAuthStateChanged((user) => {
                 try {
                     const profilePictureUrl = await profilePictureRef.getDownloadURL();
                     document.getElementById('profilePictureDisplay').src = profilePictureUrl;
+                    document.getElementById('profilePictureDisplay').style.display = 'block';
                 } catch (error) {
                     console.log("No profile picture found");
                 }
@@ -48,6 +49,7 @@ auth.onAuthStateChanged((user) => {
                         try {
                             await profilePictureRef.delete();
                             document.getElementById('profilePictureDisplay').src = '';
+                            document.getElementById('profilePictureDisplay').style.display = 'none';
                             console.log('تم حذف الصورة الشخصية بنجاح');
                         } catch (error) {
                             console.error('حدث خطأ أثناء حذف الصورة الشخصية:', error);
@@ -65,6 +67,7 @@ auth.onAuthStateChanged((user) => {
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             document.getElementById('profilePictureDisplay').src = e.target.result;
+                            document.getElementById('profilePictureDisplay').style.display = 'block';
                         };
                         reader.readAsDataURL(file);
                     }
