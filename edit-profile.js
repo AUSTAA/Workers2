@@ -21,7 +21,7 @@ auth.onAuthStateChanged((user) => {
         const userId = user.uid;
         const userDocRef = db.collection('users').doc(userId);
 
-        userDocRef.get().then((doc) => {
+        userDocRef.get().then(async (doc) => {
             if (doc.exists) {
                 const userData = doc.data();
                 document.getElementById('username').value = userData.username || '';
@@ -32,6 +32,47 @@ auth.onAuthStateChanged((user) => {
                 document.getElementById('age').value = userData.age || '';
                 document.getElementById('profession').value = userData.profession || '';
                 document.getElementById('facebook-link').value = userData.facebookLink || '';
+
+                // تحميل الصورة الشخصية
+                const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
+                try {
+                    const profilePictureUrl = await profilePictureRef.getDownloadURL();
+                    document.getElementById('profilePicture').src = profilePictureUrl;
+                } catch (error) {
+                    console.log("No profile picture found");
+                }
+
+                // إعداد أزرار الحذف والتغيير
+                document.getElementById('deleteProfilePictureButton').addEventListener('click', async () => {
+                    if (confirm('هل أنت متأكد من أنك تريد حذف الصورة الشخصية؟')) {
+                        try {
+                            await profilePictureRef.delete();
+                            document.getElementById('profilePicture').src = '';
+                            console.log('تم حذف الصورة الشخصية بنجاح');
+                        } catch (error) {
+                            console.error('حدث خطأ أثناء حذف الصورة الشخصية:', error);
+                        }
+                    }
+                });
+
+                document.getElementById('changeProfilePictureButton').addEventListener('click', () => {
+                    document.getElementById('newProfilePicture').click();
+                });
+
+                document.getElementById('newProfilePicture').addEventListener('change', async (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        try {
+                            await profilePictureRef.put(file);
+                            const newProfilePictureUrl = await profilePictureRef.getDownloadURL();
+                            document.getElementById('profilePicture').src = newProfilePictureUrl;
+                            console.log('تم تغيير الصورة الشخصية بنجاح');
+                        } catch (error) {
+                            console.error('حدث خطأ أثناء تغيير الصورة الشخصية:', error);
+                        }
+                    }
+                });
+
             } else {
                 console.log("No such document!");
             }
@@ -81,22 +122,6 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
         try {
             // تحديث البيانات في Firestore
             await userDocRef.set(updatedData, { merge: true });
-
-            // تحديث الصور
-            const profilePictureFile = document.getElementById('profilePicture').files[0];
-            const serviceImagesFiles = document.getElementById('serviceImages').files;
-
-            if (profilePictureFile) {
-                const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
-                await profilePictureRef.put(profilePictureFile);
-            }
-
-            if (serviceImagesFiles.length > 0) {
-                for (let i = 0; i < serviceImagesFiles.length; i++) {
-                    const serviceImageRef = storage.ref().child(`users/${userId}/serviceImages/${serviceImagesFiles[i].name}`);
-                    await serviceImageRef.put(serviceImagesFiles[i]);
-                }
-            }
 
             // عرض رسالة تأكيد
             alert('تم تحديث البيانات بنجاح');
