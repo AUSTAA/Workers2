@@ -7,6 +7,27 @@
     <!-- تضمين ملف manifest -->
     <link rel="manifest" href="/Workers2/manifest.json">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .confirmation-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .dialog-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .dialog-buttons button {
+            padding: 10px 20px;
+        }
+    </style>
 </head>
 <body dir="rtl">
     <header>
@@ -76,6 +97,15 @@
     <footer>
         <p>&copy; ٢٠٢٤ تطبيق اسـطـى لخدمات البناء</p>
     </footer>
+    
+    <div class="confirmation-dialog" id="logout-confirmation">
+        <p>هل تريد تسجيل الخروج؟</p>
+        <div class="dialog-buttons">
+            <button id="confirm-logout">نعم</button>
+            <button id="cancel-logout">لا</button>
+        </div>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script>
@@ -120,43 +150,50 @@
             }
         }
 
-        // وظيفة تسجيل الخروج
+        // وظيفة تسجيل الخروج مع التأكيد
         document.getElementById('logout-link').addEventListener('click', function(event) {
             event.preventDefault();
-            auth.signOut().then(() => {
-                alert("تم تسجيل الخروج بنجاح.");
-                window.location.href = "index.html";
-            }).catch((error) => {
-                console.error("Error signing out: ", error);
+            const confirmationDialog = document.getElementById('logout-confirmation');
+            confirmationDialog.style.display = 'block';
+
+            document.getElementById('confirm-logout').addEventListener('click', function() {
+                auth.signOut().then(() => {
+                    alert("تم تسجيل الخروج بنجاح.");
+                    window.location.href = "index.html";
+                }).catch((error) => {
+                    console.error("Error signing out: ", error);
+                });
+            });
+
+            document.getElementById('cancel-logout').addEventListener('click', function() {
+                confirmationDialog.style.display = 'none';
             });
         });
 
-         
-    function searchCategories() {
-        const searchInput = document.getElementById('search-input').value.trim().toLowerCase();
-        const categories = document.querySelectorAll('#categories-list li');
+        function searchCategories() {
+            const searchInput = document.getElementById('search-input').value.trim().toLowerCase();
+            const categories = document.querySelectorAll('#categories-list li');
 
-        categories.forEach(category => {
-            const categoryName = category.textContent.trim().toLowerCase();
-            if (categoryName.includes(searchInput)) {
-                category.style.display = 'block';
-            } else {
-                category.style.display = 'none';
-            }
-        });
-    }
+            categories.forEach(category => {
+                const categoryName = category.textContent.trim().toLowerCase();
+                if (categoryName.includes(searchInput)) {
+                    category.style.display = 'block';
+                } else {
+                    category.style.display = 'none';
+                }
+            });
+        }
 
-    // تسجيل Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('/Workers2/service-worker.js').then(function(registration) {
-          console.log('Service Worker registered with scope:', registration.scope);
-        }, function(error) {
-          console.log('Service Worker registration failed:', error);
-        });
-      });
-    }
- 
-</script>
+        // تسجيل Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/Workers2/service-worker.js').then(function(registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }, function(error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+            });
+        }
+    </script>
 </body>
 </html>
