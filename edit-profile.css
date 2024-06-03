@@ -101,15 +101,17 @@ footer {
 }
 
 .profile-picture-container img {
-    width: 150px; /* تحديد عرض الصورة الشخصية */
-    height: 150px; /* تحديد ارتفاع الصورة الشخصية */
-    object-fit: cover; /* لضمان أن الصورة تغطي كامل الإطار بدون تشويه */
-    border-radius: 50%; /* جعل الصورة دائرية */
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-top: 1rem;
+    display: block;
 }
 
-/* Additional space between paragraphs */
+/* Additional space between sections */
 .additional-space {
-    margin-bottom: 2rem; /* Adjust this value to increase or decrease the space */
+    margin-top: 2rem;
 }
 
 /* Responsive styles */
