@@ -33,11 +33,11 @@ auth.onAuthStateChanged((user) => {
                 document.getElementById('profession').value = userData.profession || '';
                 document.getElementById('facebook-link').value = userData.facebookLink || '';
 
-                // تحميل الصورة الشخصية
+                 // تحميل الصورة الشخصية
                 const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
-                try {
-                    const profilePictureUrl = await profilePictureRef.getDownloadURL();
-                    document.getElementById('profilePicture').src = profilePictureUrl;
+                const profilePictureUrl = await profilePictureRef.getDownloadURL();
+                document.getElementById('profilePicture').src = profilePictureUrl;
+
                 } catch (error) {
                     console.log("No profile picture found");
                 }
