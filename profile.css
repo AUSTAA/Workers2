@@ -34,6 +34,7 @@ main {
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+    margin-bottom: 5rem; /* أضف هامش سفلي لتجنب تغطية الفوتر للمحتوى */
 }
 
 main h2 {
@@ -84,8 +85,8 @@ main h2 {
 }
 
 .image-container {
-    position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     margin: 0.5rem;
 }
 
@@ -98,19 +99,12 @@ main h2 {
 }
 
 .image-container .deleteButton {
-    position: absolute;
-    top: 5px;
-    right: 5px;
     background: none;
     border: none;
     cursor: pointer;
     font-size: 18px;
     color: red;
-    display: none;
-}
-
-.image-container:hover .deleteButton {
-    display: block;
+    margin-right: 10px;
 }
 
 .social-links img {
