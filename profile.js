@@ -7,6 +7,7 @@ const firebaseConfig = {
     appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
 };
 
+
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
@@ -74,8 +75,8 @@ auth.onAuthStateChanged((user) => {
                         }
                     });
 
-                    imgContainer.appendChild(img);
                     imgContainer.appendChild(deleteButton);
+                    imgContainer.appendChild(img);
                     serviceImagesContainer.appendChild(imgContainer);
                 }
             } else {
