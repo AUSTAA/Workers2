@@ -45,15 +45,15 @@ document.getElementById('newProfilePicture').addEventListener('change', (event) 
     }
 });
                 
-                // تحميل الصورة الشخصية
-                const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
-                try {
-                    const profilePictureUrl = await profilePictureRef.getDownloadURL();
-                    document.getElementById('profilePictureDisplay').src = profilePictureUrl;
-                    document.getElementById('profilePictureDisplay').style.display = 'block';
-                } catch (error) {
-                    console.log("No profile picture found");
-                }
+// تحميل الصورة الشخصية
+const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
+try {
+    const profilePictureUrl = await profilePictureRef.getDownloadURL();
+    document.getElementById('profilePictureDisplay').src = profilePictureUrl;
+    document.getElementById('profilePictureDisplay').style.display = 'block';
+} catch (error) {
+    console.log("No profile picture found");
+}
 
                 // إعداد أزرار الحذف والتغيير
                 document.getElementById('deleteProfilePictureButton').addEventListener('click', async () => {
