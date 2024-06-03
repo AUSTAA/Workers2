@@ -107,6 +107,11 @@ footer {
     border-radius: 50%; /* جعل الصورة دائرية */
 }
 
+/* Additional space between paragraphs */
+.additional-space {
+    margin-bottom: 2rem; /* Adjust this value to increase or decrease the space */
+}
+
 /* Responsive styles */
 @media screen and (max-width: 600px) {
     main {
