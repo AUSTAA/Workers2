@@ -95,6 +95,11 @@ footer {
     padding: 1rem;
 }
 
+/* Images spacing */
+.profile-picture-container {
+    margin-bottom: 1.5rem; /* Adding space between profile picture and service images */
+}
+
 /* Responsive styles */
 @media screen and (max-width: 600px) {
     main {
