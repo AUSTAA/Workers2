@@ -65,8 +65,8 @@ auth.onAuthStateChanged((user) => {
                         try {
                             await profilePictureRef.put(file);
                             const newProfilePictureUrl = await profilePictureRef.getDownloadURL();
-                            document.getElementById('profilePicture').src = newProfilePictureUrl;
-                            console.log('تم تغيير الصورة الشخصية بنجاح');
+                            document.getElementById('profilePictureDisplay').src = newProfilePictureUrl;
+                            alert('الصورة الشخصية تم تغييرها بنجاح. الرجاء الضغط على "حفظ التغييرات" لحفظ التغييرات.');
                         } catch (error) {
                             console.error('حدث خطأ أثناء تغيير الصورة الشخصية:', error);
                         }
