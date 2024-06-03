@@ -85,8 +85,8 @@ main h2 {
 }
 
 .image-container {
-    display: flex;
-    align-items: center;
+    position: relative;
+    display: inline-block;
     margin: 0.5rem;
 }
 
@@ -99,12 +99,14 @@ main h2 {
 }
 
 .image-container .deleteButton {
+    position: absolute;
+    top: 5px;
+    left: 5px;
     background: none;
     border: none;
     cursor: pointer;
     font-size: 18px;
     color: red;
-    margin-right: 10px;
 }
 
 .social-links img {
