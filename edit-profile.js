@@ -37,7 +37,7 @@ auth.onAuthStateChanged((user) => {
                 const profilePictureRef = storage.ref().child(`users/${userId}/profilePicture.jpg`);
                 try {
                     const profilePictureUrl = await profilePictureRef.getDownloadURL();
-                    document.getElementById('profilePicture').src = profilePictureUrl;
+                    document.getElementById('profilePictureDisplay').src = profilePictureUrl;
                 } catch (error) {
                     console.log("No profile picture found");
                 }
