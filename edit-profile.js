@@ -47,7 +47,7 @@ auth.onAuthStateChanged((user) => {
                     if (confirm('هل أنت متأكد من أنك تريد حذف الصورة الشخصية؟')) {
                         try {
                             await profilePictureRef.delete();
-                            document.getElementById('profilePicture').src = '';
+                            document.getElementById('profilePictureDisplay').src = '';
                             console.log('تم حذف الصورة الشخصية بنجاح');
                         } catch (error) {
                             console.error('حدث خطأ أثناء حذف الصورة الشخصية:', error);
@@ -59,17 +59,14 @@ auth.onAuthStateChanged((user) => {
                     document.getElementById('newProfilePicture').click();
                 });
 
-                document.getElementById('newProfilePicture').addEventListener('change', async (event) => {
+                document.getElementById('newProfilePicture').addEventListener('change', (event) => {
                     const file = event.target.files[0];
                     if (file) {
-                        try {
-                            await profilePictureRef.put(file);
-                            const newProfilePictureUrl = await profilePictureRef.getDownloadURL();
-                            document.getElementById('profilePictureDisplay').src = newProfilePictureUrl;
-                            alert('الصورة الشخصية تم تغييرها بنجاح. الرجاء الضغط على "حفظ التغييرات" لحفظ التغييرات.');
-                        } catch (error) {
-                            console.error('حدث خطأ أثناء تغيير الصورة الشخصية:', error);
-                        }
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('profilePictureDisplay').src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
                     }
                 });
 
