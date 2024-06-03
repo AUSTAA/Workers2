@@ -74,8 +74,12 @@
                 <!-- أضف باقي المهن هنا -->
             </select>
 
-            <label for="profilePicture">الصورة الشخصية:</label>
-            <input type="file" id="profilePicture" name="profilePicture">
+            <div class="profile-picture-container">
+                <img id="profilePictureDisplay" src="" alt="الصورة الشخصية">
+                <button id="deleteProfilePictureButton" class="profilePictureButton" type="button">حذف</button>
+                <button id="changeProfilePictureButton" class="profilePictureButton" type="button">تغيير</button>
+                <input type="file" id="newProfilePicture" style="display: none;">
+            </div>
 
             <label for="serviceImages">صور شغلك :</label>
             <input type="file" id="serviceImages" name="serviceImages" multiple>
