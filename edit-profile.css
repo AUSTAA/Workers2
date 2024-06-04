@@ -114,6 +114,10 @@ footer {
     margin-top: 2rem;
 }
 
+.space-below {
+    margin-bottom: 2rem; /* Add space below this element */
+}
+
 /* Responsive styles */
 @media screen and (max-width: 600px) {
     main {
