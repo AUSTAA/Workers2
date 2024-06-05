@@ -187,16 +187,37 @@
             });
         }
 
-        // تسجيل Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/Workers2/service-worker.js').then(function(registration) {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                }, function(error) {
-                    console.log('Service Worker registration failed:', error);
-                });
-            });
-        }
-    </script>
+       <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/Workers2/service-worker.js').then(function(registration) {
+        console.log('Service Worker registered with scope:', registration.scope);
+      }, function(error) {
+        console.log('Service Worker registration failed:', error);
+      });
+
+      // تسجيل المزامنة الخلفية
+      if ('SyncManager' in window) {
+        navigator.serviceWorker.ready.then(function(registration) {
+          return registration.sync.register('sync-data');
+        }).catch(function(err) {
+          console.error('Sync registration failed:', err);
+        });
+      }
+
+      // تسجيل المزامنة الدورية
+      if ('PeriodicSyncManager' in window) {
+        navigator.serviceWorker.ready.then(function(registration) {
+          registration.periodicSync.register({
+            tag: 'content-sync',
+            minInterval: 24 * 60 * 60 * 1000  // المزامنة مرة واحدة يومياً
+          }).catch(function(err) {
+            console.error('Periodic Sync registration failed:', err);
+          });
+        });
+      }
+    });
+  }
+</script>
 </body>
 </html>
