@@ -177,7 +177,7 @@
             const searchInput = document.getElementById('search-input').value.trim().toLowerCase();
             const categories = document.querySelectorAll('#categories-list li');
 
-            categories.forEach(category => {
+           categories.forEach(category => {
                 const categoryName = category.textContent.trim().toLowerCase();
                 if (categoryName.includes(searchInput)) {
                     category.style.display = 'block';
@@ -186,8 +186,8 @@
                 }
             });
         }
+    </script>
 
-      
     <!-- Include the service worker script -->
     <script>
         if ('serviceWorker' in navigator) {
