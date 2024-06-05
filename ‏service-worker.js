@@ -6,8 +6,8 @@ const urlsToCache = [
   '/script/main.js'
 ];
 
+// تثبيت الـ Service Worker والاحتفاظ بالملفات في الـ Cache
 self.addEventListener('install', function(event) {
-  // Perform install steps
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(function(cache) {
@@ -17,22 +17,28 @@ self.addEventListener('install', function(event) {
   );
 });
 
+// التعامل مع الطلبات وجلبها من الـ Cache أولاً ثم من الشبكة إذا لم تكن موجودة في الـ Cache
 self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
-        // Cache hit - return response
+        // إرجاع الاستجابة من الـ Cache إذا كانت موجودة
         if (response) {
           return response;
         }
-        return fetch(event.request);
-      }
-    )
+
+        // إذا لم تكن الاستجابة في الـ Cache، جلبها من الشبكة
+        return fetch(event.request).catch(function() {
+          // يمكن هنا إضافة fallback page أو شيء آخر عند عدم توفر الشبكة
+          return caches.match('/offline.html');
+        });
+      })
   );
 });
 
+// تفعيل الـ Service Worker وتنظيف الـ Cache القديمة
 self.addEventListener('activate', function(event) {
-  const cacheWhitelist = ['my-site-cache-v1'];
+  const cacheWhitelist = [CACHE_NAME];
 
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
