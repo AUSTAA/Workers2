@@ -52,3 +52,80 @@ self.addEventListener('activate', function(event) {
     })
   );
 });
+
+// تسجيل المزامنة الخلفية
+self.addEventListener('sync', function(event) {
+  if (event.tag === 'sync-data') {
+    event.waitUntil(syncData());
+  }
+});
+
+function syncData() {
+  return new Promise((resolve, reject) => {
+    // تنفيذ مهام المزامنة هنا
+    fetch('/api/sync', {
+      method: 'POST',
+      body: JSON.stringify(getPendingData()),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => response.json())
+      .then(data => {
+        clearPendingData(); // مسح البيانات المعلقة بعد المزامنة الناجحة
+        resolve();
+      })
+      .catch(error => {
+        reject();
+      });
+  });
+}
+
+// المزامنة الدورية لتحديث التطبيق
+self.addEventListener('periodicsync', function(event) {
+  if (event.tag === 'content-sync') {
+    event.waitUntil(updateContent());
+  }
+});
+
+function updateContent() {
+  return caches.open(CACHE_NAME).then(function(cache) {
+    return fetch('/api/update-content')
+      .then(function(response) {
+        return response.json();
+      })
+      .then(function(data) {
+        // تحديث المحتوى هنا
+        return cache.put('/data/content', new Response(JSON.stringify(data)));
+      });
+  });
+}
+
+// إعدادات Firebase للإشعارات
+importScripts('https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.6.8/firebase-messaging.js');
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+  authDomain: "omran-16f44.firebaseapp.com",
+  databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+  projectId: "omran-16f44",
+  storageBucket: "omran-16f44.appspot.com",
+  messagingSenderId: "598982209417",
+  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+  measurementId: "G-PGZJ0T555G"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const messaging = firebase.messaging();
+
+messaging.onBackgroundMessage((payload) => {
+  console.log('Received background message ', payload);
+  const notificationTitle = 'New message from your app';
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: '/Workers2/icon-192x192.png'
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
