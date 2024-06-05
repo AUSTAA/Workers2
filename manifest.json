@@ -1,13 +1,27 @@
 {
   "name": "اسـطـى",
   "short_name": "اسـطـى",
-  "description": " منصة توفر مساحة لعرض خدمات الأسطاوية والعمال ومحلات البناء.",
+  "description": "منصة توفر مساحة لعرض خدمات الأسطاوية والعمال ومحلات البناء.",
   "start_url": "https://AUSTAA.github.io/Workers2/index.html",
   "display": "standalone",
   "background_color": "#f4f4f4",
   "theme_color": "#222222",
   "orientation": "portrait",
   "id": "austaa.github.io/workers2",
+  "lang": "ar",
+  "categories": ["business", "utilities"],
+  "screenshots": [
+    {
+      "src": "/Workers2/screenshot1.png",
+      "type": "image/png",
+      "sizes": "540x720"
+    },
+    {
+      "src": "/Workers2/screenshot2.png",
+      "type": "image/png",
+      "sizes": "540x720"
+    }
+  ],
   "icons": [
     {
       "src": "/Workers2/icon-72x72.png",
@@ -50,6 +64,10 @@
       "type": "image/png"
     }
   ],
+  "dir": "ltr",
+  "iarc_rating_id": "eC6d564K", // يجب التأكد من استخدام رمز صحيح
+  "prefer_related_applications": false,
+  "related_applications": [],
   "launch_handler": {
     "client_mode": "auto"
   }
