@@ -6,6 +6,8 @@
     <title>تطبيق اسـطـى لخدمات البناء</title>
     <!-- تضمين ملف manifest -->
     <link rel="manifest" href="/Workers2/manifest.json">
+    <!-- إضافة ميتا تاغ للتأكيد على دعم الـ PWA -->
+    <meta name="theme-color" content="#222222">
     <link rel="stylesheet" href="styles.css">
     <style>
         .confirmation-dialog {
@@ -60,7 +62,7 @@
         </section>
         <section id="categories">
             <h2>التصنيفات</h2>
-            <ul>
+            <ul id="categories-list">
                 <li><a href="engineers.html">المهندسين</a></li>
                 <li><a href="contractors.html">المقاولون</a></li>
                 <li><a href="concrete.html">الخرسانة</a></li>
@@ -106,6 +108,7 @@
         </div>
     </div>
 
+    <!-- إضافة Firebase عبر CDN -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script>
