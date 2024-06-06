@@ -173,11 +173,11 @@
             });
         });
 
-        function searchCategories() {
+                function searchCategories() {
             const searchInput = document.getElementById('search-input').value.trim().toLowerCase();
             const categories = document.querySelectorAll('#categories-list li');
 
-           categories.forEach(category => {
+            categories.forEach(category => {
                 const categoryName = category.textContent.trim().toLowerCase();
                 if (categoryName.includes(searchInput)) {
                     category.style.display = 'block';
@@ -186,17 +186,26 @@
                 }
             });
         }
-        <script>
-      if ('serviceWorker' in navigator) {
-          window.addEventListener('load', function() {
-              navigator.serviceWorker.register('/Workers2/service-worker.js')
-                  .then(function(registration) {
-                      console.log('Service Worker registered with scope:', registration.scope);
-                  }, function(error) {
-                      console.log('Service Worker registration failed:', error);
-                  });
-          });
-      }
-  </script>
+
+        // إضافة مستمع للأحداث لنموذج البحث
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            searchCategories();
+        });
+    </script>
+
+    <!-- تسجيل Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/Workers2/service-worker.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    }, function(error) {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
