@@ -24,13 +24,6 @@ document.getElementById('backButton').addEventListener('click', () => {
 });
 
 
-// زر "إرسال التقييم"
-const submitRatingButton = document.createElement('button');
-submitRatingButton.textContent = 'إرسال التقييم';
-submitRatingButton.id = 'submitRating';
-document.body.insertBefore(submitRatingButton, document.getElementById('workerId'));
-
-
 // تحديد الـ ID من عنوان URL
 const workerId = getWorkerIdFromUrl(window.location.href);
 
@@ -39,6 +32,42 @@ function getWorkerIdFromUrl(url) {
     const queryString = url.split('?')[1];
     const params = new URLSearchParams(queryString);
     return params.get('id');
+}
+
+// دالة لإنشاء نجمة معينة
+function createStar(filled) {
+    const starContainer = document.createElement('div');
+    starContainer.style.display = 'flex'; // لتمكين عرض الزر والنجوم في نفس السطر
+    const star = document.createElement('span');
+    star.textContent = '★';
+    star.style.color = filled ? 'gold' : 'gray';
+    starContainer.appendChild(star);
+    
+    // إنشاء زر "إرسال التقييم"
+    const submitRatingButton = document.createElement('button');
+    submitRatingButton.textContent = 'إرسال التقييم';
+    submitRatingButton.id = 'submitRating';
+    submitRatingButton.style.marginLeft = '5px'; // تحديد تباعد بين الزر والنجوم
+    submitRatingButton.style.display = 'none'; // بدايةً يتم إخفاء الزر
+
+    // إضافة حدث النقر إلى الزر
+    submitRatingButton.addEventListener('click', () => {
+        // إرسال التقييم هنا
+    });
+
+    starContainer.appendChild(submitRatingButton);
+
+    return starContainer;
+}
+
+// دالة لعرض التقييم بالنجوم
+function displayRatingStars(averageRating) {
+    const starRatingDisplay = document.getElementById('averageRating');
+    starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
+
+    for (let i = 1; i <= 5; i++) {
+        starRatingDisplay.appendChild(createStar(i <= averageRating));
+    }
 }
 
 // جلب بيانات العامل باستخدام الـ ID
@@ -102,42 +131,6 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
-// دالة لإنشاء نجمة معينة
-function createStar(filled) {
-    const starContainer = document.createElement('div');
-    starContainer.style.display = 'flex'; // لتمكين عرض الزر والنجوم في نفس السطر
-    const star = document.createElement('span');
-    star.textContent = '★';
-    star.style.color = filled ? 'gold' : 'gray';
-    starContainer.appendChild(star);
-    
-    // إنشاء زر "إرسال التقييم"
-    const submitRatingButton = document.createElement('button');
-    submitRatingButton.textContent = 'إرسال التقييم';
-    submitRatingButton.id = 'submitRating';
-    submitRatingButton.style.marginLeft = '5px'; // تحديد تباعد بين الزر والنجوم
-    submitRatingButton.style.display = 'none'; // بدايةً يتم إخفاء الزر
-
-    // إضافة حدث النقر إلى الزر
-    submitRatingButton.addEventListener('click', () => {
-        // إرسال التقييم هنا
-    });
-
-    starContainer.appendChild(submitRatingButton);
-
-    return starContainer;
-}
-
-// دالة لعرض التقييم بالنجوم
-function displayRatingStars(averageRating) {
-    const starRatingDisplay = document.getElementById('averageRating');
-    starRatingDisplay.innerHTML = ''; // مسح المحتوى السابق
-
-    for (let i = 1; i <= 5; i++) {
-        starRatingDisplay.appendChild(createStar(i <= averageRating));
-    }
-}
-
 // حساب متوسط عدد النجوم
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
@@ -163,7 +156,7 @@ function loadRatingsAndComments(workerId) {
 
                     starRating.addEventListener('change', (event) => {
                         const rating = parseInt(event.target.value);
-                        userRatingRef.set({ userId, workerId }).then(() => {
+                       userRatingRef.set({ userId, workerId }).then(() => {
                             db.collection("ratings").add({ workerId, rating }).then(() => {
                                 alert('تم إرسال التقييم بنجاح!');
                                 starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
