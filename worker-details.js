@@ -24,6 +24,12 @@ document.getElementById('backButton').addEventListener('click', () => {
 });
 
 
+// زر "إرسال التقييم"
+const submitRatingButton = document.createElement('button');
+submitRatingButton.textContent = 'إرسال التقييم';
+submitRatingButton.id = 'submitRating';
+document.body.insertBefore(submitRatingButton, document.getElementById('workerId'));
+
 
 // تحديد الـ ID من عنوان URL
 const workerId = getWorkerIdFromUrl(window.location.href);
