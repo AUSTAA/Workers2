@@ -104,10 +104,28 @@ db.collection("users").doc(workerId).get()
 
 // دالة لإنشاء نجمة معينة
 function createStar(filled) {
+    const starContainer = document.createElement('div');
+    starContainer.style.display = 'flex'; // لتمكين عرض الزر والنجوم في نفس السطر
     const star = document.createElement('span');
     star.textContent = '★';
     star.style.color = filled ? 'gold' : 'gray';
-    return star;
+    starContainer.appendChild(star);
+    
+    // إنشاء زر "إرسال التقييم"
+    const submitRatingButton = document.createElement('button');
+    submitRatingButton.textContent = 'إرسال التقييم';
+    submitRatingButton.id = 'submitRating';
+    submitRatingButton.style.marginLeft = '5px'; // تحديد تباعد بين الزر والنجوم
+    submitRatingButton.style.display = 'none'; // بدايةً يتم إخفاء الزر
+
+    // إضافة حدث النقر إلى الزر
+    submitRatingButton.addEventListener('click', () => {
+        // إرسال التقييم هنا
+    });
+
+    starContainer.appendChild(submitRatingButton);
+
+    return starContainer;
 }
 
 // دالة لعرض التقييم بالنجوم
