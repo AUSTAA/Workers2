@@ -121,6 +121,35 @@ db.collection("users").doc(workerId).get()
                 console.error("Error getting service images:", error);
             });
 
+            // إنشاء الزر لإرسال التقييم
+const sendRatingButton = document.createElement('button');
+sendRatingButton.textContent = 'إرسال التقييم';
+sendRatingButton.id = 'sendRatingButton'; // تعيين هوية للزر
+sendRatingButton.style.marginRight = '10px'; // تعيين هامش للزر
+sendRatingButton.style.display = 'none'; // إخفاء الزر في البداية
+
+// إضافة مستمع للنقر على الزر
+sendRatingButton.addEventListener('click', () => {
+    const selectedRating = parseInt(starRating.value); // الحصول على التقييم المختار
+    if (selectedRating) {
+        // إرسال التقييم إلى قاعدة البيانات أو اتخاذ الإجراء المناسب
+        console.log('Rating sent:', selectedRating);
+        // قم بإخفاء الزر بعد إرسال التقييم
+        sendRatingButton.style.display = 'none';
+    } else {
+        alert('يرجى تحديد التقييم أولاً!');
+    }
+});
+
+// إضافة الزر إلى الصفحة بجوار مجموعة النجوم
+const starRatingContainer = document.getElementById('starRatingContainer');
+starRatingContainer.appendChild(sendRatingButton);
+
+// إضافة مستمع للتغيير في قيمة النجوم
+starRating.addEventListener('change', () => {
+    // عرض الزر إذا تم تحديد تقييم
+    sendRatingButton.style.display = 'block';
+});
             // تحميل التقييمات وحساب المتوسط
             loadRatingsAndComments(workerId);
         } else {
