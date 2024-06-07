@@ -202,27 +202,8 @@ function loadRatingsAndComments(workerId) {
     const commentInput = document.getElementById('commentInput');
     const submitCommentButton = document.getElementById('submitComment');
 
-    submitCommentButton.addEventListener('click', () => {    const comment = commentInput.value.trim();
-    if (comment && auth.currentUser) {
-        const commentData = {
-            workerId,
-            username: auth.currentUser.displayName || auth.currentUser.email,
-            comment,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-        };
-        db.collection("comments").add(commentData).then(() => {
-            const commentElement = document.createElement('p');
-            commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
-            commentsContainer.appendChild(commentElement);
-            commentInput.value = ''; // مسح التعليق
-        }).catch((error) => {
-            console.error("Error submitting comment: ", error);
-        });
-    } else if (!auth.currentUser) {
-        alert('يجب تسجيل الدخول لإرسال تعليق.');
-    }
-});
-           const comment = commentInput.value.trim();
+    submitCommentButton.addEventListener('click', () => {
+        const comment = commentInput.value.trim();
         if (comment && auth.currentUser) {
             const commentData = {
                 workerId,
@@ -231,7 +212,7 @@ function loadRatingsAndComments(workerId) {
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             };
             db.collection("comments").add(commentData).then(() => {
-                const commentElement = document.createElement('p');
+                const commentElement =                const commentElement = document.createElement('p');
                 commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
                 commentsContainer.appendChild(commentElement);
                 commentInput.value = ''; // مسح التعليق
@@ -253,37 +234,3 @@ auth.onAuthStateChanged((user) => {
         authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
     }
 });
-```
-
-### التعديلات المطلوبة:
-
-1. إضافة زر "إرسال التقييم" في HTML:
-    ```html
-    <button id="submitRatingButton" style="display:none;">إرسال التقييم</button>
-    ```
-
-2. تعديل الكود لعرض زر "إرسال التقييم" عند اختيار عدد النجوم:
-    ```javascript
-    starRating.addEventListener('change', (event) => {
-        submitRatingButton.style.display = 'block'; // عرض زر إرسال التقييم عند اختيار النجوم
-    });
-    ```
-
-3. إرسال التقييم عند الضغط على زر "إرسال التقييم":
-    ```javascript
-    submitRatingButton.addEventListener('click', () => {
-        const rating = parseInt(starRating.value);
-        userRatingRef.set({ userId, workerId }).then(() => {
-            db.collection("ratings").add({ workerId, rating }).then(() => {
-                alert('تم إرسال التقييم بنجاح!');
-                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
-                rateButton.style.display = 'none'; // إخفاء زر التقييم
-                submitRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
-                averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
-            }).catch((error) => {
-                console.error("Error submitting rating: ", error);
-            });
-        }).catch((error) => {
-            console.error("Error saving rating: ", error);
-        });
-    });
