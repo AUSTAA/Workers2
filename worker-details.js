@@ -10,7 +10,6 @@ const firebaseConfig = {
     measurementId: "G-PGZJ0T555G"
 };
 
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -97,19 +96,6 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
-// في دالة loadRatingsAndComments(workerId)
-
-auth.onAuthStateChanged((user) => {
-    const authButton = document.getElementById('authButton');
-    const rateButton = document.getElementById('rateButton'); // إضافة استدعاء لزر التقييم
-    if (user) {
-        authButton.style.display = 'none'; // إخفاء زر تسجيل الدخول إذا كان المستخدم مسجلاً الدخول
-        rateButton.style.display = 'block'; // عرض زر التقييم إذا كان المستخدم مسجلاً الدخول
-    } else {
-        authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
-        rateButton.style.display = 'none'; // إخفاء زر التقييم إذا لم يكن المستخدم مسجلاً الدخول
-    }
-});
 // دالة لإنشاء نجمة معينة
 function createStar(filled) {
     const star = document.createElement('span');
@@ -132,7 +118,7 @@ function displayRatingStars(averageRating) {
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
-    const rateButton = document.getElementById('rateButton');
+    const sendRatingButton = document.getElementById('sendRatingButton'); // تغيير الزر إلى زر "إرسال التقييم"
     const averageRatingDisplay = document.getElementById('averageRating');
 
     auth.onAuthStateChanged((user) => {
@@ -144,27 +130,27 @@ function loadRatingsAndComments(workerId) {
             userRatingRef.get().then((doc) => {
                 if (doc.exists) {
                     starRating.style.display = 'none'; // إخفاء النجوم
-                    rateButton.style.display = 'none'; // إخفاء زر التقييم
+                    sendRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
                     averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                 } else {
-                    rateButton.addEventListener('click', () => {
-                        starRating.style.display = 'block';
-                    });
-
-                    starRating.addEventListener('change', (event) => {
-                        const rating = parseInt(event.target.value);
-                        userRatingRef.set({ userId, workerId }).then(() => {
-                            db.collection("ratings").add({ workerId, rating }).then(() => {
-                                alert('تم إرسال التقييم بنجاح!');
-                                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
-                                rateButton.style.display = 'none'; // إخفاء زر التقييم
-                                averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
+                    sendRatingButton.addEventListener('click', () => {
+                        const rating = parseInt(starRating.value);
+                        if (rating) {
+                            userRatingRef.set({ userId, workerId }).then(() => {
+                                db.collection("ratings").add({ workerId, rating }).then(() => {
+                                    alert('تم إرسال التقييم بنجاح!');
+                                    starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
+                                    sendRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
+                                    averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
+                                }).catch((error) => {
+                                    console.error("Error submitting rating: ", error);
+                                });
                             }).catch((error) => {
-                                console.error("Error submitting rating: ", error);
+                                console.error("Error saving rating: ", error);
                             });
-                        }).catch((error) => {
-                            console.error("Error saving rating: ", error);
-                        });
+                        } else {
+                            alert('يرجى تحديد عدد النجوم قبل إرسال التقييم.');
+                        }
                     });
                 }
             });
