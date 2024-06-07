@@ -23,8 +23,6 @@ document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
 
-
-
 // تحديد الـ ID من عنوان URL
 const workerId = getWorkerIdFromUrl(window.location.href);
 
@@ -114,7 +112,7 @@ function displayRatingStars(averageRating) {
     }
 }
 
-// حساب متوسط عدد النجوم
+// دالة لتحميل التقييمات والتعليقات
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
@@ -220,11 +218,6 @@ function loadRatingsAndComments(workerId) {
     });
 }
 
-const sendRatingButton = document.getElementById('sendRatingButton');
-
-sendRatingButton.addEventListener('click', () => {
-    // قم بتنفيذ عملية إرسال التقييم هنا
-});
 // التحقق من حالة تسجيل الدخول
 auth.onAuthStateChanged((user) => {
     const authButton = document.getElementById('authButton');
