@@ -10,6 +10,7 @@ const firebaseConfig = {
     measurementId: "G-PGZJ0T555G"
 };
 
+
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
@@ -22,6 +23,8 @@ document.getElementById('homeButton').addEventListener('click', () => {
 document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
+
+
 
 // تحديد الـ ID من عنوان URL
 const workerId = getWorkerIdFromUrl(window.location.href);
@@ -112,7 +115,7 @@ function displayRatingStars(averageRating) {
     }
 }
 
-// دالة لتحميل التقييمات والتعليقات
+// حساب متوسط عدد النجوم
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
