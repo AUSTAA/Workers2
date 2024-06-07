@@ -118,7 +118,7 @@ function displayRatingStars(averageRating) {
 function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
-    const sendRatingButton = document.getElementById('sendRatingButton'); // تغيير الزر إلى زر "إرسال التقييم"
+    const rateButton = document.getElementById('rateButton');
     const averageRatingDisplay = document.getElementById('averageRating');
 
     auth.onAuthStateChanged((user) => {
@@ -130,27 +130,27 @@ function loadRatingsAndComments(workerId) {
             userRatingRef.get().then((doc) => {
                 if (doc.exists) {
                     starRating.style.display = 'none'; // إخفاء النجوم
-                    sendRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
+                    rateButton.style.display = 'none'; // إخفاء زر التقييم
                     averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                 } else {
-                    sendRatingButton.addEventListener('click', () => {
-                        const rating = parseInt(starRating.value);
-                        if (rating) {
-                            userRatingRef.set({ userId, workerId }).then(() => {
-                                db.collection("ratings").add({ workerId, rating }).then(() => {
-                                    alert('تم إرسال التقييم بنجاح!');
-                                    starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
-                                    sendRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
-                                    averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
-                                }).catch((error) => {
-                                    console.error("Error submitting rating: ", error);
-                                });
+                    rateButton.addEventListener('click', () => {
+                        starRating.style.display = 'block';
+                    });
+
+                    starRating.addEventListener('change', (event) => {
+                        const rating = parseInt(event.target.value);
+                        userRatingRef.set({ userId, workerId }).then(() => {
+                            db.collection("ratings").add({ workerId, rating }).then(() => {
+                                alert('تم إرسال التقييم بنجاح!');
+                                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
+                                rateButton.style.display = 'none'; // إخفاء زر التقييم
+                                averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                             }).catch((error) => {
-                                console.error("Error saving rating: ", error);
+                                console.error("Error submitting rating: ", error);
                             });
-                        } else {
-                            alert('يرجى تحديد عدد النجوم قبل إرسال التقييم.');
-                        }
+                        }).catch((error) => {
+                            console.error("Error saving rating: ", error);
+                        });
                     });
                 }
             });
