@@ -97,6 +97,19 @@ db.collection("users").doc(workerId).get()
         console.error("Error getting document:", error);
     });
 
+// في دالة loadRatingsAndComments(workerId)
+
+auth.onAuthStateChanged((user) => {
+    const authButton = document.getElementById('authButton');
+    const rateButton = document.getElementById('rateButton'); // إضافة استدعاء لزر التقييم
+    if (user) {
+        authButton.style.display = 'none'; // إخفاء زر تسجيل الدخول إذا كان المستخدم مسجلاً الدخول
+        rateButton.style.display = 'block'; // عرض زر التقييم إذا كان المستخدم مسجلاً الدخول
+    } else {
+        authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
+        rateButton.style.display = 'none'; // إخفاء زر التقييم إذا لم يكن المستخدم مسجلاً الدخول
+    }
+});
 // دالة لإنشاء نجمة معينة
 function createStar(filled) {
     const star = document.createElement('span');
