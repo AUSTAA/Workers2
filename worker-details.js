@@ -142,23 +142,21 @@ function loadRatingsAndComments(workerId) {
                     });
 
                     submitRatingButton.addEventListener('click', () => {
-                        const rating = parseInt(starRating.value);
-                        userRatingRef.set({ userId, workerId }).then(() => {
-                            db.collection("ratings").add({ workerId, rating }).then(() => {
-                                alert('تم إرسال التقييم بنجاح!');
+    const rating = parseInt(starRating.value);
+    userRatingRef.set({ userId, workerId }).then(() => {
+        db.collection("ratings").add({ workerId, rating }).then(() => {
+            alert('تم إرسال التقييم بنجاح!');
 
-                                rateButton.style.display = 'none'; // إخفاء زر التقييم
-                                submitRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
-                                averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
-                            }).catch((error) => {
-                                console.error("Error submitting rating: ", error);
-                            });
-                        }).catch((error) => {
-                            console.error("Error saving rating: ", error);
-                        });
-                    });
-                }
-            });
+            rateButton.style.display = 'none'; // إخفاء زر التقييم
+            submitRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
+            averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
+        }).catch((error) => {
+            console.error("Error submitting rating: ", error);
+        });
+    }).catch((error) => {
+        console.error("Error saving rating: ", error);
+    });
+});
 
             // حساب متوسط عدد النجوم
             db.collection("ratings").where("workerId", "==", workerId).get()
