@@ -142,7 +142,7 @@ function loadRatingsAndComments(workerId) {
                     });
 
                     submitRatingButton.addEventListener('click', () => {
-                        const rating = parseInt(starRating.value);
+                        const rating = parseInt(starRating.number);
                         userRatingRef.set({ userId, workerId }).then(() => {
                             db.collection("ratings").add({ workerId, rating }).then(() => {
                                 alert('تم إرسال التقييم بنجاح!');
