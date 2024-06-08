@@ -146,7 +146,7 @@ function loadRatingsAndComments(workerId) {
                         userRatingRef.set({ userId, workerId }).then(() => {
                             db.collection("ratings").add({ workerId, rating }).then(() => {
                                 alert('تم إرسال التقييم بنجاح!');
-                                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
+
                                 rateButton.style.display = 'none'; // إخفاء زر التقييم
                                 submitRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
                                 averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
