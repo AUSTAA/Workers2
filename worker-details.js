@@ -144,7 +144,7 @@ function loadRatingsAndComments(workerId) {
                     averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                 } else {
                     rateButton.addEventListener('click', () => {
-                        starRating.style.display = 'block';
+
                     });
 
                     starRating.addEventListener('change', (event) => {
