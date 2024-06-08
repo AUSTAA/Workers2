@@ -173,7 +173,7 @@ function loadRatingsAndComments(workerId) {
                     displayRatingStars(Math.round(averageStars)); // عرض التقييم المتوسط كعدد من النجوم
                 })
                 .catch((error) => {
-                    console.error("Error getting ratings: ", error);
+console.error("Error getting ratings: ", error);
                 });
 
         } else {
