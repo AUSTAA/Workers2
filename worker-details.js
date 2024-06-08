@@ -141,8 +141,9 @@ function loadRatingsAndComments(workerId) {
                         submitRatingButton.style.display = 'block'; // عرض زر إرسال التقييم عند اختيار النجوم
                     });
 
-                    submitRatingButton.addEventListener('click', () => {
-                        const rating = parseInt(starRating.number);
+                    submitRatingButton.addEventListener('click',   (event) => {
+                       
+                    const rating = parseInt(event.target.value);
                         userRatingRef.set({ userId, workerId }).then(() => {
                             db.collection("ratings").add({ workerId, rating }).then(() => {
                                 alert('تم إرسال التقييم بنجاح!');
