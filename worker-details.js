@@ -1,6 +1,3 @@
-هل يوجد اخطاء في هدا الكود 
-من اقواس وغيرها 
-هل هكدا جاهز ؟
 // إعداد Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
