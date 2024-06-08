@@ -176,7 +176,7 @@ function loadRatingsAndComments(workerId) {
 console.error("Error getting ratings: ", error);
                 });
 
-        } else {
+         else {
             ratingSection.style.display = 'none';
         }
     });
