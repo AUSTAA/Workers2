@@ -23,6 +23,8 @@ document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
 
+
+
 // تحديد الـ ID من عنوان URL
 const workerId = getWorkerIdFromUrl(window.location.href);
 
@@ -117,18 +119,7 @@ function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
     const rateButton = document.getElementById('rateButton');
-    const submitRatingButton = document.getElementById('submitRatingButton'); // زر إرسال التقييم
     const averageRatingDisplay = document.getElementById('averageRating');
-
-    // إضافة زر إرسال التقييم
-    const sendRatingButton = document.createElement('button');
-    sendRatingButton.textContent = 'إرسال التقييم';
-    sendRatingButton.id = 'sendRatingButton'; // تعيين الـ ID للزر الجديد
-    sendRatingButton.addEventListener('click', () => {
-        // تنفيذ عملية إرسال التقييم هنا
-        alert('تم إرسال التقييم!');
-    });
-    ratingSection.appendChild(sendRatingButton);
 
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -140,26 +131,19 @@ function loadRatingsAndComments(workerId) {
                 if (doc.exists) {
                     starRating.style.display = 'none'; // إخفاء النجوم
                     rateButton.style.display = 'none'; // إخفاء زر التقييم
-                    submitRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
                     averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                 } else {
                     rateButton.addEventListener('click', () => {
-
+                        starRating.style.display = 'block';
                     });
 
                     starRating.addEventListener('change', (event) => {
-                        submitRatingButton.style.display = 'block'; // عرض زر إرسال التقييم عند اختيار النجوم
-                    });
-
-                    submitRatingButton.addEventListener('click',   (event) => {
-                       
-                    const rating = parseInt(event.target.value);
+                        const rating = parseInt(event.target.value);
                         userRatingRef.set({ userId, workerId }).then(() => {
                             db.collection("ratings").add({ workerId, rating }).then(() => {
                                 alert('تم إرسال التقييم بنجاح!');
-
+                                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
                                 rateButton.style.display = 'none'; // إخفاء زر التقييم
-                                submitRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
                                 averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                             }).catch((error) => {
                                 console.error("Error submitting rating: ", error);
@@ -169,11 +153,15 @@ function loadRatingsAndComments(workerId) {
                         });
                     });
                 }
+            });
 
-                // حساب متوسط عدد النجوم
-                db.collection("ratings").where("workerId", "==", workerId).get()
-                    .then((querySnapshot) => {
-                        let totalStars = 0                    querySnapshot.forEach((doc) => {
+            // حساب متوسط عدد النجوم
+            db.collection("ratings").where("workerId", "==", workerId).get()
+                .then((querySnapshot) => {
+                    let totalStars = 0;
+                    let ratingCount = 0;
+
+                    querySnapshot.forEach((doc) => {
                         totalStars += doc.data().rating;
                         ratingCount++;
                     });
@@ -184,12 +172,11 @@ function loadRatingsAndComments(workerId) {
                 .catch((error) => {
                     console.error("Error getting ratings: ", error);
                 });
-        });
 
-    } else {
-        ratingSection.style.display = 'none';
-    }
-});
+        } else {
+            ratingSection.style.display = 'none';
+        }
+    });
 
     // تحميل التعليقات
     const commentsContainer = document.getElementById('commentsContainer');
