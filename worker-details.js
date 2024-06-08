@@ -234,29 +234,3 @@ auth.onAuthStateChanged((user) => {
         authButton.style.display = 'inline-block'; // عرض زر تسجيل الدخول إذا لم يكن المستخدم مسجلاً الدخول
     }
 });
-```
-
-### التعديلات المطلوبة في HTML:
-تأكد من وجود العناصر التالية في HTML:
-```html
-<!-- تقييم النجوم -->
-<select id="starRating" style="display: none;">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-</select>
-<button id="rateButton">تقييم</button>
-<button id="submitRatingButton" style="display:none;">إرسال التقييم</button>
-
-<!-- عرض متوسط التقييم -->
-<div id="averageRating"></div>
-
-<!-- عرض التعليقات -->
-<div id="commentsContainer"></div>
-<textarea id="commentInput" placeholder="أضف تعليقًا"></textarea>
-<button id="submitComment">إرسال التعليق</button>
-
-<!-- زر تسجيل الدخول -->
-<button id="authButton">تسجيل الدخول</button>
