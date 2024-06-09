@@ -95,7 +95,7 @@ db.collection("users").doc(workerId).get()
     });
 
 // دالة لإنشاء نجمة معينة
-function createStar(filled) {
+function createStar(filled)function createStar(filled) {
     const star = document.createElement('span');
     star.textContent = '★';
     star.style.color = filled ? 'gold' : 'gray';
@@ -117,8 +117,8 @@ function loadRatingsAndComments(workerId) {
     const ratingSection = document.getElementById('ratingSection');
     const starRating = document.getElementById('starRating');
     const rateButton = document.getElementById('rateButton');
+    const submitRatingButton = document.getElementById('submitRatingButton'); // زر إرسال التقييم
     const averageRatingDisplay = document.getElementById('averageRating');
-    const submitRatingButton = document.getElementById('submitRatingButton');
 
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -130,21 +130,29 @@ function loadRatingsAndComments(workerId) {
                 if (doc.exists) {
                     starRating.style.display = 'none'; // إخفاء النجوم
                     rateButton.style.display = 'none'; // إخفاء زر التقييم
+                    submitRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
                     averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
                 } else {
                     rateButton.addEventListener('click', () => {
                         starRating.style.display = 'block';
                     });
 
+                    starRating.addEventListener('change', (event) => {
+                        submitRatingButton.style.display = 'block'; // عرض زر إرسال التقييم عند اختيار النجوم
+                    });
+
                     submitRatingButton.addEventListener('click', () => {
-                        const rating = parseInt(starRating.value);
+                        const rating = parseInt(starRating.value); // تأكد من أنك تحصل على القيمة الصحيحة
                         if (!isNaN(rating) && rating > 0 && rating <= 5) {
                             userRatingRef.set({ userId, workerId }).then(() => {
                                 db.collection("ratings").add({ workerId, rating }).then(() => {
                                     alert('تم إرسال التقييم بنجاح!');
                                     starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
                                     rateButton.style.display = 'none'; // إخفاء زر التقييم
+                                    submitRatingButton.style.display = 'none'; // إخفاء زر إرسال التقييم
                                     averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
+                                    // تحديث متوسط التقييم
+                                    updateAverageRating(workerId);
                                 }).catch((error) => {
                                     console.error("Error submitting rating: ", error);
                                 });
@@ -156,25 +164,10 @@ function loadRatingsAndComments(workerId) {
                         }
                     });
                 }
+
+                // حساب متوسط عدد النجوم
+                updateAverageRating(workerId);
             });
-
-            // حساب متوسط عدد النجوم
-            db.collection("ratings").where("workerId", "==", workerId).get()
-                .then((querySnapshot) => {
-                    let totalStars = 0;
-                    let ratingCount = 0;
-
-                    querySnapshot.forEach((doc) => {
-                        totalStars += doc.data().rating;
-                        ratingCount++;
-                    });
-
-                    const averageStars = ratingCount ? (totalStars / ratingCount) : 0;
-                    displayRatingStars(Math.round(averageStars)); // عرض التقييم المتوسط كعدد من النجوم
-                })
-                .catch((error) => {
-                    console.error("Error getting ratings: ", error);
-                });
 
         } else {
             ratingSection.style.display = 'none';
@@ -221,6 +214,26 @@ function loadRatingsAndComments(workerId) {
             alert('يجب تسجيل الدخول لإرسال تعليق.');
         }
     });
+}
+
+// دالة لحساب وتحديث متوسط عدد النجوم
+function updateAverageRating(workerId) {
+    db.collection("ratings").where("workerId", "==", workerId).get()
+        .then((querySnapshot) => {
+            let totalStars = 0;
+            let ratingCount = 0;
+
+            querySnapshot.forEach((doc) => {
+                totalStars += doc.data().rating;
+                ratingCount++;
+            });
+
+            const averageStars = ratingCount ? (totalStars / ratingCount) : 0;
+            displayRatingStars(Math.round(averageStars)); // عرض التقييم المتوسط كعدد من النجوم
+        })
+        .catch((error) => {
+            console.error("Error getting ratings: ", error);
+        });
 }
 
 // التحقق من حالة تسجيل الدخول
