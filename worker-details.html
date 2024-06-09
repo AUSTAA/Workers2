@@ -210,19 +210,19 @@ function loadRatingsAndComments(workerId) {
                 username: auth.currentUser.displayName || auth.currentUser.email,
                 comment,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
-};
-db.collection(“comments”).add(commentData)
-.then(() => {
-const commentElement = document.createElement(‘p’);
-commentElement.textContent = ${commentData.username}: ${commentData.comment};
-commentsContainer.appendChild(commentElement);
-commentInput.value = ‘’; // مسح حقل الإدخال بعد الإرسال
-})
-.catch((error) => {
-console.error(“Error submitting comment: “, error);
-});
-} else {
-alert(‘الرجاء تسجيل الدخول لترك تعليق.’);
-}
-});
+            };
+            db.collection("comments").add(commentData)
+                .then(() => {
+                    const commentElement = document.createElement('p');
+                    commentElement.textContent = `${commentData.username}: ${commentData.comment}`;
+                    commentsContainer.appendChild(commentElement);
+                    commentInput.value = ''; // مسح حقل الإدخال بعد الإرسال
+                })
+                .catch((error) => {
+                    console.error("Error submitting comment: ", error);
+                });
+        } else {
+            alert('الرجاء تسجيل الدخول لترك تعليق.');
+        }
+    });
 }
