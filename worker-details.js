@@ -23,8 +23,6 @@ document.getElementById('backButton').addEventListener('click', () => {
     window.history.back();
 });
 
-
-
 // تحديد الـ ID من عنوان URL
 const workerId = getWorkerIdFromUrl(window.location.href);
 
@@ -120,6 +118,7 @@ function loadRatingsAndComments(workerId) {
     const starRating = document.getElementById('starRating');
     const rateButton = document.getElementById('rateButton');
     const averageRatingDisplay = document.getElementById('averageRating');
+    const submitRatingButton = document.getElementById('submitRatingButton');
 
     auth.onAuthStateChanged((user) => {
         if (user) {
@@ -137,20 +136,24 @@ function loadRatingsAndComments(workerId) {
                         starRating.style.display = 'block';
                     });
 
-                    starRating.addEventListener('change', (event) => {
-                        const rating = parseInt(event.target.value);
-                        userRatingRef.set({ userId, workerId }).then(() => {
-                            db.collection("ratings").add({ workerId, rating }).then(() => {
-                                alert('تم إرسال التقييم بنجاح!');
-                                starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
-                                rateButton.style.display = 'none'; // إخفاء زر التقييم
-                                averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
+                    submitRatingButton.addEventListener('click', () => {
+                        const rating = parseInt(starRating.value);
+                        if (!isNaN(rating) && rating > 0 && rating <= 5) {
+                            userRatingRef.set({ userId, workerId }).then(() => {
+                                db.collection("ratings").add({ workerId, rating }).then(() => {
+                                    alert('تم إرسال التقييم بنجاح!');
+                                    starRating.style.display = 'none'; // إخفاء النجوم بعد التقييم
+                                    rateButton.style.display = 'none'; // إخفاء زر التقييم
+                                    averageRatingDisplay.textContent = 'لقد قمت بالتقييم مسبقًا.';
+                                }).catch((error) => {
+                                    console.error("Error submitting rating: ", error);
+                                });
                             }).catch((error) => {
-                                console.error("Error submitting rating: ", error);
+                                console.error("Error saving rating: ", error);
                             });
-                        }).catch((error) => {
-                            console.error("Error saving rating: ", error);
-                        });
+                        } else {
+                            alert('الرجاء اختيار تقييم بين 1 و 5.');
+                        }
                     });
                 }
             });
