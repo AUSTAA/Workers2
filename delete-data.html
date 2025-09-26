@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حذف البيانات - تطبيق اسـطـى</title>
+    <style>
+        body {
+            font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+            background: #f7f7f8;
+            color: #222;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 28px;
+            border-radius: 8px;
+            box-shadow: 0 6px 18px rgba(0,0,0,.06);
+        }
+        h1 { font-size: 28px; margin-top: 0; }
+        h2 { font-size: 18px; margin-bottom: 6px; }
+        p, ul { line-height: 1.7; }
+        a.button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #0b63d6;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        a.button:hover { background: #084a9e; }
+        footer {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>طلب حذف البيانات</h1>
+        <p>مرحبًا بك في صفحة تعليمات حذف البيانات لتطبيق <strong>اسـطـى</strong>. يمكنك من هنا معرفة كيفية حذف بياناتك الشخصية من التطبيق.</p>
+
+        <h2>الخطوات:</h2>
+        <ul>
+            <li>قم بقراءة الشروط التالية: عند حذف البيانات، سيتم إزالة جميع المعلومات المرتبطة بحسابك نهائيًا.</li>
+            <li>تأكد من أنك تريد الاستمرار قبل إرسال الطلب.</li>
+            <li>انقر على زر "طلب حذف البيانات" أدناه لإرسال بريد إلكتروني مباشر إلى فريق الدعم لدينا.</li>
+        </ul>
+
+        <a class="button" href="mailto:omarmared3@gmail.com?subject=طلب حذف البيانات&body=السلام عليكم، أود حذف جميع بياناتي من تطبيق اسطى." target="_blank">
+            طلب حذف البيانات
+        </a>
+
+        <h2>ملاحظات مهمة:</h2>
+        <ul>
+            <li>سيتم تنفيذ الحذف خلال فترة معقولة بعد تأكيد الطلب.</li>
+            <li>بعد الحذف، لا يمكن استرجاع البيانات.</li>
+            <li>يمكنك أيضًا التواصل معنا عبر البريد لأي استفسارات إضافية.</li>
+        </ul>
+    </main>
+
+    <footer>
+        حقوق النشر © <span id="year"></span> <strong>اسـطـى</strong>. جميع الحقوق محفوظة.
+    </footer>
+
+    <script>
+        document.getElementById('year').innerText = new Date().getFullYear();
+    </script>
+</body>
+</html>
