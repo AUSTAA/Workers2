@@ -83,6 +83,22 @@ googleSignInButton.addEventListener('click', function() {
             console.error("Error signing in with Google:", error);
         });
 });
+// تسجيل الدخول باستخدام Facebook
+const facebookSignInButton = document.getElementById('facebookSignIn');
+facebookSignInButton.addEventListener('click', function() {
+    const provider = new firebase.auth.FacebookAuthProvider();
+    auth.signInWithPopup(provider)
+        .then((result) => {
+            const user = result.user;
+            console.log("Facebook User:", user);
+            // تحويل المستخدم للصفحة المطلوبة
+            window.location.href = `profile.html?userId=${user.uid}`;
+        })
+        .catch((error) => {
+            console.error("Error signing in with Facebook:", error);
+            alert("فشل تسجيل الدخول بفيسبوك");
+        });
+});
 
 
 document.addEventListener('DOMContentLoaded', function() {
