@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق اسـطـى لخدمات البناء</title>
+    <!-- تضمين ملف manifest -->
+    <link rel="manifest" href="/Workers2/manifest.json">
+    <!-- إضافة ميتا تاغ للتأكيد على دعم الـ PWA -->
+    <meta name="theme-color" content="#222222">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .confirmation-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        .dialog-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .dialog-buttons button {
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body dir="rtl">
+    <header>
+        <div class="header-left">
+            <a id="registration-link" href="registration.html">تسجيل</a>
+        </div>
+        <h1>اسـطـى لخدمات البناء</h1>
+        <div class="header-right">
+            <span class="menu-icon" id="menu-icon" onclick="toggleDropdown()">☰</span>
+        </div>
+        <nav id="nav-container">
+            <ul id="nav-links">
+                <li><a href="services.html">الخدمات</a></li>
+                <li><a href="about.html">من نحن</a></li>
+                <li><a href="contact.html">اتصل بنا</a></li>
+            </ul>
+        </nav>
+        <div class="dropdown-menu" id="profile-menu">
+            <a href="profile.html">الملف الشخصي</a>
+            <a href="#" id="logout-link">تسجيل الخروج</a>
+        </div>
+    </header>
+    <main>
+        <section id="search">
+            <h2>البحث عن العمال والمقاولين</h2>
+            <form id="search-form">
+                <input type="text" id="search-input" placeholder="البحث عن الخدمات...">
+                <button type="submit">بحث</button>
+            </form>
+        </section>
+        <section id="categories">
+            <h2>التصنيفات</h2>
+            <ul id="categories-list">
+                <li><a href="engineers.html">المهندسين</a></li>
+                <li><a href="contractors.html">المقاولون</a></li>
+                <li><a href="concrete.html">الخرسانة</a></li>
+                <li><a href="sata-ceramic.html">سطى سيراميك</a></li>
+                <li><a href="sata-marble.html">سطى رخام</a></li>
+                <li><a href="workers.html">العمال</a></li>
+                <li><a href="plaster.html">الجبس</a></li>
+                <li><a href="tank-digging.html">حفر خزانات</a></li>        
+                <li><a href="marble-shops.html">مصانع الرخام</a></li>
+                <li><a href="ceramic-shops.html">محلات السيراميك</a></li>
+                <li><a href="electrical-shops.html">محلات الكهربائية</a></li>
+                <li><a href="aluminum-pvc.html">الألومنيوم والبي في سي</a></li>
+                <li><a href="insulation.html">العوازل</a></li>
+                <li><a href="accessories-alternatives.html">الإكسسوارات والبدائل</a></li> 
+                <li><a href="construction-companies.html">شركات البناء</a></li>
+                <li><a href="carpenters.html">النجارين</a></li>
+                <li><a href="electricians.html">الكهربائيين</a></li>
+                <li><a href="plumbers.html">السباكين</a></li>
+                <li><a href="painters.html">الدهانين</a></li>
+                <li><a href="hvac.html">التكييف</a></li>
+                <li><a href="spooning.html">الملعقة</a></li>
+                <li><a href="design.html">التصميمات والديكور</a></li>
+                <li><a href="finishing.html">التشطيبات</a></li>
+                <li><a href="builders.html">البنّائين</a></li>
+                <li><a href="garages.html">الكراجات</a></li>
+                <li><a href="transport-vehicles.html">سيارات نقل</a></li>
+                <li><a href="building-materials.html">محلات مواد البناء</a></li>
+                <li><a href="paint-shops.html">محلات الدهانات</a></li>
+                <li><a href="rebar-shops.html">محلات حديد التسليح</a></li>
+                <li><a href="hardware.html">البكيرات</a></li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; ٢٠٢٤ تطبيق اسـطـى لخدمات البناء</p>
+    </footer>
+    
+    <div class="confirmation-dialog" id="logout-confirmation">
+        <p>هل تريد تسجيل الخروج؟</p>
+        <div class="dialog-buttons">
+            <button id="confirm-logout">نعم</button>
+            <button id="cancel-logout">لا</button>
+        </div>
+    </div>
+
+    <!-- إضافة Firebase عبر CDN -->
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script>
+        // إعداد Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
+            authDomain: "omran-16f44.firebaseapp.com",
+            databaseURL: "https://omran-16f44-default-rtdb.firebaseio.com",
+            projectId: "omran-16f44",
+            storageBucket: "omran-16f44.appspot.com",
+            messagingSenderId: "598982209417",
+            appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+            measurementId: "G-PGZJ0T555G"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // تأخير عرض القائمة حتى النقر على زر التلات خطوط
+        document.addEventListener('DOMContentLoaded', () => {
+            const menu = document.getElementById('profile-menu');
+            menu.style.display = 'none';
+
+            // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    document.getElementById('registration-link').style.display = 'none';
+                    document.getElementById('menu-icon').style.display = 'block';
+                } else {
+                    document.getElementById('registration-link').style.display = 'block';
+                    document.getElementById('menu-icon').style.display = 'none';
+                }
+            });
+        });
+
+        // دالة تبديل عرض القائمة المنبثقة
+        function toggleDropdown() {
+            const menu = document.getElementById('profile-menu');
+            if (menu.style.display === 'block' || menu.style.display === '') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'block';
+            }
+        }
+
+        // وظيفة تسجيل الخروج مع التأكيد
+        document.getElementById('logout-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            const confirmationDialog = document.getElementById('logout-confirmation');
+            confirmationDialog.style.display = 'block';
+
+            document.getElementById('confirm-logout').addEventListener('click', function() {
+                auth.signOut().then(() => {
+                    alert("تم تسجيل الخروج بنجاح.");
+                    window.location.href = "index.html";
+                }).catch((error) => {
+                    console.error("Error signing out: ", error);
+                });
+            });
+
+            document.getElementById('cancel-logout').addEventListener('click', function() {
+                confirmationDialog.style.display = 'none';
+            });
+        });
+
+                function searchCategories() {
+            const searchInput = document.getElementById('search-input').value.trim().toLowerCase();
+            const categories = document.querySelectorAll('#categories-list li');
+
+            categories.forEach(category => {
+                const categoryName = category.textContent.trim().toLowerCase();
+                if (categoryName.includes(searchInput)) {
+                    category.style.display = 'block';
+                } else {
+                    category.style.display = 'none';
+                }
+            });
+        }
+
+        // إضافة مستمع للأحداث لنموذج البحث
+        document.getElementById('search-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            searchCategories();
+        });
+    </script>
+
+    <!-- تسجيل Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/Workers2/service-worker.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    }, function(error) {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
