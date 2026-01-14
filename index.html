@@ -99,8 +99,8 @@
         </section>
     </main>
     <footer>
-        <p>&copy; 2025 تطبيق اسـطـى لخدمات البناء</p>
-    </footer>
+    <p>&copy; <span id="current-year"></span> تطبيق اسـطـى لخدمات البناء</p>
+</footer>
     
     <div class="confirmation-dialog" id="logout-confirmation">
         <p>هل تريد تسجيل الخروج؟</p>
@@ -209,5 +209,8 @@
             });
         }
     </script>
+    <script>
+    document.getElementById("current-year").textContent = new Date().getFullYear();
+</script>
 </body>
 </html>
