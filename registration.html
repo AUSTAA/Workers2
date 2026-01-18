@@ -4,45 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>التسجيل</title>
+
     <link rel="stylesheet" href="regist.css">
+
+    <!-- Firebase v10 compat (صحيح للـ HTML) -->
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+
+    <!-- libphonenumber -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.18/libphonenumber-js.min.js"></script>
-    <script src="https://www.google.com/recaptcha/api.js"></script>
+
 </head>
+
 <body dir="rtl">
-    <header>
-        <h1>التسجيل</h1>
-    </header>
-    <main>
-        <form id="registrationForm">
 
-            <label for="phone">رقم الهاتف:</label>
-            <input type="tel" id="phone" name="phone" required>
-            <button type="button" id="sendCode">إرسال رمز التحقق</button>
-            <div id="recaptcha-container"></div>
+<header>
+    <h1>التسجيل</h1>
+</header>
 
-            <label for="code">رمز التحقق:</label>
-            <input type="text" id="code" name="code" required>
-            <label for="password">الرمز السري:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="button" id="verifyCode">تحقق من الرمز</button>
-        </form>
+<main>
 
-        <button id="googleSignIn">
-            <img src="google-icon.png" alt="Google Icon"> تسجيل الدخول باستخدام Google
-        </button>
-        <button id="facebookSignIn" style="border:none; padding:0; background:none; display:flex; align-items:center; gap:10px;">
-  <img src="IMG_6739.png" alt="Facebook Icon" style="width:300px; height:50px; object-fit:contain; display:block;">
-  <!-- إذا كانت الصورة مستطيلة كاملة (زر كامل)، يمكنك إزالة النص -->
+<form id="registrationForm">
+
+    <label for="phone">رقم الهاتف:</label>
+    <input type="tel" id="phone" required value="+218">
+    <button type="button" id="sendCode">إرسال رمز التحقق</button>
+
+    <!-- reCAPTCHA لازم يكون موجود -->
+    <div id="recaptcha-container"></div>
+
+    <label for="code">رمز التحقق:</label>
+    <input type="text" id="code">
+
+    <label for="password">الرمز السري:</label>
+    <input type="password" id="password">
+
+    <button type="button" id="verifyCode">تحقق من الرمز</button>
+
+</form>
+
+<hr>
+
+<button id="googleSignIn">
+    <img src="google-icon.png" alt="Google" style="width:20px">
+    تسجيل الدخول باستخدام Google
 </button>
 
-    </main>
-    <footer>
-  <p>&copy; <span id="current-year"></span> تطبيق اسـطـى لخدمات البناء</p>
+<button id="facebookSignIn" style="border:none;background:none;">
+    <img src="IMG_6739.png" alt="Facebook" style="width:300px;height:50px;object-fit:contain;">
+</button>
+
+</main>
+
+<footer>
+    <p>&copy; <span id="current-year"></span> تطبيق اسـطـى لخدمات البناء</p>
 </footer>
-    <script src="registration.js" defer></script>
-    <script src="footer-year.js"></script>
+
+<!-- ملفات الجافاسكربت -->
+<script src="registration.js"></script>
+<script src="footer-year.js"></script>
+
 </body>
 </html>
