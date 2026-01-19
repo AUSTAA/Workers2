@@ -38,43 +38,73 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-auth.languageCode = 'ar';
+auth.languageCode = "ar";
 
 /*********************************
- * reCAPTCHA
+ * reCAPTCHA (الصحيح لـ v11)
  *********************************/
-window.recaptchaVerifier = new RecaptchaVerifier(
-  auth,
-  "recaptcha-container",
-  {
-    size: "normal"
+let recaptchaVerifier;
+let confirmationResult;
+
+function initRecaptcha() {
+  if (recaptchaVerifier) {
+    recaptchaVerifier.clear();
   }
-);
+
+  recaptchaVerifier = new RecaptchaVerifier(
+    auth,
+    "recaptcha-container",
+    {
+      size: "normal",
+      callback: () => {
+        console.log("reCAPTCHA verified");
+      },
+      "expired-callback": () => {
+        console.log("reCAPTCHA expired");
+      }
+    }
+  );
+
+  recaptchaVerifier.render();
+}
+
+window.addEventListener("load", initRecaptcha);
 
 /*********************************
  * Phone Auth
  *********************************/
-let confirmationResult;
-
 document.getElementById("sendCode").addEventListener("click", async () => {
   const phoneNumber = document.getElementById("phone").value.trim();
+
+  if (!phoneNumber) {
+    alert("أدخل رقم الهاتف");
+    return;
+  }
 
   try {
     confirmationResult = await signInWithPhoneNumber(
       auth,
       phoneNumber,
-      window.recaptchaVerifier
+      recaptchaVerifier
     );
 
     alert("تم إرسال رمز التحقق");
   } catch (error) {
     console.error(error);
-    alert("فشل إرسال الرمز، تأكد من الرقم أو reCAPTCHA");
+    alert(error.message || "فشل إرسال الرمز");
+
+    // إعادة تهيئة reCAPTCHA عند الفشل
+    initRecaptcha();
   }
 });
 
 document.getElementById("verifyCode").addEventListener("click", async () => {
   const code = document.getElementById("code").value.trim();
+
+  if (!code) {
+    alert("أدخل رمز التحقق");
+    return;
+  }
 
   try {
     const result = await confirmationResult.confirm(code);
