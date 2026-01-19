@@ -1,69 +1,67 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>التسجيل</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>التسجيل</title>
 
-    <link rel="stylesheet" href="regist.css">
+  <link rel="stylesheet" href="regist.css">
 
-    <!-- Firebase v10 compat (صحيح للـ HTML) -->
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore-compat.js"></script>
+  <!-- Firebase v8 (الأكثر استقرارًا للويب العادي) -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 
-    <!-- libphonenumber -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.9.18/libphonenumber-js.min.js"></script>
-
+  <!-- reCAPTCHA -->
+  <script src="https://www.google.com/recaptcha/api.js"></script>
 </head>
 
 <body dir="rtl">
 
 <header>
-    <h1>التسجيل</h1>
+  <h1>التسجيل</h1>
 </header>
 
 <main>
 
-<form id="registrationForm">
+  <!-- تسجيل برقم الهاتف -->
+  <div class="card">
+    <label>رقم الهاتف</label>
+    <input type="tel" id="phone" value="+218">
 
-    <label for="phone">رقم الهاتف:</label>
-    <input type="tel" id="phone" required value="+218">
-    <button type="button" id="sendCode">إرسال رمز التحقق</button>
-
-    <!-- reCAPTCHA لازم يكون موجود -->
     <div id="recaptcha-container"></div>
 
-    <label for="code">رمز التحقق:</label>
+    <button id="sendCode">إرسال رمز التحقق</button>
+
+    <label>رمز التحقق</label>
     <input type="text" id="code">
 
-    <label for="password">الرمز السري:</label>
-    <input type="password" id="password">
+    <button id="verifyCode">تأكيد الرمز</button>
+  </div>
 
-    <button type="button" id="verifyCode">تحقق من الرمز</button>
+  <hr>
 
-</form>
-
-<hr>
-
-<button id="googleSignIn">
-    <img src="google-icon.png" alt="Google" style="width:20px">
+  <!-- Google -->
+  <button id="googleSignIn">
     تسجيل الدخول باستخدام Google
-</button>
+  </button>
 
-<button id="facebookSignIn" style="border:none;background:none;">
-    <img src="IMG_6739.png" alt="Facebook" style="width:300px;height:50px;object-fit:contain;">
-</button>
+  <!-- Facebook -->
+  <button id="facebookSignIn">
+    تسجيل الدخول باستخدام Facebook
+  </button>
 
 </main>
 
 <footer>
-    <p>&copy; <span id="current-year"></span> تطبيق اسـطـى لخدمات البناء</p>
+  <p>&copy; <span id="current-year"></span> تطبيق اسـطـى لخدمات البناء</p>
 </footer>
 
-<!-- ملفات الجافاسكربت -->
 <script src="registration.js"></script>
-<script src="footer-year.js"></script>
+<script>
+  document.getElementById("current-year").textContent =
+    new Date().getFullYear();
+</script>
 
 </body>
 </html>
