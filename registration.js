@@ -7,74 +7,99 @@ const firebaseConfig = {
   projectId: "omran-16f44",
   storageBucket: "omran-16f44.appspot.com",
   messagingSenderId: "598982209417",
-  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58",
+  appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
 };
 
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
 const auth = firebase.auth();
+const db = firebase.firestore();
 
 /***********************
- * Phone Auth
+ * Phone Auth (OTP)
  ***********************/
 let confirmationResult;
 
-const recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
   "recaptcha-container",
-  { size: "normal" }
+  {
+    size: "normal",
+    callback: () => {}
+  }
 );
 
-document.getElementById("sendCode").onclick = async () => {
+document.getElementById("sendCode").addEventListener("click", async () => {
+  const phoneNumber = document.getElementById("phone").value.trim();
+
   try {
-    const phone = document.getElementById("phone").value.trim();
-    confirmationResult = await auth.signInWithPhoneNumber(phone, recaptchaVerifier);
+    confirmationResult =
+      await auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier);
+
     alert("تم إرسال رمز التحقق");
-  } catch (e) {
+  } catch (error) {
+    console.error(error);
     alert("فشل إرسال الرمز");
-    console.error(e);
   }
-};
+});
 
-document.getElementById("verifyCode").onclick = async () => {
+document.getElementById("verifyCode").addEventListener("click", async () => {
+  const code = document.getElementById("code").value.trim();
+
   try {
-    const code = document.getElementById("code").value;
-    const password = document.getElementById("password").value;
-
     const result = await confirmationResult.confirm(code);
-    await result.user.updatePassword(password);
-
-    alert("تم التسجيل بنجاح");
-    window.location.href = "profile.html";
-  } catch (e) {
-    alert("رمز غير صحيح");
-    console.error(e);
+    await handleUser(result.user);
+  } catch (error) {
+    console.error(error);
+    alert("رمز التحقق غير صحيح");
   }
-};
+});
 
 /***********************
- * Google Login
+ * Google Sign In
  ***********************/
-document.getElementById("googleSignIn").onclick = async () => {
+document.getElementById("googleSignIn").addEventListener("click", async () => {
+  const provider = new firebase.auth.GoogleAuthProvider();
   try {
-    const provider = new firebase.auth.GoogleAuthProvider();
     const result = await auth.signInWithPopup(provider);
-    window.location.href = "profile.html";
-  } catch (e) {
-    alert("فشل تسجيل Google");
-    console.error(e);
+    await handleUser(result.user);
+  } catch (error) {
+    console.error(error);
+    alert("فشل تسجيل الدخول بجوجل");
   }
-};
+});
 
 /***********************
- * Facebook Login
+ * Facebook Sign In
  ***********************/
-document.getElementById("facebookSignIn").onclick = async () => {
+document.getElementById("facebookSignIn").addEventListener("click", async () => {
+  const provider = new firebase.auth.FacebookAuthProvider();
   try {
-    const provider = new firebase.auth.FacebookAuthProvider();
     const result = await auth.signInWithPopup(provider);
-    window.location.href = "profile.html";
-  } catch (e) {
-    alert("فشل تسجيل Facebook");
-    console.error(e);
+    await handleUser(result.user);
+  } catch (error) {
+    console.error(error);
+    alert("فشل تسجيل الدخول بفيسبوك");
   }
-};
+});
+
+/***********************
+ * Handle User (New / Existing)
+ ***********************/
+async function handleUser(user) {
+  const userRef = db.collection("users").doc(user.uid);
+  const doc = await userRef.get();
+
+  if (!doc.exists) {
+    await userRef.set({
+      uid: user.uid,
+      phone: user.phoneNumber || "",
+      email: user.email || "",
+      name: user.displayName || "",
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+
+  window.location.href = "profile.html";
+}
