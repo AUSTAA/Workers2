@@ -21,31 +21,58 @@ const db = firebase.firestore();
  * Phone Auth (OTP)
  ***********************/
 let confirmationResult;
+let recaptchaVerifier;
 
-window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-  "recaptcha-container",
-  {
-    size: "normal",
-    callback: () => {}
-  }
-);
+/* إنشاء reCAPTCHA مرة واحدة فقط */
+window.onload = () => {
+  recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+    "recaptcha-container",
+    {
+      size: "normal",
+      callback: () => {
+        console.log("reCAPTCHA solved");
+      },
+      "expired-callback": () => {
+        console.log("reCAPTCHA expired");
+      }
+    }
+  );
+
+  recaptchaVerifier.render();
+};
 
 document.getElementById("sendCode").addEventListener("click", async () => {
   const phoneNumber = document.getElementById("phone").value.trim();
 
+  if (!phoneNumber.startsWith("+")) {
+    alert("يجب إدخال رقم الهاتف مع رمز الدولة مثل +218");
+    return;
+  }
+
   try {
-    confirmationResult =
-      await auth.signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier);
+    confirmationResult = await auth.signInWithPhoneNumber(
+      phoneNumber,
+      recaptchaVerifier
+    );
 
     alert("تم إرسال رمز التحقق");
   } catch (error) {
     console.error(error);
     alert("فشل إرسال الرمز");
+
+    // إعادة تهيئة reCAPTCHA عند الفشل
+    recaptchaVerifier.clear();
+    recaptchaVerifier.render();
   }
 });
 
 document.getElementById("verifyCode").addEventListener("click", async () => {
   const code = document.getElementById("code").value.trim();
+
+  if (!confirmationResult) {
+    alert("يجب طلب الرمز أولاً");
+    return;
+  }
 
   try {
     const result = await confirmationResult.confirm(code);
