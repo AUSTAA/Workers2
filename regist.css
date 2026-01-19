@@ -1,6 +1,6 @@
-/* ملف regist.css */
-
-/* إعادة تعيين النمط الافتراضي للعناصر */
+/* =========
+   Reset
+========= */
 * {
     margin: 0;
     padding: 0;
@@ -8,109 +8,150 @@
     font-family: 'Cairo', sans-serif;
 }
 
+/* =========
+   Layout
+========= */
 body {
     background-color: #f4f4f4;
     color: #333;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
 }
 
 header {
-    margin-bottom: 20px;
+    padding: 20px 0;
     text-align: center;
 }
 
 header h1 {
     font-size: 24px;
-    color: #333;
+    font-weight: bold;
 }
 
+/* =========
+   Main Card
+========= */
 main {
     width: 100%;
     max-width: 400px;
+    margin: auto;
     background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
+/* =========
+   Form
+========= */
 form {
     display: flex;
     flex-direction: column;
 }
 
 form label {
-    margin-bottom: 5px;
+    margin-bottom: 6px;
     font-weight: bold;
+    font-size: 14px;
 }
 
-form input[type="tel"],
-form input[type="text"],
-form input[type="password"] {
+form input {
     width: 100%;
-    padding: 10px;
+    padding: 11px;
     margin-bottom: 15px;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 15px;
 }
 
+form input:focus {
+    outline: none;
+    border-color: #4CAF50;
+}
+
+/* زر الهاتف */
 form button {
-    padding: 10px;
+    padding: 12px;
     background-color: #4CAF50;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
+    transition: background 0.2s;
 }
 
 form button:hover {
-    background-color: #45a049;
+    background-color: #43a047;
 }
 
-#googleSignIn {
+/* =========
+   Social Buttons
+========= */
+#googleSignIn,
+#facebookSignIn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    padding: 10px;
-    margin-top: 15px;
+    gap: 10px;
+    font-size: 15px;
+}
+
+/* Google */
+#googleSignIn {
     background-color: #db4437;
     color: #fff;
     border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    text-align: center;
 }
 
 #googleSignIn img {
     width: 20px;
     height: 20px;
-    margin-right: 10px;
 }
 
-#googleSignIn:hover {
-    background-color: #c33d2e;
+/* Facebook (زر بالصورة فقط) */
+#facebookSignIn {
+    background: none;
+    border: none;
+    padding: 0;
 }
 
+#facebookSignIn img {
+    width: 100%;
+    max-width: 320px;
+    height: 48px;
+    object-fit: contain;
+}
+
+/* =========
+   Links
+========= */
 a {
     display: block;
-    margin-top: 20px;
+    margin-top: 18px;
     text-align: center;
     color: #333;
     text-decoration: none;
+    font-size: 14px;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
+/* =========
+   Footer
+========= */
 footer {
-    margin-top: 20px;
+    margin-top: auto;
+    padding: 15px 0;
     text-align: center;
-    color: #666;
+    color: #777;
+    font-size: 13px;
 }
