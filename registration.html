@@ -2,19 +2,10 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>التسجيل</title>
 
-  <!-- CSS -->
   <link rel="stylesheet" href="regist.css">
-
-  <!-- Firebase v8 -->
-  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
-
-  <!-- reCAPTCHA -->
-  <script src="https://www.google.com/recaptcha/api.js"></script>
 </head>
 
 <body dir="rtl">
@@ -25,32 +16,35 @@
 
 <main>
 
-  <!-- بطاقة التسجيل -->
-  <form>
-
-    <label for="phone">رقم الهاتف</label>
+  <!-- تسجيل برقم الهاتف -->
+  <div class="card">
+    <label>رقم الهاتف</label>
     <input type="tel" id="phone" value="+218">
 
+    <!-- reCAPTCHA -->
     <div id="recaptcha-container"></div>
 
-    <button type="button" id="sendCode">إرسال رمز التحقق</button>
+    <button id="sendCode">إرسال رمز التحقق</button>
 
-    <label for="code">رمز التحقق</label>
+    <label>رمز التحقق</label>
     <input type="text" id="code">
 
-    <button type="button" id="verifyCode">تأكيد الرمز</button>
+    <button id="verifyCode">تأكيد الرمز</button>
+  </div>
 
-  </form>
+  <hr>
 
-  <!-- Google -->
+  <!-- تسجيل اجتماعي -->
   <button id="googleSignIn">
     <img src="google-icon.png" alt="Google Icon">
     تسجيل الدخول باستخدام Google
   </button>
 
-  <!-- Facebook -->
-  <button id="facebookSignIn">
-    <img src="IMG_6739.png" alt="Facebook Icon">
+  <button id="facebookSignIn"
+    style="border:none; padding:0; background:none; display:flex; align-items:center; gap:10px;">
+    <img src="IMG_6739.png"
+         alt="Facebook Icon"
+         style="width:300px; height:50px; object-fit:contain;">
   </button>
 
 </main>
@@ -59,11 +53,13 @@
   <p>&copy; <span id="current-year"></span> تطبيق اسـطـى لخدمات البناء</p>
 </footer>
 
-<script src="registration.js"></script>
 <script>
   document.getElementById("current-year").textContent =
     new Date().getFullYear();
 </script>
+
+<!-- 🔴 مهم: type="module" -->
+<script type="module" src="registration.js"></script>
 
 </body>
 </html>
