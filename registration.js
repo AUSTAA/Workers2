@@ -1,6 +1,27 @@
-/***********************
- * Firebase Init
- ***********************/
+/*********************************
+ * Firebase v11 Imports
+ *********************************/
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+/*********************************
+ * Firebase Config
+ *********************************/
 const firebaseConfig = {
   apiKey: "AIzaSyB7YJhtaefEPc9NMzhTBjQC06WmSEja0xc",
   authDomain: "omran-16f44.firebaseapp.com",
@@ -10,121 +31,102 @@ const firebaseConfig = {
   appId: "1:598982209417:web:dc9cbddd485a1ea52bbb58"
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+/*********************************
+ * Init Firebase
+ *********************************/
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+auth.languageCode = 'ar';
 
-/***********************
- * Phone Auth (OTP)
- ***********************/
+/*********************************
+ * reCAPTCHA
+ *********************************/
+window.recaptchaVerifier = new RecaptchaVerifier(
+  auth,
+  "recaptcha-container",
+  {
+    size: "normal"
+  }
+);
+
+/*********************************
+ * Phone Auth
+ *********************************/
 let confirmationResult;
-let recaptchaVerifier;
-
-/* إنشاء reCAPTCHA مرة واحدة فقط */
-window.onload = () => {
-  recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
-    "recaptcha-container",
-    {
-      size: "normal",
-      callback: () => {
-        console.log("reCAPTCHA solved");
-      },
-      "expired-callback": () => {
-        console.log("reCAPTCHA expired");
-      }
-    }
-  );
-
-  recaptchaVerifier.render();
-};
 
 document.getElementById("sendCode").addEventListener("click", async () => {
   const phoneNumber = document.getElementById("phone").value.trim();
 
-  if (!phoneNumber.startsWith("+")) {
-    alert("يجب إدخال رقم الهاتف مع رمز الدولة مثل +218");
-    return;
-  }
-
   try {
-    confirmationResult = await auth.signInWithPhoneNumber(
+    confirmationResult = await signInWithPhoneNumber(
+      auth,
       phoneNumber,
-      recaptchaVerifier
+      window.recaptchaVerifier
     );
 
     alert("تم إرسال رمز التحقق");
   } catch (error) {
     console.error(error);
-    alert("فشل إرسال الرمز");
-
-    // إعادة تهيئة reCAPTCHA عند الفشل
-    recaptchaVerifier.clear();
-    recaptchaVerifier.render();
+    alert("فشل إرسال الرمز، تأكد من الرقم أو reCAPTCHA");
   }
 });
 
 document.getElementById("verifyCode").addEventListener("click", async () => {
   const code = document.getElementById("code").value.trim();
 
-  if (!confirmationResult) {
-    alert("يجب طلب الرمز أولاً");
-    return;
-  }
-
   try {
     const result = await confirmationResult.confirm(code);
-    await handleUser(result.user);
+    await saveUser(result.user);
   } catch (error) {
     console.error(error);
     alert("رمز التحقق غير صحيح");
   }
 });
 
-/***********************
+/*********************************
  * Google Sign In
- ***********************/
+ *********************************/
 document.getElementById("googleSignIn").addEventListener("click", async () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
+  const provider = new GoogleAuthProvider();
   try {
-    const result = await auth.signInWithPopup(provider);
-    await handleUser(result.user);
+    const result = await signInWithPopup(auth, provider);
+    await saveUser(result.user);
   } catch (error) {
     console.error(error);
     alert("فشل تسجيل الدخول بجوجل");
   }
 });
 
-/***********************
+/*********************************
  * Facebook Sign In
- ***********************/
+ *********************************/
 document.getElementById("facebookSignIn").addEventListener("click", async () => {
-  const provider = new firebase.auth.FacebookAuthProvider();
+  const provider = new FacebookAuthProvider();
   try {
-    const result = await auth.signInWithPopup(provider);
-    await handleUser(result.user);
+    const result = await signInWithPopup(auth, provider);
+    await saveUser(result.user);
   } catch (error) {
     console.error(error);
     alert("فشل تسجيل الدخول بفيسبوك");
   }
 });
 
-/***********************
- * Handle User (New / Existing)
- ***********************/
-async function handleUser(user) {
-  const userRef = db.collection("users").doc(user.uid);
-  const doc = await userRef.get();
+/*********************************
+ * Save User
+ *********************************/
+async function saveUser(user) {
+  const ref = doc(db, "users", user.uid);
+  const snap = await getDoc(ref);
 
-  if (!doc.exists) {
-    await userRef.set({
+  if (!snap.exists()) {
+    await setDoc(ref, {
       uid: user.uid,
       phone: user.phoneNumber || "",
       email: user.email || "",
       name: user.displayName || "",
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      createdAt: serverTimestamp()
     });
   }
 
