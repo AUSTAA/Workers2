@@ -9,24 +9,43 @@
 }
 
 /* =========
-   Layout
+   Body
 ========= */
 body {
-    background-color: #f4f4f4;
+    background-color: #f2f3f5;
     color: #333;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
+/* =========
+   Top Bar
+========= */
 header {
-    padding: 20px 0;
-    text-align: center;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #f2f3f5;
 }
 
 header h1 {
-    font-size: 24px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* زر الرجوع */
+.back-btn {
+    position: absolute;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #444;
 }
 
 /* =========
@@ -34,56 +53,27 @@ header h1 {
 ========= */
 main {
     width: 100%;
-    max-width: 400px;
+    max-width: 380px;
     margin: auto;
     background-color: #fff;
-    padding: 22px;
-    border-radius: 10px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    padding: 26px 22px;
+    border-radius: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
 }
 
 /* =========
-   Form
+   Texts
 ========= */
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-form label {
+main h2 {
+    font-size: 20px;
     margin-bottom: 6px;
-    font-weight: bold;
+}
+
+main p {
     font-size: 14px;
-}
-
-form input {
-    width: 100%;
-    padding: 11px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 15px;
-}
-
-form input:focus {
-    outline: none;
-    border-color: #4CAF50;
-}
-
-/* زر الهاتف */
-form button {
-    padding: 12px;
-    background-color: #4CAF50;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s;
-}
-
-form button:hover {
-    background-color: #43a047;
+    color: #666;
+    margin-bottom: 22px;
 }
 
 /* =========
@@ -92,15 +82,15 @@ form button:hover {
 #googleSignIn,
 #facebookSignIn {
     width: 100%;
-    margin-top: 12px;
     padding: 12px;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     font-size: 15px;
+    margin-bottom: 12px;
 }
 
 /* Google */
@@ -115,34 +105,16 @@ form button:hover {
     height: 20px;
 }
 
-/* Facebook (زر بالصورة فقط) */
+/* Facebook */
 #facebookSignIn {
-    background: none;
+    background-color: #1877f2;
+    color: #fff;
     border: none;
-    padding: 0;
 }
 
 #facebookSignIn img {
-    width: 100%;
-    max-width: 320px;
-    height: 48px;
-    object-fit: contain;
-}
-
-/* =========
-   Links
-========= */
-a {
-    display: block;
-    margin-top: 18px;
-    text-align: center;
-    color: #333;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-a:hover {
-    text-decoration: underline;
+    width: 20px;
+    height: 20px;
 }
 
 /* =========
