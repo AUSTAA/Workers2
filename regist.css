@@ -12,7 +12,7 @@
    Body
 ========= */
 body {
-    background-color: #f2f3f5;
+    background-color: #f4f4f4;
     color: #333;
     min-height: 100vh;
     display: flex;
@@ -20,50 +20,56 @@ body {
 }
 
 /* =========
-   Top Bar
+   Header
 ========= */
 header {
-    height: 56px;
+    background-color: #2f7d32; /* لون التطبيق */
+    color: #fff;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    background: #f2f3f5;
 }
 
 header h1 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #444;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 /* زر الرجوع */
 .back-btn {
     position: absolute;
-    right: 15px;
-    background: none;
+    right: 16px;
+    background: rgba(255, 255, 255, 0.15);
     border: none;
-    font-size: 20px;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 14px;
     cursor: pointer;
-    color: #444;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
 }
 
 /* =========
-   Main Card
+   Main
 ========= */
 main {
     width: 100%;
-    max-width: 380px;
-    margin: auto;
+    max-width: 420px;
+    margin: 24px auto 0; /* للأعلى */
     background-color: #fff;
     padding: 26px 22px;
-    border-radius: 14px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
     text-align: center;
 }
 
 /* =========
-   Texts
+   Text
 ========= */
 main h2 {
     font-size: 20px;
@@ -122,7 +128,7 @@ main p {
 ========= */
 footer {
     margin-top: auto;
-    padding: 15px 0;
+    padding: 14px 0;
     text-align: center;
     color: #777;
     font-size: 13px;
