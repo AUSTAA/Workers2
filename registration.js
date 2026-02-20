@@ -7,7 +7,6 @@ import { initializeApp } from
 import {
   getAuth,
   GoogleAuthProvider,
-  FacebookAuthProvider,
   signInWithPopup
 } from
   "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
@@ -61,18 +60,7 @@ document.getElementById("googleSignIn").onclick = async () => {
 /*********************************
  * Facebook Login
  *********************************/
-document.getElementById("facebookSignIn").onclick = async () => {
-  try {
-    const result = await signInWithPopup(
-      auth,
-      new FacebookAuthProvider()
-    );
-    await saveUser(result.user);
-  } catch (e) {
-    console.error(e);
-    alert("فشل تسجيل الدخول بفيسبوك");
-  }
-};
+
 
 /*********************************
  * Save User
