@@ -1,0 +1,12 @@
+[
+ {
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+   "namespace": "android_app",
+   "package_name": "com.austaa.app",
+   "sha256_cert_fingerprints": [
+    "E9:F1:09:4F:62:11:CF:83:1C:7D:AD:06:85:B7:C5:F8:54:5E:21:F0:2E:23:9F:13:19:13:5C:EE:98:DE:2E:DD"
+   ]
+  }
+ }
+]
